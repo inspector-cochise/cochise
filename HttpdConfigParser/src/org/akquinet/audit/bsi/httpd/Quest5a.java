@@ -12,7 +12,7 @@ public class Quest5a extends YesNoQuestion
 {
 	private ConfigFile _conf;
 	private static final FormattedConsole _console = FormattedConsole.getDefault();
-	private final FormattedConsole.OutputLevel _level = FormattedConsole.OutputLevel.Q2;
+	private static final FormattedConsole.OutputLevel _level = FormattedConsole.OutputLevel.Q2;
 	
 	public Quest5a(ConfigFile conf)
 	{
