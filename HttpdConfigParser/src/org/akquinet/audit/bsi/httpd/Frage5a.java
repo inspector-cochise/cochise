@@ -39,7 +39,7 @@ public class Frage5a extends YesNoQuestion
 		}
 		else
 		{
-			_console.printAnswer(OutputLevel.Q2, true, "");
+			_console.printAnswer(OutputLevel.Q2, true, "No Include-directives found.");
 			return true;
 		}
 	}
