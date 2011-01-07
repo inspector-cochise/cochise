@@ -39,6 +39,7 @@ public class FormattedConsole
 			buf = (new StringBuffer("  \t\t")).append(buf);
 			break;
 		}
+		System.out.println(buf);
 	}
 	
 	public void printAnswer(OutputLevel level, boolean answer, String comment)
@@ -63,5 +64,6 @@ public class FormattedConsole
 			buf = buf.append("\t\t").append(comment);
 			break;
 		}
+		System.out.println(buf);
 	}
 }
