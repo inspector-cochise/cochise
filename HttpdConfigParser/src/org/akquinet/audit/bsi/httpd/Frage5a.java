@@ -11,13 +11,12 @@ import org.akquinet.httpd.syntax.Directive;
 public class Frage5a extends YesNoQuestion
 {
 	private ConfigFile _conf;
-	private FormattedConsole _console;
+	private static final FormattedConsole _console = FormattedConsole.getDefault();
 	private final FormattedConsole.OutputLevel _level = FormattedConsole.OutputLevel.Q2;
 	
-	public Frage5a(ConfigFile conf, FormattedConsole console)
+	public Frage5a(ConfigFile conf)
 	{
 		_conf = conf;
-		_console = console;
 	}
 
 	/**

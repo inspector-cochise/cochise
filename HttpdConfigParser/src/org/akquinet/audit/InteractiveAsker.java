@@ -6,12 +6,11 @@ import org.akquinet.audit.FormattedConsole.OutputLevel;
 public class InteractiveAsker
 {
 	private List<YesNoQuestion> _questions;
-	private FormattedConsole _console;
+	private static final FormattedConsole _console = FormattedConsole.getDefault();
 	
-	public InteractiveAsker(List<YesNoQuestion> questions, FormattedConsole console)
+	public InteractiveAsker(List<YesNoQuestion> questions)
 	{
 		_questions = questions;
-		_console = console;
 	}
 	
 	public boolean askQuestions()
