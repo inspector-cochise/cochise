@@ -1,0 +1,35 @@
+
+preprocessing: remove any '\\\n' or '\\\r\n'
+
+grammar:
+
+
+Head            --> Expression
+
+Expression      --> (Blank|Newline)*
+                --> Directive
+                --> Context
+                --> Comment
+                --> Expression*
+
+Comment         --> Blank* '#' Value Newline
+
+Directive       --> Blank* Name Blank* Value Newline
+
+Context         --> Blank* '<' Blank* Name(1) Blank* Parameter Blank* '>' Blank* Newline
+                               MultiExpression
+                    Blank* '</' Blank* Name(1) Blank* '>' Blank* Newline
+
+Name            --> >> mustn't contain: Blank, Newline, '/', '<', '>' <<
+
+Value           --> >> mustn't contain: Newline <<
+
+Parameter       --> >> mustn't contain: Blank, Newline; mustn't end with: '>'(Blank*)Newline <<
+
+Blank           --> ' ' | '\t'
+Newline         --> '\n' | '\r\n'
+
+
+
+The parser behaves as follow at the last rule for Expression:
+	The parent of the Expression object that is actually parsing gets the parent of all following Expressions
