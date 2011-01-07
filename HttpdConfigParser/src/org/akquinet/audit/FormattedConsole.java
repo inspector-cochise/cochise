@@ -10,6 +10,21 @@ public class FormattedConsole
 		Q2			//for subquestions
 	};
 	
+	private static FormattedConsole _default = null;
+
+	private FormattedConsole()
+	{
+	}
+	
+	public static FormattedConsole getDefault()
+	{
+		if(_default == null)
+		{
+			_default = new FormattedConsole();
+		}
+		return _default;
+	}
+	
 	public void println(OutputLevel level, String str)
 	{
 		StringBuffer buf = new StringBuffer(str);
