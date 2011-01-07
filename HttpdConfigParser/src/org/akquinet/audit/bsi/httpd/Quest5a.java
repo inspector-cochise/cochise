@@ -32,7 +32,7 @@ public class Quest5a extends YesNoQuestion
 			_console.printAnswer(_level, false, "There are Include-directives in your apache configuration:");
 			for (Directive directive : incList)
 			{
-				_console.println(_level, directive.getLinenumber() + ": " + directive.getName() + " " + directive.getValue());
+				_console.println(_level, "line " + directive.getLinenumber() + ": " + directive.getName() + " " + directive.getValue());
 			}
 			return false;
 		}
