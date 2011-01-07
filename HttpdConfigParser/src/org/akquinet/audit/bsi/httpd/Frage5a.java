@@ -33,4 +33,11 @@ public class Frage5a extends YesNoQuestion
 			return true;
 		}
 	}
+
+	@Override
+	public boolean isCritical()
+	{
+		//TODO this may gets false if the parsers evaluates Include-directives
+		return true;
+	}
 }
