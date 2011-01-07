@@ -17,12 +17,6 @@ public class Context extends Statement
 		parse();
 	}
 
-	public Context getContext()
-	{
-		// a Context is always child of a Context or child of null
-		return (Context) getParent();
-	}
-
 	@Override
 	protected void parse() throws IOException, FileEndException
 	{
