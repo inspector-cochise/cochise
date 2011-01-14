@@ -1,6 +1,6 @@
 package org.akquinet.audit;
 
-public abstract class YesNoQuestion
+public interface YesNoQuestion
 {
 	/**
 	 * Answers the question.

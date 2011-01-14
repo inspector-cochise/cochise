@@ -21,7 +21,7 @@ public class InteractiveAsker
 			boolean answer = question.answer();
 			overallAnswer &= answer;
 			
-			if(question.isCritical())
+			if(!answer && question.isCritical())
 			{
 				_console.println(OutputLevel.HEADING , "You answered a question with 'no', which has effect on evaluation of future questions.");
 				_console.println(OutputLevel.HEADING , "Fix that issue and then run me again.");

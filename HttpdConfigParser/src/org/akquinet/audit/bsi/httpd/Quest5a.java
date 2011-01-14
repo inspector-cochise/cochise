@@ -8,7 +8,7 @@ import org.akquinet.audit.FormattedConsole.OutputLevel;
 import org.akquinet.httpd.ConfigFile;
 import org.akquinet.httpd.syntax.Directive;
 
-public class Quest5a extends YesNoQuestion
+public class Quest5a implements YesNoQuestion
 {
 	private ConfigFile _conf;
 	private static final FormattedConsole _console = FormattedConsole.getDefault();
@@ -46,7 +46,7 @@ public class Quest5a extends YesNoQuestion
 	@Override
 	public boolean isCritical()
 	{
-		//TODO this may gets false if the parsers evaluates Include-directives
-		return true;
+		//Quest5 is critical, this is a subquestion so this is handled by Quest5
+		return false;
 	}
 }

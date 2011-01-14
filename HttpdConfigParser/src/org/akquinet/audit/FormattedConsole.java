@@ -42,26 +42,34 @@ public class FormattedConsole
 		System.out.println(buf);
 	}
 	
-	public void printAnswer(OutputLevel level, boolean answer, String comment)
+	public void printAnswer(OutputLevel level, Boolean answer, String comment)
 	{
 		StringBuffer buf = new StringBuffer();
-		if(answer)
+		String str_answer = "--";
+		if(answer == null)
 		{
-			buf.append("yy");
+			str_answer = "--";
+		}
+		else if(answer)
+		{
+			str_answer = "yy";
 		}
 		else
 		{
-			buf.append("NN");
+			str_answer = "NN";
 		}
+		
 		switch(level)
 		{
 		case HEADING:
+			buf.append(comment);
 			break;
 		case Q1:
-			buf = buf.append("\t").append(comment);
+			buf = buf.append(str_answer).append("\t").append(comment);
 			break;
 		case Q2:
-			buf = buf.append("\t\t").append(comment);
+			str_answer = "|" + str_answer.substring(1);
+			buf = buf.append(str_answer).append("\t\t").append(comment);
 			break;
 		}
 		System.out.println(buf);
