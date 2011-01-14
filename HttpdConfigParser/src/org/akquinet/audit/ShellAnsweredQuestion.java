@@ -8,8 +8,9 @@ import java.io.OutputStream;
 public class ShellAnsweredQuestion
 {
 	private ProcessBuilder _command;
-	private OutputStream _out;
-	private InputStream _in;
+	private OutputStream _stdIn;
+	private InputStream _stdOut;
+	private InputStream _stdErr;
 
 	public ShellAnsweredQuestion(String command)
 	{
@@ -22,8 +23,9 @@ public class ShellAnsweredQuestion
 		try
 		{
 			Process p = _command.start();
-			_out = p.getOutputStream();
-			_in = p.getInputStream();
+			_stdIn = p.getOutputStream();
+			_stdOut = p.getInputStream();
+			_stdErr = p.getErrorStream();
 			p.waitFor();
 			retVal = p.exitValue();
 		}
@@ -38,13 +40,18 @@ public class ShellAnsweredQuestion
 		return retVal == 0;
 	}
 	
-	public OutputStream getOutputStream()
+	public OutputStream getStdIn()
 	{
-		return _out;
+		return _stdIn;
 	}
 	
-	public InputStream getInputStream()
+	public InputStream getStdOut()
 	{
-		return _in;
+		return _stdOut;
+	}
+	
+	public InputStream getStdErr()
+	{
+		return _stdErr;
 	}
 }
