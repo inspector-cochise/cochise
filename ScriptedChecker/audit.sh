@@ -33,13 +33,6 @@ frage2()
 	echo -e "       \t\tIs your apache well patched (0/1)?"
 }
 
-frage5a()
-{
-}
-
-frage5b()
-{
-}
 
 frage5()
 {
@@ -61,7 +54,8 @@ frage5()
 
 frage6()
 {
-	if apache2ctl configtest >& /dev/null
+	apache2 -t >& /dev/null
+	if [ $? != 0 ]
 	then
 		echo -e "NOTOK\t\tsyntax problems detected"
 		problems=`expr $problems + 1`
@@ -70,7 +64,7 @@ frage6()
 		read tmpVar
 		if [ $tmpVar = 1 ]
 		then
-			apache2ctl configtest
+			apache2 -t
 			echo -e ""
 		fi
 		echo -e "Due to these syntax problems the following test are not reliable anymore."
