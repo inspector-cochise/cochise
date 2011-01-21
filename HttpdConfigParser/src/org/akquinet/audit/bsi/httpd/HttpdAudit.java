@@ -27,8 +27,8 @@ public class HttpdAudit
 			switch(args.length)
 			{
 			case 2:
-				conf = new ConfigFile(new File(args[1]));
-				apacheExecutable = new File(args[2]);
+				conf = new ConfigFile(new File(args[0]));
+				apacheExecutable = new File(args[1]);
 				break;
 			default:
 				System.err.println("parameters: apacheConfigFile apacheExecutable");
