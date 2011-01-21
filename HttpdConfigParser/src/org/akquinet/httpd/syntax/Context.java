@@ -49,7 +49,7 @@ public class Context extends Statement
 		String tmp = (new Name(this)).getStringContent();
 		if (!_name.equals(tmp))
 		{
-			throw new RuntimeException("Syntax Error. Expecting closing block for " + _name + " .");
+			throw new RuntimeException("Syntax Error. Expecting closing block for " + _name + " in line " + getActualLine() + ".");
 		}
 		eatBlanks();
 		eatRightDelimiter();
@@ -67,12 +67,12 @@ public class Context extends Statement
 	{
 		if (getActualChar() != '<')
 		{
-			throw new RuntimeException("Syntax Error. Expecting closing block for " + _name + " .");
+			throw new RuntimeException("Syntax Error. Expecting closing block for " + _name + " in line " + getActualLine() + ".");
 		}
 		readNextChar();
 		if (getActualChar() != '/')
 		{
-			throw new RuntimeException("Syntax Error. Expecting closing block for " + _name + " .");
+			throw new RuntimeException("Syntax Error. Expecting closing block for " + _name + " in line " + getActualLine() + ".");
 		}
 		readNextChar();
 	}
@@ -81,7 +81,7 @@ public class Context extends Statement
 	{
 		if (getActualChar() != '>')
 		{
-			throw new RuntimeException("Syntax Error. Missing '>' .");
+			throw new RuntimeException("Syntax Error. Missing '>' in line " + getActualLine() + ".");
 		}
 		readNextChar();
 	}

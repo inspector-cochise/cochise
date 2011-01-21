@@ -1,9 +1,10 @@
 package org.akquinet.httpd.syntax;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
+
+import org.akquinet.httpd.MultipleMarkerInputStream;
 
 public class StatmentList extends SyntaxElement
 {
@@ -16,7 +17,7 @@ public class StatmentList extends SyntaxElement
 		parse();
 	}
 
-	public StatmentList(SyntaxElement parent, InputStream text) throws IOException
+	public StatmentList(SyntaxElement parent, MultipleMarkerInputStream text) throws IOException
 	{
 		super(parent, text);
 		_statements = new LinkedList<Statement>();

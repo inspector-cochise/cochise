@@ -1,14 +1,15 @@
 package org.akquinet.httpd.syntax;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.util.List;
+
+import org.akquinet.httpd.MultipleMarkerInputStream;
 
 public class Head extends SyntaxElement
 {
 	private StatmentList _statements;
 	
-	public Head(SyntaxElement parent, BufferedInputStream text) throws IOException
+	public Head(SyntaxElement parent, MultipleMarkerInputStream text) throws IOException
 	{
 		super(parent, text);
 		parse();

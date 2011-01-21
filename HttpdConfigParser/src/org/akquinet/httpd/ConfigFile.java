@@ -1,6 +1,5 @@
 package org.akquinet.httpd;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -16,7 +15,7 @@ public class ConfigFile
 	public ConfigFile(File file) throws IOException
 	{
 		FileInputStream input = new FileInputStream(file);
-		_head = new Head(null, new BufferedInputStream(input));
+		_head = new Head(null, new MultipleMarkerInputStream(input));
 	}
 	
 	public List<Directive> getDirective(String name)

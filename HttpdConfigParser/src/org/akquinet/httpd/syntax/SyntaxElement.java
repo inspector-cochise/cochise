@@ -1,16 +1,18 @@
 package org.akquinet.httpd.syntax;
 
 import java.io.IOException;
-import java.io.InputStream;
+
+import org.akquinet.httpd.MultipleMarkerInputStream;
 
 abstract public class SyntaxElement
 {
 	protected static final String UNEXPECTED_EOF_ERROR_STRING = "Unexpected end of file. Please check Syntax.";
 	private SyntaxElement _parent;
-	private InputStream _text;
+	private MultipleMarkerInputStream _text;
 	private char _actualChar;
 	private char _markedChar;
 	private int _actualLine;
+	private int _markedLine;
 
 	/**
 	 * Default Constructor
@@ -32,7 +34,7 @@ abstract public class SyntaxElement
 	 *            the text which should be parsed, only necessary for the root
 	 *            element
 	 */
-	public SyntaxElement(SyntaxElement parent, InputStream text) throws IOException
+	public SyntaxElement(SyntaxElement parent, MultipleMarkerInputStream text) throws IOException
 	{
 		_parent = parent;
 		_text = text;
@@ -193,6 +195,7 @@ abstract public class SyntaxElement
 		{
 			_text.mark(arg0);
 			_markedChar = getActualChar();
+			_markedLine = getActualLine();
 		}
 	}
 
@@ -206,6 +209,7 @@ abstract public class SyntaxElement
 		{
 			_text.reset();
 			_actualChar = _markedChar;
+			_actualLine = _markedLine;
 		}
 	}
 	
