@@ -1,10 +1,10 @@
+#!/bin/bash
 
-
-if awk 'BEGIN { if($2 != "L") exit 1 }' -- `passwd -S root`
+if passwd -S root | awk -f q1.awk
 then
-	echo -e "NOTOK\t\tuser root is not deactivated"
-	exit 1
-else
 	echo -e "OK   \t\tuser root correctly deactivated"
-	exit 0 
+	exit 0
+else
+ 	echo -e "NOTOK\t\ti am not being run with root rights or root is not deactivated (passwd -l root)"
+	exit 1
 fi
