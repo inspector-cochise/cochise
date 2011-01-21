@@ -12,6 +12,7 @@ import org.akquinet.httpd.syntax.Statement;
 
 public class Quest11b implements YesNoQuestion
 {
+	private static final String _id = "Quest11b";
 	private ConfigFile _conf;
 	private static final FormattedConsole _console = FormattedConsole.getDefault();
 	private static final FormattedConsole.OutputLevel _level = FormattedConsole.OutputLevel.Q2;
@@ -134,5 +135,11 @@ public class Quest11b implements YesNoQuestion
 	public boolean isCritical()
 	{
 		return false;
+	}
+
+	@Override
+	public String getID()
+	{
+		return _id;
 	}
 }

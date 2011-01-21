@@ -6,6 +6,7 @@ import org.akquinet.audit.YesNoQuestion;
 
 public class Quest1 implements YesNoQuestion
 {
+	private static final String _id = "Quest1";
 	private boolean _highSecReq;
 	private static final FormattedConsole _console = FormattedConsole.getDefault();
 	private static final FormattedConsole.OutputLevel _level = FormattedConsole.OutputLevel.Q1;
@@ -40,6 +41,12 @@ public class Quest1 implements YesNoQuestion
 	public boolean isCritical()
 	{
 		return false;
+	}
+
+	@Override
+	public String getID()
+	{
+		return _id;
 	}
 
 }

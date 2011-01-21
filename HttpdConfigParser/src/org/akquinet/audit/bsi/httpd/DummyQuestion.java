@@ -5,6 +5,7 @@ import org.akquinet.audit.YesNoQuestion;
 
 public class DummyQuestion implements YesNoQuestion
 {
+	private static final String _id = "";	//DymmyQuestion has no ID
 	private String _message;
 	private FormattedConsole.OutputLevel _level;
 	private static final FormattedConsole _console = FormattedConsole.getDefault();
@@ -31,6 +32,12 @@ public class DummyQuestion implements YesNoQuestion
 	public boolean isCritical()
 	{
 		return false;
+	}
+
+	@Override
+	public String getID()
+	{
+		return _id;
 	}
 
 }

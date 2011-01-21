@@ -10,6 +10,7 @@ import org.akquinet.httpd.syntax.Directive;
 
 public class Quest5a implements YesNoQuestion
 {
+	private static final String _id = "Quest5a";
 	private ConfigFile _conf;
 	private static final FormattedConsole _console = FormattedConsole.getDefault();
 	private static final FormattedConsole.OutputLevel _level = FormattedConsole.OutputLevel.Q2;
@@ -48,5 +49,11 @@ public class Quest5a implements YesNoQuestion
 	{
 		//Quest5 is critical, this is a subquestion so this is handled by Quest5
 		return false;
+	}
+
+	@Override
+	public String getID()
+	{
+		return _id;
 	}
 }

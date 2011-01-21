@@ -6,7 +6,7 @@ import org.akquinet.httpd.ConfigFile;
 
 public class Quest5 implements YesNoQuestion
 {
-
+	private static final String _id = "Quest5";
 	private ConfigFile _conf;
 	private static final FormattedConsole _console = FormattedConsole.getDefault();
 	private static final FormattedConsole.OutputLevel _level = FormattedConsole.OutputLevel.Q1;
@@ -42,5 +42,11 @@ public class Quest5 implements YesNoQuestion
 	{
 		//TODO this may gets false if the parsers evaluates Include-directives
 		return true;
+	}
+
+	@Override
+	public String getID()
+	{
+		return _id;
 	}
 }

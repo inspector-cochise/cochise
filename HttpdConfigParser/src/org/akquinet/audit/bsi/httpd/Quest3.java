@@ -12,6 +12,7 @@ import org.akquinet.httpd.syntax.Directive;
 
 public class Quest3 implements YesNoQuestion
 {
+	private static final String _id = "Quest3";
 	private ConfigFile _conf;
 	private ProcessBuilder _httpd;
 	private static final FormattedConsole _console = FormattedConsole.getDefault();
@@ -98,5 +99,11 @@ public class Quest3 implements YesNoQuestion
 	public boolean isCritical()
 	{
 		return false;
+	}
+
+	@Override
+	public String getID()
+	{
+		return _id;
 	}
 }
