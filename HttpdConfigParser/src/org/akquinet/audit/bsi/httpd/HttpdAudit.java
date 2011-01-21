@@ -21,9 +21,26 @@ public class HttpdAudit
 		//for now this is just for debugging
 		try
 		{
-			ConfigFile conf = new ConfigFile(new File("D:/Immanuel/workspace/ApacheBSIAuditHelper/testFiles/example.conf"));
+			ConfigFile conf = null;
+			File apacheExecutable = null;
+			boolean highSec = true;	//TODO initialize me in some way
+			switch(args.length)
+			{
+			case 2:
+				conf = new ConfigFile(new File(args[1]));
+				apacheExecutable = new File(args[2]);
+				break;
+			default:
+				System.err.println("parameters: apacheConfigFile apacheExecutable");
+				return;
+			}
+			
 			List<YesNoQuestion> tmpList = new LinkedList<YesNoQuestion>();
 
+			tmpList.add(new Quest1(highSec));
+			tmpList.add(new Quest3(conf, apacheExecutable));
+			tmpList.add(new Quest5(conf));
+			tmpList.add(new Quest6(apacheExecutable));
 			tmpList.add(new Quest11b(conf));
 			
 			InteractiveAsker asker = new InteractiveAsker(tmpList);
