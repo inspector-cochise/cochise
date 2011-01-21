@@ -1,6 +1,7 @@
 package org.akquinet.audit;
 
 import java.util.List;
+
 import org.akquinet.audit.FormattedConsole.OutputLevel;
 
 public class InteractiveAsker
