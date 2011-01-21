@@ -28,7 +28,7 @@ public class Quest11b implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		//TODO check whether all cases are handled (correctly)
+		// TODO check whether all cases are handled (correctly)
 		List<Statement> statList = _conf.getHeadExpression().getStatements()._statements;
 		List<Context> dirList = createDirectoryRoot_List(statList);
 
@@ -72,7 +72,7 @@ public class Quest11b implements YesNoQuestion
 			else
 			{
 				_console.printAnswer(_level, false, "I found multiple and/or incorrectly sorted \"Order\" and \"Deny\" directives betwenn lines "
-						+ "-" + dir.getEndLineNumber() + ". Please make them unique, sort them and run me again.");
+						+ dir.getBeginLineNumber() + " and " + dir.getEndLineNumber() + ". Please make them unique, sort them and run me again.");
 				return false;
 			}
 		}
