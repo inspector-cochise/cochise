@@ -64,10 +64,12 @@ public class Quest6 implements YesNoQuestion
 		catch (IOException e)
 		{
 			e.printStackTrace();
+			_console.printAnswer(_level, false, "Problem while answering question. Caught an IOException (see stderr).");
 		}
 		catch (InterruptedException e)
 		{
 			e.printStackTrace();
+			_console.printAnswer(_level, false, "Problem while answering question. Caught an InterruptedException (see stderr).");
 		}
 		return false;
 	}
