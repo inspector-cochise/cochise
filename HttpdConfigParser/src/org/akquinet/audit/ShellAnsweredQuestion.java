@@ -12,9 +12,9 @@ public class ShellAnsweredQuestion
 	private InputStream _stdOut;
 	private InputStream _stdErr;
 
-	public ShellAnsweredQuestion(String command)
+	public ShellAnsweredQuestion(String... commands)
 	{
-		_command = new ProcessBuilder(command);
+		_command = new ProcessBuilder(commands);
 	}
 
 	public boolean answer()
