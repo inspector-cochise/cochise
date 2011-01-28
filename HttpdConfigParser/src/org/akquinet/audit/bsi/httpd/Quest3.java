@@ -23,7 +23,7 @@ public class Quest3 implements YesNoQuestion
 		_conf = conf;
 		try
 		{
-			_httpd = new ProcessBuilder(apacheExecutable.getCanonicalPath(), "-t");
+			_httpd = new ProcessBuilder(apacheExecutable.getCanonicalPath(), "-l");
 		}
 		catch (IOException e)
 		{
