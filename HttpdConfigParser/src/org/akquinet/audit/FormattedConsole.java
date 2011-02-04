@@ -114,7 +114,7 @@ public class FormattedConsole
 			{
 				ret = true;
 			}
-			else if (answer.equalsIgnoreCase("no"))
+			else if (answer.equalsIgnoreCase("no") || answer.equalsIgnoreCase(""))
 			{
 				ret = false;
 			}
