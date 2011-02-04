@@ -1,7 +1,9 @@
 package org.akquinet.audit.bsi.httpd;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.akquinet.audit.FormattedConsole;
 import org.akquinet.audit.YesNoQuestion;
@@ -74,5 +76,38 @@ public class Quest7 implements YesNoQuestion
 	public String getID()
 	{
 		return _id;
+	}
+	
+	private void warnForPlugin(String optionsValue)
+	{
+		String[] pluginArr = optionsValue.split("[ \t]");
+		for(int i = 0; i < pluginArr.length; ++i)
+		{
+			if(pluginArr[i].startsWith("+"))
+			{
+				pluginArr[i].replaceFirst("+", "");
+			}
+			
+			if(pluginArr[i].startsWith("-"))
+			{
+				pluginArr[i] = "";
+			}
+		}
+		
+		Map<String,String> warnDB = new HashMap<String, String>(); //format regex -> warn-message
+		//TODO maybe do a lookup in some database or file for this -> in future it may grows!
+		warnDB.put("[Ii]ndexes", "Use this one with care! You probably show information by accident that should not be shown.");
+		warnDB.put("[Ii]ncludes", "This one is a security risk. Please disable. (Will be topic of a later question)");
+		
+		for (String plugin : pluginArr)
+		{
+			for (String regex : warnDB.keySet())
+			{
+				if(plugin.matches(regex))
+				{
+					_console.println(_level, optionsValue + "\t " + warnDB.get(regex));
+				}
+			}
+		}
 	}
 }
