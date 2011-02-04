@@ -29,35 +29,39 @@ public class Quest5b implements YesNoQuestion
 	{
 		List<Directive> dirList = _conf.getDirective("AllowOverride");
 		List<Directive> problems = new LinkedList<Directive>();
-		boolean isSetGlobal = false;	//will be changed if at least one directive in global context is found
+		boolean isSetGlobalRoot = false;	//will be changed if at least one directive in global context is found
 		
 		for (Directive directive : dirList)
 		{
-			if(!directive.getValue().matches("( |\t)*None( |\t)*"))
+			if(!directive.getValue().matches("[ \t]*None[ \t]*"))
 			{
 				problems.add(directive);
 			}
-			else if(directive.getSurroundingContexts().get(0) == null)
+			else if(directive.getSurroundingContexts().size() == 2) //that means one real context and one context being null (i.e. global context)
 			{
-				isSetGlobal = true;
+				if(directive.getSurroundingContexts().get(0).getName().equalsIgnoreCase("directory") && 
+						directive.getSurroundingContexts().get(0).getValue().matches("[ \t]*/[ \t]*"))
+				{
+					isSetGlobalRoot = true;
+				}
 			}
 		}
-		String global = isSetGlobal ?
-						"Directive \"AllowOverride None\" is correctly stated in global context." :
-						"You haven't stated the directive \"AllowOverride None\" in global context.";
+		String global = isSetGlobalRoot ?
+						"Directive \"AllowOverride None\" is correctly stated in context for root directory being in global context." :
+						"You haven't stated the directive \"AllowOverride None\" in a directory context for the root directory which is itself placed in global context.";
 		String overrides = problems.isEmpty() ?
 						"Directive \"AllowOverride\" correctly doesn't appear with a parameter other than \"None\"" :
 						"You have stated the directive \"AllowOverrid\" with parameters other than \"None\". Remove these:";
-		_console.printAnswer(_level, isSetGlobal & problems.isEmpty(), global + " " + overrides);
+		_console.printAnswer(_level, isSetGlobalRoot & problems.isEmpty(), global + " " + overrides);
 		for (Directive directive : problems)
 		{
 			_console.println(_level, "line " + directive.getLinenumber() + ": " + directive.getName() + " " + directive.getValue());
 		}
 
 		
-		return isSetGlobal && problems.isEmpty();
+		return isSetGlobalRoot && problems.isEmpty();
 	}
-
+	
 	@Override
 	public boolean isCritical()
 	{
