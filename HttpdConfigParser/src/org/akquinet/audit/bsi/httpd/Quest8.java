@@ -22,6 +22,7 @@ public class Quest8 implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
+		_console.println(FormattedConsole.OutputLevel.HEADING, "----" + _id + "----");
 		ShellAnsweredQuestion quest = new ShellAnsweredQuestion(_command, _apacheExecutable.getParent(), _apacheExecutable.getName());
 		boolean ret = quest.answer();
 		

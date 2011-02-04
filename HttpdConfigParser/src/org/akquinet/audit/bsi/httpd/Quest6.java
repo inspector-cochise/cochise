@@ -34,6 +34,7 @@ public class Quest6 implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
+		_console.println(FormattedConsole.OutputLevel.HEADING, "----" + _id + "----");
 		//TODO: test!
 		try
 		{
@@ -53,7 +54,7 @@ public class Quest6 implements YesNoQuestion
 				int b = _stdErr.read();
 				while(b != -1)
 				{
-					buf.append(b);
+					buf.append((char)b);
 					b = _stdErr.read();
 				}
 				_console.println(_level, buf.toString());

@@ -28,9 +28,11 @@ public class Quest5 implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
+		_console.println(FormattedConsole.OutputLevel.HEADING, "vvvv" + _id + "vvvv");
 		_console.printAnswer(_level, null, "Evaluating whether your main configuration file is your only possible configuration file...");
 		boolean ret = _q5a.answer() && _q5b.answer();
 		
+		_console.println(FormattedConsole.OutputLevel.HEADING, "^^^^" + _id + "^^^^");
 		_console.printAnswer(_level, ret, ret ?
 					"Your main configuration file is your only possible configuration file."
 					: "Your main configuration file is not your only possible configuration file.");

@@ -27,6 +27,7 @@ public class Quest5b implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
+		_console.println(FormattedConsole.OutputLevel.HEADING, "----" + _id + "----");
 		List<Directive> dirList = _conf.getDirective("AllowOverride");
 		List<Directive> problems = new LinkedList<Directive>();
 		boolean isSetGlobalRoot = false;	//will be changed if at least one directive in global context is found

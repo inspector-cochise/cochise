@@ -34,6 +34,7 @@ public class FormattedConsole
 		switch (level)
 		{
 		case HEADING:
+			buf = (new StringBuffer("  ")).append(buf);
 			break;
 		case Q1:
 			buf = (new StringBuffer("  \t")).append(buf);
@@ -65,14 +66,14 @@ public class FormattedConsole
 		switch (level)
 		{
 		case HEADING:
-			buf.append(comment);
+			buf.append("  ").append(comment);
 			break;
 		case Q1:
-			buf = buf.append(str_answer).append("\t").append(comment);
+			buf = buf.append(str_answer).append("  \t").append(comment);
 			break;
 		case Q2:
 			str_answer = "|" + str_answer.substring(1);
-			buf = buf.append(str_answer).append("\t\t").append(comment);
+			buf = buf.append(str_answer).append("  \t\t").append(comment);
 			break;
 		}
 		System.out.println(buf);
@@ -87,10 +88,10 @@ public class FormattedConsole
 			buf.append(question);
 			break;
 		case Q1:
-			buf = buf.append("\t").append(question).append(" (Yes/No) [No]: ");
+			buf = buf.append("  \t").append(question).append(" (Yes/No) [No]: ");
 			break;
 		case Q2:
-			buf = buf.append("\t\t").append(question).append(" (Yes/No) [No]: ");
+			buf = buf.append("  \t\t").append(question).append(" (Yes/No) [No]: ");
 			break;
 		}
 

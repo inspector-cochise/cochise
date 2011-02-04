@@ -25,6 +25,7 @@ public class Quest7 implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
+		_console.println(FormattedConsole.OutputLevel.HEADING, "----" + _id + "----");
 		_console.println(_level, "All options should be explicitly deactivated and only necessary options should be activated.");
 		_console.println(_level, "Scanning for \"Options None\" in global context");
 		

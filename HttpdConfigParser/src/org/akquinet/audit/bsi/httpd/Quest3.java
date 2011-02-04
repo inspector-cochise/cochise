@@ -23,6 +23,7 @@ public class Quest3 extends ModuleHelper implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
+		_console.println(FormattedConsole.OutputLevel.HEADING, "----" + _id + "----");
 		//TODO: test
 		List<Directive> loadList = getLoadModuleList();
 		for (Directive directive : loadList)

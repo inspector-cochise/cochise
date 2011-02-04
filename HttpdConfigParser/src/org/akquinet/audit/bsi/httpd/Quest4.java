@@ -28,6 +28,7 @@ public class Quest4 extends ModuleHelper implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
+		_console.println(FormattedConsole.OutputLevel.HEADING, "----" + _id + "----");
 		_console.println(_level, "It is necessary, that only modules you really need are being loaded.");
 		_console.println(_level, "Cause I don't know what modules you need and this is usally a longer list, I will give you a list in " + _listFileName + " .");
 		

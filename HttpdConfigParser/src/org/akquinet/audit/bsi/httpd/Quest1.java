@@ -1,5 +1,7 @@
 package org.akquinet.audit.bsi.httpd;
 
+import java.text.Normalizer.Form;
+
 import org.akquinet.audit.FormattedConsole;
 import org.akquinet.audit.ShellAnsweredQuestion;
 import org.akquinet.audit.YesNoQuestion;
@@ -20,6 +22,7 @@ public class Quest1 implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
+		_console.println(FormattedConsole.OutputLevel.HEADING, "----" + _id + "----");
 		if(_highSecReq)
 		{
 			ShellAnsweredQuestion quest = new ShellAnsweredQuestion(_command);
