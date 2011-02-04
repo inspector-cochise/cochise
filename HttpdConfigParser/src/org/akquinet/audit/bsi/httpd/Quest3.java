@@ -1,44 +1,30 @@
 package org.akquinet.audit.bsi.httpd;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 import org.akquinet.audit.FormattedConsole;
+import org.akquinet.audit.ModuleHelper;
 import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.httpd.ConfigFile;
 import org.akquinet.httpd.syntax.Directive;
 
-public class Quest3 implements YesNoQuestion
+public class Quest3 extends ModuleHelper implements YesNoQuestion
 {
 	private static final String _id = "Quest3";
-	private ConfigFile _conf;
-	private ProcessBuilder _httpd;
 	private static final FormattedConsole _console = FormattedConsole.getDefault();
 	private static final FormattedConsole.OutputLevel _level = FormattedConsole.OutputLevel.Q1;
 	
 	public Quest3(ConfigFile conf, File apacheExecutable)
 	{
-		_conf = conf;
-		try
-		{
-			_httpd = new ProcessBuilder(apacheExecutable.getCanonicalPath(), "-l");
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
+		super(conf, apacheExecutable);
 	}
 
-	/**
-	 * checks whether there are any Include-directives in the config file
-	 */
 	@Override
 	public boolean answer()
 	{
 		//TODO: test
-		List<Directive> loadList = _conf.getDirectiveIgnoreCase("LoadModule");
+		List<Directive> loadList = getLoadModuleList();
 		for (Directive directive : loadList)
 		{
 			String[] arguments = directive.getValue().trim().split("( |\t)*");
@@ -58,37 +44,14 @@ public class Quest3 implements YesNoQuestion
 		}
 		
 		//maybe ModSecurity is compiled into the apache binary, check for that:
-		try
+		String[] modList = getCompiledIntoModulesList();
+		for (String str : modList)
 		{
-			Process p = _httpd.start();
-			InputStream stdErr = p.getErrorStream();
-			p.waitFor();
-			
-			StringBuffer buf = new StringBuffer();
-			int b = stdErr.read();
-			while(b != -1)
+			if(str.matches("( |\t)*mod_security.c"))
 			{
-				buf.append(b);
-				b = stdErr.read();
+				_console.printAnswer(_level, true, "ModSecurity is compiled into the httpd binary.");
+				return true;
 			}
-			String output = buf.toString();
-			String[] modList = output.split("(\n|\r\n)");
-			for (String str : modList)
-			{
-				if(str.matches("( |\t)*mod_security.c"))
-				{
-					_console.printAnswer(_level, true, "ModSecurity is compiled into the httpd binary.");
-					return true;
-				}
-			}
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-		catch (InterruptedException e)
-		{
-			e.printStackTrace();
 		}
 		
 		_console.printAnswer(_level, false, "ModSecurity seems not to be loaded.");
