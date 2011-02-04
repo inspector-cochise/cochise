@@ -28,7 +28,7 @@ public class Quest3 extends ModuleHelper implements YesNoQuestion
 		List<Directive> loadList = getLoadModuleList();
 		for (Directive directive : loadList)
 		{
-			String[] arguments = directive.getValue().trim().split("( |\t)*");
+			String[] arguments = directive.getValue().trim().split("[ \t]+");
 			if(arguments == null || arguments.length < 2)
 			{
 				continue;
