@@ -32,14 +32,14 @@ public class Quest7 implements YesNoQuestion
 		
 		for (Directive directive : dirList)
 		{
-			if(!directive.getValue().matches("( |\t)*None( |\t)*"))
+			if(!directive.getValue().matches("[ \t]*[Nn]one[ \t]*"))
 			{
-				if(!directive.getValue().matches("( |\t)*-(\\S)*( |\t)*"))	//maybe an option is deactivated
+				if(!directive.getValue().matches("[ \t]*-(\\S)*[ \t]*"))	//maybe an option is deactivated
 				{
 					problems.add(directive);
 				}
 			}
-			if(directive.getSurroundingContexts().get(0) == null)
+			else if(directive.getSurroundingContexts().get(0) == null)
 			{
 				isSetGlobal = true;
 			}
