@@ -32,7 +32,7 @@ public class Quest11a implements YesNoQuestion
 		_console.printAnswer(_level, ret, ret ? 
 						"Ok this should block access to files outside of the servers root directory."
 						: "No chroot - it may be possible to access files outside of the servers root directory if not sealed otherwise.");
-		return false;
+		return ret;
 	}
 
 	@Override
