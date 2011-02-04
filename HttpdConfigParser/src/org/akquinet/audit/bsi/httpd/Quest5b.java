@@ -37,7 +37,7 @@ public class Quest5b implements YesNoQuestion
 			{
 				problems.add(directive);
 			}
-			if(directive.getSurroundingContexts().get(0) == null)
+			else if(directive.getSurroundingContexts().get(0) == null)
 			{
 				isSetGlobal = true;
 			}
