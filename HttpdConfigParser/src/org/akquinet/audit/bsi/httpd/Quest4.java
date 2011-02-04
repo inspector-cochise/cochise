@@ -57,6 +57,7 @@ public class Quest4 extends ModuleHelper implements YesNoQuestion
 			{
 				writer.write(dir.getLinenumber() + ": " + dir.getName() + " " + dir.getValue() + "\n");
 			}
+			writer.close();
 		}
 		catch (FileNotFoundException e)
 		{
