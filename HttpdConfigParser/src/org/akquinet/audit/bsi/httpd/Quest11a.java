@@ -1,14 +1,7 @@
 package org.akquinet.audit.bsi.httpd;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import org.akquinet.audit.FormattedConsole;
 import org.akquinet.audit.YesNoQuestion;
-import org.akquinet.httpd.ConfigFile;
-import org.akquinet.httpd.syntax.Context;
-import org.akquinet.httpd.syntax.Directive;
-import org.akquinet.httpd.syntax.Statement;
 
 public class Quest11a implements YesNoQuestion
 {
