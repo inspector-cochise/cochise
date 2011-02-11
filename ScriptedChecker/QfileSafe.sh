@@ -7,6 +7,8 @@ if ls -l $1 | grep -w $2 | awk -f QfileSafe.awk
 then
 	#now check the owning user is a member of the group root
 	owningUser=`ls -l $1 | grep -w $2 | awk '{print $3}'`
+	
+	#is $owningUser a member of root?
 	if cat /etc/group | grep ^root | awk 'BEGIN {FS=":"} {print $4;}' | awk 'BEGIN {RS=","} {print $0;}' | grep $owningUser >& /dev/null
 	then
 		echo -e "OK   \t\tYour main file seems to be safe."
