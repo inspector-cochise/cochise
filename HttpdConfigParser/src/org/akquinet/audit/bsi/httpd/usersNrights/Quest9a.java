@@ -9,7 +9,7 @@ public class Quest9a implements YesNoQuestion
 	private static final FormattedConsole _console = FormattedConsole.getDefault();
 	private static final FormattedConsole.OutputLevel _level = FormattedConsole.OutputLevel.Q2;
 
-	public Quest9a(String _serverRoot)
+	public Quest9a(String _serverRoot, String user)
 	{
 		// TODO Auto-generated constructor stub
 	}

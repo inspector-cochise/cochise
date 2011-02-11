@@ -22,8 +22,6 @@ public class Quest9 implements YesNoQuestion
 	{
 		_conf = conf;
 		_serverRoot = getServerRoot();
-		_q9a = new Quest9a(_serverRoot);
-		_q9b = new Quest9b(_serverRoot);
 	}
 
 	@Override
@@ -32,7 +30,16 @@ public class Quest9 implements YesNoQuestion
 		//TODO is this everything?
 		_console.println(FormattedConsole.OutputLevel.HEADING, "vvvv" + _id + "vvvv");
 
-		_console.printAnswer(_level, null, "We'll now start to examine the permissions in your ServerRoor:");
+		_console.printAnswer(_level, null, "We'll now start to examine the permissions in your ServerRoor.");
+		String user = _console.askStringQuestion(_level, "");
+		if(user.equals(""))
+		{
+			user = "root";
+		}
+		
+		_q9a = new Quest9a(_serverRoot, user);
+		_q9b = new Quest9b(_serverRoot);
+		
 		boolean ret = _q9a.answer();
 		if(hasHtdocsDir())
 		{

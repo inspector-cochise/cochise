@@ -110,7 +110,7 @@ public class FormattedConsole
 			{
 			}
 
-//			String answer = System.console().readLine(buf.toString());
+			// String answer = System.console().readLine(buf.toString());
 			if (answer.equalsIgnoreCase("yes"))
 			{
 				ret = true;
@@ -126,5 +126,35 @@ public class FormattedConsole
 		}
 
 		return ret;
+	}
+
+	public String askStringQuestion(OutputLevel level, String question)
+	{
+		StringBuffer buf = new StringBuffer();
+		switch (level)
+		{
+		case HEADING:
+			buf.append(question);
+			break;
+		case Q1:
+			buf = buf.append("  \t").append(question).append(" ");
+			break;
+		case Q2:
+			buf = buf.append("  \t\t").append(question).append(" ");
+			break;
+		}
+
+		String answer = "";
+		try
+		{
+			BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+			System.out.print(buf.toString());
+			answer = in.readLine();
+		}
+		catch (IOException e)
+		{
+		}
+
+		return answer;
 	}
 }
