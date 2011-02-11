@@ -54,20 +54,22 @@ public class Quest11b implements YesNoQuestion
 
 			List<Directive> orderList = dir.getDirectiveIgnoreCase("order");
 			List<Directive> denyList = dir.getDirectiveIgnoreCase("deny");
-			if (orderList.size() == 1 && denyList.size() == 1 && orderList.get(0).getLinenumber() > denyList.get(0).getLinenumber())
+			if (orderList.size() == 1 &&
+				denyList.size() == 1 &&
+				orderList.get(0).getLinenumber() < denyList.get(0).getLinenumber())
 			{
 				Directive order = orderList.get(0);
 				Directive deny = denyList.get(0);
 				// fast evaluation ensures, that only one of these methods can
 				// output an answer-message
-				if (orderIsNotOK(order) || denyIsNotOK(deny))
-				{
-					return false;
-				}
-				else
+				if (orderIsOK(order) || denyIsOK(deny))
 				{
 					_console.printAnswer(_level, true, "Access to \"/\" correctly blocked via mod_access.");
 					ret = true;
+				}
+				else
+				{
+					return false;
 				}
 			}
 			else
@@ -81,7 +83,7 @@ public class Quest11b implements YesNoQuestion
 		return ret;
 	}
 
-	private static boolean denyIsNotOK(Directive deny)
+	private static boolean denyIsOK(Directive deny)
 	{
 		if (deny.getValue().matches("( |\t)*from all( |\t)*"))
 		{
@@ -95,9 +97,9 @@ public class Quest11b implements YesNoQuestion
 		}
 	}
 
-	private static boolean orderIsNotOK(Directive order)
+	private static boolean orderIsOK(Directive order)
 	{
-		if (order.getValue().matches("( |\t)*from all( |\t)*"))
+		if (order.getValue().matches("( |\t)*[Dd]eny,[Aa]llow( |\t)*"))
 		{
 			return true;
 		}
