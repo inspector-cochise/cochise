@@ -41,7 +41,8 @@ public class Quest5b implements YesNoQuestion
 			else if(directive.getSurroundingContexts().size() == 2) //that means one real context and one context being null (i.e. global context)
 			{
 				if(directive.getSurroundingContexts().get(0).getName().equalsIgnoreCase("directory") && 
-						directive.getSurroundingContexts().get(0).getValue().matches("[ \t]*/[ \t]*"))
+						directive.getSurroundingContexts().get(0).getValue().matches("[ \t]*/[ \t]*") &&
+						directive.getSurroundingContexts().get(1) == null)
 				{
 					isSetGlobalRoot = true;
 				}
