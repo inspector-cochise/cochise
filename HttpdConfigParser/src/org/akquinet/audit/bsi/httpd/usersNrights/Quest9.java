@@ -30,7 +30,7 @@ public class Quest9 implements YesNoQuestion
 	public boolean answer()
 	{
 		//TODO is this everything?
-		_console.println(FormattedConsole.OutputLevel.HEADING, "----" + _id + "----");
+		_console.println(FormattedConsole.OutputLevel.HEADING, "vvvv" + _id + "vvvv");
 
 		_console.printAnswer(_level, null, "We'll now start to examine the permissions in your ServerRoor:");
 		boolean ret = _q9a.answer();
@@ -38,7 +38,7 @@ public class Quest9 implements YesNoQuestion
 		{
 			ret &= _q9b.answer();
 		}
-		
+		_console.println(FormattedConsole.OutputLevel.HEADING, "^^^^" + _id + "^^^^");
 		_console.printAnswer(_level, ret, ret ? "Your ServerRoot seems safe." : "Seems like your ServerRoot is unsafe in the way mentioned above.");
 		
 		return ret;
