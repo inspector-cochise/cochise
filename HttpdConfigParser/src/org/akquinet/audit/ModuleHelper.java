@@ -13,9 +13,15 @@ public class ModuleHelper
 	private ConfigFile _conf;
 	private ProcessBuilder _httpd;
 	
+	public ModuleHelper(ConfigFile conf)
+	{
+		this(conf, null);
+	}
+	
 	public ModuleHelper(ConfigFile conf, File apacheExecutable)
 	{
 		_conf = conf;
+		
 		try
 		{
 			_httpd = new ProcessBuilder(apacheExecutable.getCanonicalPath(), "-l");
