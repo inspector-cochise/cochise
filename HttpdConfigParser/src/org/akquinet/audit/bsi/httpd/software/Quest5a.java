@@ -1,4 +1,4 @@
-package org.akquinet.audit.bsi.httpd;
+package org.akquinet.audit.bsi.httpd.software;
 
 import java.util.List;
 

@@ -1,6 +1,4 @@
-package org.akquinet.audit.bsi.httpd;
-
-import java.text.Normalizer.Form;
+package org.akquinet.audit.bsi.httpd.os;
 
 import org.akquinet.audit.FormattedConsole;
 import org.akquinet.audit.ShellAnsweredQuestion;

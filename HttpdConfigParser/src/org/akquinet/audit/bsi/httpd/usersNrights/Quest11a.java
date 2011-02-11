@@ -1,4 +1,4 @@
-package org.akquinet.audit.bsi.httpd;
+package org.akquinet.audit.bsi.httpd.usersNrights;
 
 import org.akquinet.audit.FormattedConsole;
 import org.akquinet.audit.YesNoQuestion;

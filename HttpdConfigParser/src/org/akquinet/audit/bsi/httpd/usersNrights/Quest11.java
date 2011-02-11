@@ -1,24 +1,24 @@
-package org.akquinet.audit.bsi.httpd;
+package org.akquinet.audit.bsi.httpd.usersNrights;
 
 import org.akquinet.audit.FormattedConsole;
 import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.httpd.ConfigFile;
 
-public class Quest5 implements YesNoQuestion
+public class Quest11 implements YesNoQuestion
 {
-	private static final String _id = "Quest5";
+	private static final String _id = "Quest11";
 	private ConfigFile _conf;
 	private static final FormattedConsole _console = FormattedConsole.getDefault();
 	private static final FormattedConsole.OutputLevel _level = FormattedConsole.OutputLevel.Q1;
 	
-	private Quest5a _q5a;
-	private Quest5b _q5b;
+	private Quest11a _q11a;
+	private Quest11b _q11b;
 	
-	public Quest5(ConfigFile conf)
+	public Quest11(ConfigFile conf)
 	{
 		_conf = conf;
-		_q5a = new Quest5a(_conf);
-		_q5b = new Quest5b(_conf);
+		_q11a = new Quest11a();
+		_q11b = new Quest11b(_conf);
 	}
 
 	/**
@@ -29,21 +29,25 @@ public class Quest5 implements YesNoQuestion
 	public boolean answer()
 	{
 		_console.println(FormattedConsole.OutputLevel.HEADING, "vvvv" + _id + "vvvv");
-		_console.printAnswer(_level, null, "Evaluating whether your main configuration file is your only possible configuration file...");
-		boolean ret = _q5a.answer() && _q5b.answer();
+		_console.printAnswer(_level, null, "Evaluating whether it may be possible to access files outside of the servers root directory.");
+		boolean ret = _q11b.answer();
+		if(!ret)
+		{
+			_console.println(_level, "There is also another way to block access to files outside of the servers root directory:");
+			 ret = _q11a.answer();
+		}
 		
 		_console.println(FormattedConsole.OutputLevel.HEADING, "^^^^" + _id + "^^^^");
 		_console.printAnswer(_level, ret, ret ?
-					"Your main configuration file is your only possible configuration file."
-					: "Your main configuration file is not your only possible configuration file.");
+					"Access to files outside of the servers root directory is correctly blocked."
+					: "In some way it may be possible to access files outside of the servers root directory.");
 		return ret;
 	}
 
 	@Override
 	public boolean isCritical()
 	{
-		//TODO this may gets false if the parsers evaluates Include-directives
-		return true;
+		return false;
 	}
 
 	@Override

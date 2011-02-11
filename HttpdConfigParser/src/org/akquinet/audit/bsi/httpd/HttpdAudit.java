@@ -7,6 +7,15 @@ import java.util.List;
 
 import org.akquinet.audit.InteractiveAsker;
 import org.akquinet.audit.YesNoQuestion;
+import org.akquinet.audit.bsi.httpd.os.Quest1;
+import org.akquinet.audit.bsi.httpd.software.Quest2;
+import org.akquinet.audit.bsi.httpd.software.Quest3;
+import org.akquinet.audit.bsi.httpd.software.Quest4;
+import org.akquinet.audit.bsi.httpd.software.Quest5;
+import org.akquinet.audit.bsi.httpd.software.Quest6;
+import org.akquinet.audit.bsi.httpd.software.Quest7;
+import org.akquinet.audit.bsi.httpd.usersNrights.Quest11;
+import org.akquinet.audit.bsi.httpd.usersNrights.Quest8;
 import org.akquinet.httpd.ConfigFile;
 
 public class HttpdAudit
@@ -38,10 +47,14 @@ public class HttpdAudit
 			List<YesNoQuestion> tmpList = new LinkedList<YesNoQuestion>();
 
 			tmpList.add(new Quest1(highSec));
+			tmpList.add(new Quest2(apacheExecutable));
 			tmpList.add(new Quest3(conf, apacheExecutable));
+			tmpList.add(new Quest4(conf, apacheExecutable));
 			tmpList.add(new Quest5(conf));
 			tmpList.add(new Quest6(apacheExecutable));
-			tmpList.add(new Quest11b(conf));
+			tmpList.add(new Quest7(conf));
+			tmpList.add(new Quest8(apacheExecutable));
+			tmpList.add(new Quest11(conf));
 			
 			InteractiveAsker asker = new InteractiveAsker(tmpList);
 			

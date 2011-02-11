@@ -43,7 +43,7 @@ public class ModuleHelper
 			int b = stdErr.read();
 			while(b != -1)
 			{
-				buf.append(b);
+				buf.append((char)b);
 				b = stdErr.read();
 			}
 			String output = buf.toString();

@@ -1,4 +1,4 @@
-package org.akquinet.audit.bsi.httpd;
+package org.akquinet.audit.bsi.httpd.usersNrights;
 
 import java.io.File;
 
