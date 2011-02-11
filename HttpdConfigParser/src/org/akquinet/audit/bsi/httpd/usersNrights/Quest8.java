@@ -11,7 +11,7 @@ public class Quest8 implements YesNoQuestion
 	private static final String _id = "Quest8";
 	private static final FormattedConsole _console = FormattedConsole.getDefault();
 	private static final FormattedConsole.OutputLevel _level = FormattedConsole.OutputLevel.Q1;
-	private static final String _command = "./quest8.sh";
+	private static final String _command = "./QfileSafe.sh";
 	private File _apacheExecutable;
 
 	public Quest8(File apacheExecutable)
