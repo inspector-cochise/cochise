@@ -1,12 +1,11 @@
 #!/bin/bash
-# $1 should be the path to the file (enclosing directory)
-# $2 should be the name of the file (filename only, no path)
+# $1 should be the file (including path to it)
 
 #check owning group is root and permissions are set to something like ******---
-if ls -l $1 | grep -w $2 | awk -f QfileSafe.awk
+if stat -L -c "%A %G" $1 | awk -f QfileSafe.awk
 then
 	#now check the owning user is a member of the group root
-	owningUser=`ls -l $1 | grep -w $2 | awk '{print $3}'`
+	owningUser=`stat -L -c "%U" $1`
 	
 	#is $owningUser a member of root?
 	if cat /etc/group | grep ^root | awk 'BEGIN {FS=":"} {print $4;}' | awk 'BEGIN {RS=","} {print $0;}' | grep $owningUser >& /dev/null

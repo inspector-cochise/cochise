@@ -33,7 +33,7 @@ public class Quest10 extends ModuleHelper implements YesNoQuestion
 		List<File> moduleFiles = getModuleFiles();
 		for (File file : moduleFiles)
 		{
-			ShellAnsweredQuestion quest = new ShellAnsweredQuestion(_command, file.getParent(), file.getName());
+			ShellAnsweredQuestion quest = new ShellAnsweredQuestion(_command, file.getAbsolutePath());
 			boolean ans = quest.answer();
 			ret &= ans;
 			if(!ans)
