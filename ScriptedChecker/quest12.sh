@@ -2,6 +2,20 @@
 # $1 should be the user
 # $2 should be the group
 
+#does $1 exist?
+if passwd -S $1 >& /dev/null
+then
+	echo User $1 does not exist.
+	exit 1
+fi
+
+#is $1 locked?
+if passwd -S $1 | awk '{if $2 ~ /L/ {exit 1} else {exit 0} }'
+then
+	echo User $1 is not locked. A login would may be possible.
+	exit 1
+fi
+
 #first check $1 is the only member of $2
 nmbrOfMembers=`cat /etc/group | grep ^$2 | awk 'BEGIN {FS=":"} {print $4;}' | awk 'BEGIN {RS=","} {print $0;}' | wc -w`
 
