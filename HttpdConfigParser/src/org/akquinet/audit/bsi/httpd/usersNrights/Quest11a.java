@@ -13,9 +13,6 @@ public class Quest11a implements YesNoQuestion
 	{
 	}
 
-	/**
-	 * checks whether there are any Include-directives in the config file
-	 */
 	@Override
 	public boolean answer()
 	{

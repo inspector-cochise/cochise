@@ -22,9 +22,6 @@ public class Quest11b implements YesNoQuestion
 		_conf = conf;
 	}
 
-	/**
-	 * checks whether there are any Include-directives in the config file
-	 */
 	@Override
 	public boolean answer()
 	{
