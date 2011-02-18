@@ -15,7 +15,8 @@ public class ModuleHelper
 	
 	public ModuleHelper(ConfigFile conf)
 	{
-		this(conf, null);
+		_conf = conf;
+		_httpd = null;
 	}
 	
 	public ModuleHelper(ConfigFile conf, File apacheExecutable)
@@ -35,6 +36,11 @@ public class ModuleHelper
 	protected List<Directive> getLoadModuleList()
 	{
 		return _conf.getDirectiveIgnoreCase("LoadModule");
+	}
+	
+	protected List<Directive> getLoadFileList()
+	{
+		return _conf.getDirectiveIgnoreCase("LoadFile");
 	}
 
 	protected String[] getCompiledIntoModulesList()
