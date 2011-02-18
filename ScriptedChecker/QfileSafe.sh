@@ -1,8 +1,14 @@
 #!/bin/bash
 # $1 should be the file (including path to it)
+# $2 (optional) permissions pattern
+pat=".......---"
+if test $# -gt 1
+then
+	pat=$2
+fi
 
 #check owning group is root and permissions are set to something like ******---
-if stat -L -c "%A %G" $1 | awk -f QfileSafe.awk
+if stat -L -c "%A %G" $1 | awk -v PATTERN=$pat -f QfileSafe.awk
 then
 	#now check the owning user is a member of the group root
 	owningUser=`stat -L -c "%U" $1`
