@@ -40,10 +40,18 @@ public class Quest10 extends ModuleHelper implements YesNoQuestion
 			{
 				_console.println(_level, file.getAbsolutePath());
 			}
+			//also the enclosing directory has to be safe (for the case that file is a symbolic link, which we assume)
+			quest = new ShellAnsweredQuestion(_command, file.getParent());
+			ans = quest.answer();
+			ret &= ans;
+			if(!ans)
+			{
+				_console.println(_level, file.getParent());
+			}
 		}
 		
 		_console.printAnswer(_level, ret, ret ? "Seems like only users in root have access to the dynamically loadable modules."
-							: "Other users than users in root have access to the above listed modules.\n");
+							: "Other users than users in root have access to the above listed modules or their containing directories.\n");
 		
 		return ret;
 	}
