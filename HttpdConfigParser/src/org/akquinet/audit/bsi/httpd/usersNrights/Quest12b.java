@@ -14,7 +14,7 @@ public class Quest12b implements YesNoQuestion
 	private ConfigFile _conf;
 	private static final FormattedConsole _console = FormattedConsole.getDefault();
 	private static final FormattedConsole.OutputLevel _level = FormattedConsole.OutputLevel.Q2;
-	private static final String _command = "./quest12b.sh";
+	private static final String _command = "./quest12.sh";
 
 	public Quest12b(ConfigFile conf)
 	{
@@ -26,6 +26,8 @@ public class Quest12b implements YesNoQuestion
 	{
 		_console.println(FormattedConsole.OutputLevel.HEADING, "----" + _id + "----");
 
+		_console.println(_level, "Looking for directives User and Group in the apache configuration file...");
+		
 		String user = null;
 		String group = null;
 		
