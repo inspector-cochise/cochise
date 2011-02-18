@@ -1,8 +1,10 @@
 package org.akquinet.audit.bsi.httpd.usersNrights;
 
 import java.io.File;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.akquinet.audit.FormattedConsole;
 import org.akquinet.audit.ModuleHelper;
@@ -31,27 +33,37 @@ public class Quest10 extends ModuleHelper implements YesNoQuestion
 		
 		boolean ret = true;
 		List<File> moduleFiles = getModuleFiles();
+		Set<String> probs = new HashSet<String>();
 		for (File file : moduleFiles)
 		{
-			ShellAnsweredQuestion quest = new ShellAnsweredQuestion(_command, file.getAbsolutePath());
+			ShellAnsweredQuestion quest = new ShellAnsweredQuestion(_command, file.getAbsolutePath(), "........-.");
 			boolean ans = quest.answer();
 			ret &= ans;
 			if(!ans)
 			{
-				_console.println(_level, file.getAbsolutePath());
+				probs.add(file.getAbsolutePath());
 			}
 			//also the enclosing directory has to be safe (for the case that file is a symbolic link, which we assume)
-			quest = new ShellAnsweredQuestion(_command, file.getParent());
+			quest = new ShellAnsweredQuestion(_command, file.getParent(), "........-.");
 			ans = quest.answer();
 			ret &= ans;
 			if(!ans)
 			{
-				_console.println(_level, file.getParent());
+				probs.add(file.getParent());
+			}
+		}
+
+		if(!probs.isEmpty())
+		{
+			_console.println(_level, "I found some files causing problems (in most cases this means some user not in root has write access)");
+			for (String str : probs)
+			{
+				_console.println(_level, str);
 			}
 		}
 		
 		_console.printAnswer(_level, ret, ret ? "Seems like only users in root have access to the dynamically loadable modules."
-							: "Other users than users in root have access to the above listed modules or their containing directories.\n");
+							: "Other users than users in root may have access to the above listed modules or their containing directories.\n");
 		
 		return ret;
 	}
@@ -62,7 +74,13 @@ public class Quest10 extends ModuleHelper implements YesNoQuestion
 		List<Directive> dirList = getLoadModuleList();
 		for (Directive dir : dirList)
 		{
-			ret.add(new File(dir.getName().trim()));
+			ret.add(new File(dir.getValue().trim().split("[ \\t]")[1]));
+		}
+		
+		dirList = getLoadFileList();
+		for (Directive dir : dirList)
+		{
+			ret.add(new File(dir.getValue().trim()));
 		}
 		return ret;
 	}
