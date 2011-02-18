@@ -12,18 +12,18 @@ public class Quest8 implements YesNoQuestion
 	private static final FormattedConsole _console = FormattedConsole.getDefault();
 	private static final FormattedConsole.OutputLevel _level = FormattedConsole.OutputLevel.Q1;
 	private static final String _command = "./QfileSafe.sh";
-	private File _apacheExecutable;
+	private File _configFile;
 
-	public Quest8(File apacheExecutable)
+	public Quest8(File configFile)
 	{
-		_apacheExecutable = apacheExecutable;
+		_configFile = configFile;
 	}
 
 	@Override
 	public boolean answer()
 	{
 		_console.println(FormattedConsole.OutputLevel.HEADING, "----" + _id + "----");
-		ShellAnsweredQuestion quest = new ShellAnsweredQuestion(_command, _apacheExecutable.getParent(), _apacheExecutable.getName());
+		ShellAnsweredQuestion quest = new ShellAnsweredQuestion(_command, _configFile.getAbsolutePath());
 		boolean ret = quest.answer();
 		
 		_console.printAnswer(_level, ret, ret ? "Your main configuration file seems to be safe."
