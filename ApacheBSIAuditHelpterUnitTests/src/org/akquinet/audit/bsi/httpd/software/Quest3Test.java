@@ -8,17 +8,17 @@ import org.junit.Test;
 
 public class Quest3Test
 {
-	static final File _senselessExecutable = new File("C:\\autoexec.bat");
+	private static final File _senselessExecutable = new File("C:\\autoexec.bat");
 	
-	static final File _negativeTrivial = new File("./testFiles/Quest3/neg_triv.conf"); 
-	static final File _negativeSimilar = new File("./testFiles/Quest3/neg_sim.conf"); 
-	static final File _negativeMalformed = new File("./testFiles/Quest3/neg_malf.conf"); 
-	static final File _negativeConditionally = new File("./testFiles/Quest3/neg_cond.conf"); 
+	private static final File _negativeTrivial = new File("./testFiles/Quest3/neg_triv.conf"); 
+	private static final File _negativeSimilar = new File("./testFiles/Quest3/neg_sim.conf"); 
+	private static final File _negativeMalformed = new File("./testFiles/Quest3/neg_malf.conf"); 
+	private static final File _negativeConditionally = new File("./testFiles/Quest3/neg_cond.conf"); 
 	
-	static final File _positiveTrivial = new File("./testFiles/Quest3/pos_triv.conf"); 
-	static final File _positiveMalformed = new File("./testFiles/Quest3/pos_malf.conf"); 
+	private static final File _positiveTrivial = new File("./testFiles/Quest3/pos_triv.conf"); 
+	private static final File _positiveMalformed = new File("./testFiles/Quest3/pos_malf.conf"); 
 	
-	static final File _someConfig = new File("./testFiles/Quest3/pos_triv.conf"); 
+	private static final File _someConfig = _positiveTrivial; 
 
 	@Test
 	public final void testNegativeTrivial() throws IOException
