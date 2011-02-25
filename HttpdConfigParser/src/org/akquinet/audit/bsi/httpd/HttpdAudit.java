@@ -16,6 +16,7 @@ import org.akquinet.audit.bsi.httpd.software.Quest6;
 import org.akquinet.audit.bsi.httpd.software.Quest7;
 import org.akquinet.audit.bsi.httpd.usersNrights.Quest10;
 import org.akquinet.audit.bsi.httpd.usersNrights.Quest11;
+import org.akquinet.audit.bsi.httpd.usersNrights.Quest12;
 import org.akquinet.audit.bsi.httpd.usersNrights.Quest8;
 import org.akquinet.audit.bsi.httpd.usersNrights.Quest9;
 import org.akquinet.httpd.ConfigFile;
@@ -61,6 +62,7 @@ public class HttpdAudit
 			tmpList.add(new Quest9(conf));
 			tmpList.add(new Quest10(conf));
 			tmpList.add(new Quest11(conf));
+			tmpList.add(new Quest12(conf));
 			
 			InteractiveAsker asker = new InteractiveAsker(tmpList);
 			
