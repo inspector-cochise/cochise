@@ -49,15 +49,18 @@ public class ModuleHelper
 		{
 			Process p = _httpd.start();
 			InputStream stdErr = p.getErrorStream();
-			p.waitFor();
 			
 			StringBuffer buf = new StringBuffer();
-			int b = stdErr.read();
-			while(b != -1)
+//			int b = stdErr.read();
+			int b;
+			while(stdErr.available() >= 1)
 			{
-				buf.append((char)b);
 				b = stdErr.read();
+				buf.append((char)b);
 			}
+			
+			p.waitFor();
+			
 			String output = buf.toString();
 			String[] modList = output.split("(\n|\r\n)");
 			return modList;
