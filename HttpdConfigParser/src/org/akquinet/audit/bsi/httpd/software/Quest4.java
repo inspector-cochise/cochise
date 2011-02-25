@@ -18,11 +18,17 @@ public class Quest4 extends ModuleHelper implements YesNoQuestion
 	private static final String _id = "Quest4";
 	private static final FormattedConsole _console = FormattedConsole.getDefault();
 	private static final FormattedConsole.OutputLevel _level = FormattedConsole.OutputLevel.Q1;
-	private static final String _listFileName = "/tmp/apacheAudit/moduleList.txt";
+	private String _listFileName;
+	
+	public Quest4(ConfigFile conf, File apacheExecutable, String tempDirectory)
+	{
+		super(conf, apacheExecutable);
+		_listFileName = tempDirectory + File.pathSeparator + "moduleList.txt";
+	}
 	
 	public Quest4(ConfigFile conf, File apacheExecutable)
 	{
-		super(conf, apacheExecutable);
+		this(conf, apacheExecutable, "/tmp/apacheAudit");
 	}
 
 	@Override
