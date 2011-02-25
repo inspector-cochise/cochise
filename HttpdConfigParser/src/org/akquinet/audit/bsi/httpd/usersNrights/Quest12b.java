@@ -30,15 +30,14 @@ public class Quest12b implements YesNoQuestion
 		
 		String user = null;
 		String group = null;
-		
-		user = _conf.getDirective("User").get(0).getValue().trim();
-		group = _conf.getDirective("Group").get(0).getValue().trim();
-		
-		if(user == null || group == null)
+		if(_conf.getDirective("User").size() == 0 && _conf.getDirective("Group").size() == 0)
 		{
 			_console.printAnswer(_level, false, "User or Group directive not found. No dedicated user specified.");
 			return false;
 		}
+		
+		user = _conf.getDirective("User").get(0).getValue().trim();
+		group = _conf.getDirective("Group").get(0).getValue().trim();
 		
 		ShellAnsweredQuestion quest = new ShellAnsweredQuestion(_command, user, group);
 		boolean ret = quest.answer();

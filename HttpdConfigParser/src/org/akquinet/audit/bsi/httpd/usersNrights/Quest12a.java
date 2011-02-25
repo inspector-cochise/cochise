@@ -32,17 +32,11 @@ public class Quest12a implements YesNoQuestion
 		String user = _console.askStringQuestion(_level, "What is the name of that special user? ");
 		if(user.equals("root"))
 		{
-			_console.printAnswer(_level, false, "root has way too much permissions.");
-			return false;
-		}
-		String group = _console.askStringQuestion(_level, "What is the name of this user's group (should be empty or the only member is this user)? ");
-		if(group.equals("root"))
-		{
-			_console.printAnswer(_level, false, "root has way too much permissions.");
+			_console.printAnswer(_level, false, "root has way too much permissions to restrict apache's actions.");
 			return false;
 		}
 		
-		ShellAnsweredQuestion quest = new ShellAnsweredQuestion(_command, user, group);
+		ShellAnsweredQuestion quest = new ShellAnsweredQuestion(_command, user);
 		ret = quest.answer();
 		
 		StringBuffer buf = new StringBuffer();
