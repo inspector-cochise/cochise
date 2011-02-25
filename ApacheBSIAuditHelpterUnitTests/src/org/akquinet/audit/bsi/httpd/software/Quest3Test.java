@@ -17,6 +17,8 @@ public class Quest3Test
 	
 	File _positiveTrivial = new File("./testFiles/Quest3/pos_triv.conf"); 
 	File _positiveMalformed = new File("./testFiles/Quest3/pos_malf.conf"); 
+	
+	File _someConfig = new File("./testFiles/Quest3/pos_triv.conf"); 
 
 	@Test
 	public final void testNegativeTrivial() throws IOException
@@ -58,5 +60,19 @@ public class Quest3Test
 	{
 		Quest3 SUT = new Quest3(new ConfigFile(_positiveMalformed), _senselessExecutable);
 		assertTrue(SUT.answer());
+	}
+	
+	@Test
+	public final void testGetID() throws IOException
+	{
+		Quest3 SUT = new Quest3(new ConfigFile(_someConfig), _senselessExecutable);
+		assertTrue(SUT.getID().equals("Quest3"));
+	}
+	
+	@Test
+	public final void testIsCritical() throws IOException
+	{
+		Quest3 SUT = new Quest3(new ConfigFile(_someConfig), _senselessExecutable);
+		assertFalse(SUT.isCritical());
 	}
 }
