@@ -3,7 +3,6 @@ package org.akquinet.audit.bsi.httpd.software;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 
@@ -16,11 +15,10 @@ public class Quest3Test
 	
 	private static final File _negativeTrivialExec = new File("./testFiles/Quest3/neg_triv.bat"); 
 	private static final File _negativeSimilarExec = new File("./testFiles/Quest3/neg_sim.bat"); 
-//	private static final File _negativeMalformedExec = new File("./testFiles/Quest3/neg_malf.bat"); 
-//	private static final File _negativeConditionallyExec = new File("./testFiles/Quest3/neg_cond.bat"); 
-//	
-//	private static final File _positiveTrivialExec = new File("./testFiles/Quest3/pos_triv.bat"); 
-//	private static final File _positiveMalformedExec = new File("./testFiles/Quest3/pos_malf.bat");
+	private static final File _negativeMalformedExec = new File("./testFiles/Quest3/neg_malf.bat"); 
+	
+	private static final File _positiveTrivialExec = new File("./testFiles/Quest3/pos_triv.bat"); 
+	private static final File _positiveMalformedExec = new File("./testFiles/Quest3/pos_malf.bat");
 	
 	
 	private static final File _negativeTrivial = new File("./testFiles/Quest3/neg_triv.conf"); 
@@ -94,33 +92,26 @@ public class Quest3Test
 		assertFalse(SUT.answer());
 	}
 	
-//	@Test
-//	public final void testNegativeMalformed_Exec() throws IOException
-//	{
-//		Quest3 SUT = new Quest3(new ConfigFile(_emptyConfig), _negativeMalformedExec);
-//		assertFalse(SUT.answer());
-//	}
-//	
-//	@Test
-//	public final void testNegativeConditionally_Exec() throws IOException
-//	{
-//		Quest3 SUT = new Quest3(new ConfigFile(_emptyConfig), _negativeConditionallyExec);
-//		assertFalse(SUT.answer());
-//	}
-//	
-//	@Test
-//	public final void testPositiveTrivial_Exec() throws IOException
-//	{
-//		Quest3 SUT = new Quest3(new ConfigFile(_emptyConfig), _positiveTrivialExec);
-//		assertTrue(SUT.answer());
-//	}
-//	
-//	@Test
-//	public final void testPositiveMalformed_Exec() throws IOException
-//	{
-//		Quest3 SUT = new Quest3(new ConfigFile(_emptyConfig), _positiveMalformedExec);
-//		assertTrue(SUT.answer());
-//	}
+	@Test
+	public final void testNegativeMalformed_Exec() throws IOException
+	{
+		Quest3 SUT = new Quest3(new ConfigFile(_emptyConfig), _negativeMalformedExec);
+		assertFalse(SUT.answer());
+	}
+
+	@Test
+	public final void testPositiveTrivial_Exec() throws IOException
+	{
+		Quest3 SUT = new Quest3(new ConfigFile(_emptyConfig), _positiveTrivialExec);
+		assertTrue(SUT.answer());
+	}
+	
+	@Test
+	public final void testPositiveMalformed_Exec() throws IOException
+	{
+		Quest3 SUT = new Quest3(new ConfigFile(_emptyConfig), _positiveMalformedExec);
+		assertTrue(SUT.answer());
+	}
 	
 	
 	
