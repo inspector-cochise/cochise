@@ -53,16 +53,16 @@ public class ModuleHelper
 			StringBuffer buf = new StringBuffer();
 //			int b = stdErr.read();
 			int b;
+			Thread.sleep(100);
 			while(stdErr.available() >= 1)
 			{
 				b = stdErr.read();
 				buf.append((char)b);
 			}
-			
 			p.waitFor();
 			
 			String output = buf.toString();
-			String[] modList = output.split("(\n|\r\n)");
+			String[] modList = output.split("(\r\n|\n)");
 			return modList;
 		}
 		catch (IOException e)
