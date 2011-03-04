@@ -34,7 +34,7 @@ public class Quest5b implements YesNoQuestion
 		
 		for (Directive directive : dirList)
 		{
-			if(!directive.getValue().matches("[ \t]*None[ \t]*"))
+			if(!directive.getValue().matches("[ \t]*[Nn]one[ \t]*"))
 			{
 				problems.add(directive);
 			}
