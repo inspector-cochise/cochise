@@ -48,8 +48,7 @@ public class Quest5a implements YesNoQuestion
 	@Override
 	public boolean isCritical()
 	{
-		//Quest5 is critical, this is a subquestion so this is handled by Quest5
-		return false;
+		return true;
 	}
 
 	@Override
