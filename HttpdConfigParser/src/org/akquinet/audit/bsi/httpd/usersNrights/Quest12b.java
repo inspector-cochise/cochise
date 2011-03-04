@@ -14,11 +14,19 @@ public class Quest12b implements YesNoQuestion
 	private ConfigFile _conf;
 	private static final FormattedConsole _console = FormattedConsole.getDefault();
 	private static final FormattedConsole.OutputLevel _level = FormattedConsole.OutputLevel.Q2;
-	private static final String _command = "./quest12.sh";
+	private static String _command;
+	private static String _commandPath;
 
 	public Quest12b(ConfigFile conf)
 	{
+		this(conf, "./", "quest12.sh");
+	}
+	
+	public Quest12b(ConfigFile conf, String commandPath, String command)
+	{
 		_conf = conf;
+		_commandPath = commandPath;
+		_command = command;
 	}
 
 	@Override
@@ -39,7 +47,7 @@ public class Quest12b implements YesNoQuestion
 		user = _conf.getDirective("User").get(0).getValue().trim();
 		group = _conf.getDirective("Group").get(0).getValue().trim();
 		
-		ShellAnsweredQuestion quest = new ShellAnsweredQuestion(_command, user, group);
+		ShellAnsweredQuestion quest = new ShellAnsweredQuestion(_commandPath + _command, user, group);
 		boolean ret = quest.answer();
 		
 		StringBuffer buf = new StringBuffer();
