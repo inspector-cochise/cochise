@@ -23,7 +23,7 @@ public class Quest4 extends ModuleHelper implements YesNoQuestion
 	public Quest4(ConfigFile conf, File apacheExecutable, String tempDirectory)
 	{
 		super(conf, apacheExecutable);
-		_listFileName = tempDirectory + File.pathSeparator + "moduleList.txt";
+		_listFileName = tempDirectory + File.separator + "moduleList.txt";
 	}
 	
 	public Quest4(ConfigFile conf, File apacheExecutable)
@@ -46,11 +46,13 @@ public class Quest4 extends ModuleHelper implements YesNoQuestion
 			BufferedWriter writer = new BufferedWriter(new FileWriter(listFile));
 			
 			writer.write("First a list of the modules which have been compiled into your apache executable:\n");
+			writer.write("----\n");
 			String[] compModules = getCompiledIntoModulesList();
 			for (String mod : compModules)
 			{
 				writer.write(mod + "\n");
 			}
+			writer.write("----\n");
 			writer.write("If there is any module you don't need please recompile your apache. " +
 					"(It't not too hard to select modules which get compiled into.)\n");
 
@@ -58,11 +60,13 @@ public class Quest4 extends ModuleHelper implements YesNoQuestion
 			
 			writer.write("Now let's get to the dynamically loaded modules. The following LoadModule directives in you apache" +
 					"-configuration-file may get invoked:\n");
+			writer.write("----\n");
 			List<Directive> loadModules = getLoadModuleList();
 			for (Directive dir : loadModules)
 			{
 				writer.write(dir.getLinenumber() + ": " + dir.getName() + " " + dir.getValue() + "\n");
 			}
+			writer.write("----\n");
 			writer.close();
 		}
 		catch (FileNotFoundException e)
