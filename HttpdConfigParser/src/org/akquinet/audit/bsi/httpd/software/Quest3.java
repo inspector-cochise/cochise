@@ -24,7 +24,7 @@ public class Quest3 extends ModuleHelper implements YesNoQuestion
 	public boolean answer()
 	{
 		_console.println(FormattedConsole.OutputLevel.HEADING, "----" + _id + "----");
-		//TODO: test
+
 		List<Directive> loadList = getLoadModuleList();
 		for (Directive directive : loadList)
 		{
@@ -48,7 +48,7 @@ public class Quest3 extends ModuleHelper implements YesNoQuestion
 		String[] modList = getCompiledIntoModulesList();
 		for (String str : modList)
 		{
-			if(str.matches("( |\t)*mod_security.c"))
+			if(str.matches("( |\t)*mod_security.c( |\t)*"))
 			{
 				_console.printAnswer(_level, true, "ModSecurity is compiled into the httpd binary.");
 				return true;
