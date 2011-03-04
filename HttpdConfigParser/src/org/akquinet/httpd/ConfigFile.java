@@ -18,14 +18,44 @@ public class ConfigFile
 		_head = new Head(null, new MultipleMarkerInputStream(input));
 	}
 	
+	/**
+	 * 
+	 * @param name name of the directive
+	 * @return list of all directives with this name directly contained in root context
+	 */
 	public List<Directive> getDirective(String name)
 	{
 		return _head.getDirective(name);
 	}
 	
+	/**
+	 * 
+	 * @param name name of the directive
+	 * @return list of all directives with this name directly contained in root context
+	 */
 	public List<Directive> getDirectiveIgnoreCase(String name)
 	{
 		return _head.getDirectiveIgnoreCase(name);
+	}
+	
+	/**
+	 * 
+	 * @param name name of the directive
+	 * @return list of all directives with this name (indepent of context)
+	 */
+	public List<Directive> getAllDirectives(String name)
+	{
+		return _head.getAllDirectives(name);
+	}
+	
+	/**
+	 * 
+	 * @param name name of the directive
+	 * @return list of all directives with this name (indepent of context)
+	 */
+	public List<Directive> getAllDirectivesIgnoreCase(String name)
+	{
+		return _head.getAllDirectivesIgnoreCase(name);
 	}
 	
 	public Head getHeadExpression()

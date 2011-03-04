@@ -171,6 +171,18 @@ public class Directive extends Statement
 		
 		return ret;
 	}
+
+	@Override
+	public List<Directive> getAllDirectives(String name)
+	{
+		return getDirective(name);
+	}
+
+	@Override
+	public List<Directive> getAllDirectivesIgnoreCase(String name)
+	{
+		return getDirectiveIgnoreCase(name);
+	}
 	
 	
 }

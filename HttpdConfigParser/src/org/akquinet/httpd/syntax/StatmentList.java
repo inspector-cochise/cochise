@@ -112,4 +112,24 @@ public class StatmentList extends SyntaxElement
 		}
 		return ret;
 	}
+
+	public List<Directive> getAllDirectives(String name)
+	{
+		List<Directive> ret = new LinkedList<Directive>();
+		for (Statement statement : _statements)
+		{
+			ret.addAll( statement.getAllDirectives(name) );
+		}
+		return ret;
+	}
+	
+	public List<Directive> getAllDirectivesIgnoreCase(String name)
+	{
+		List<Directive> ret = new LinkedList<Directive>();
+		for (Statement statement : _statements)
+		{
+			ret.addAll( statement.getAllDirectivesIgnoreCase(name) );
+		}
+		return ret;
+	}
 }

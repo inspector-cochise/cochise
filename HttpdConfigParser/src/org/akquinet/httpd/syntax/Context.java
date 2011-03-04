@@ -150,4 +150,16 @@ public class Context extends Statement
 	{
 		return _containedStatementList.getDirectiveIgnoreCase(name);
 	}
+
+	@Override
+	public List<Directive> getAllDirectives(String name)
+	{
+		return _containedStatementList.getAllDirectives(name);
+	}
+
+	@Override
+	public List<Directive> getAllDirectivesIgnoreCase(String name)
+	{
+		return _containedStatementList.getAllDirectivesIgnoreCase(name);
+	}
 }

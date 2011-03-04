@@ -48,4 +48,16 @@ public class Comment extends Statement
 	{
 		return new LinkedList<Directive>();
 	}
+
+	@Override
+	public List<Directive> getAllDirectives(String name)
+	{
+		return new LinkedList<Directive>();
+	}
+
+	@Override
+	public List<Directive> getAllDirectivesIgnoreCase(String name)
+	{
+		return new LinkedList<Directive>();
+	}
 }

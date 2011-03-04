@@ -35,4 +35,14 @@ public class Head extends SyntaxElement
 	{
 		return _statements.getDirectiveIgnoreCase(name);
 	}
+
+	public List<Directive> getAllDirectives(String name)
+	{
+		return _statements.getAllDirectives(name);
+	}
+	
+	public List<Directive> getAllDirectivesIgnoreCase(String name)
+	{
+		return _statements.getAllDirectivesIgnoreCase(name);
+	}
 }
