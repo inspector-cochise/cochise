@@ -27,7 +27,7 @@ public class Quest5a implements YesNoQuestion
 	public boolean answer()
 	{
 		_console.println(FormattedConsole.OutputLevel.HEADING, "----" + _id + "----");
-		List<Directive> incList = _conf.getDirectiveIgnoreCase("Include");
+		List<Directive> incList = _conf.getAllDirectivesIgnoreCase("Include");
 		
 		if(!incList.isEmpty())
 		{
