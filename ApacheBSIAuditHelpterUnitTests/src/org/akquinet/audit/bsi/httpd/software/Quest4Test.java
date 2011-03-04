@@ -53,10 +53,10 @@ public class Quest4Test
 		String[] loadedModules = getLoadedModules().split("\n");
 		assertEquals("all loaded modules should be displayed correctly", 4, loadedModules.length);
 		
-		assertTrue("module authz_host should be displayed correctly", loadedModules[0].contains("LoadModule authz_host_module /usr/lib/apache2/modules/mod_authz_host.so"));
-		assertTrue("module cgi should be displayed correctly", loadedModules[1].contains("LoadModule cgi_module /usr/lib/apache2/modules/mod_cgi.so"));
-		assertTrue("module dbd should be displayed correctly", loadedModules[2].contains("LoadModule dbd_module /usr/lib/apache2/modules/mod_dbd.so"));
-		assertTrue("module dir should be displayed correctly", loadedModules[3].contains("LoadModule dir_module /usr/lib/apache2/modules/mod_dir.so"));
+		assertTrue("module authz_host should be displayed correctly", loadedModules[0].matches(".*LoadModule[ \t]*authz_host_module[ \t]*/usr/lib/apache2/modules/mod_authz_host\\.so.*"));
+		assertTrue("module cgi should be displayed correctly", loadedModules[1].matches(".*LoadModule[ \t]*cgi_module[ \t]*/usr/lib/apache2/modules/mod_cgi\\.so.*"));
+		assertTrue("module dbd should be displayed correctly", loadedModules[2].matches(".*LoadModule[ \t]*dbd_module[ \t]*/usr/lib/apache2/modules/mod_dbd\\.so.*"));
+		assertTrue("module dir should be displayed correctly", loadedModules[3].matches(".*LoadModule[ \t]*dir_module[ \t]*/usr/lib/apache2/modules/mod_dir\\.so.*"));
 	}
 	
 	@Test
