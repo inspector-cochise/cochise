@@ -107,7 +107,7 @@ public class Quest12Test
 				{
 					//Quest12a should not be consulted, so we don't simulate user input
 					Quest12 SUT = new Quest12(new ConfigFile(_a1), "./testFiles/", "emptyScript.bat");
-					assertFalse(SUT.answer());
+					assertTrue(SUT.answer());
 				}
 				catch (IOException e)
 				{
