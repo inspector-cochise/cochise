@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.akquinet.httpd.ConfigFile;
+import org.akquinet.test.util.RethrowingThread;
 import org.junit.Test;
 
 public class Quest12Test
@@ -21,9 +22,9 @@ public class Quest12Test
 	private static final File _someConfig = _a0;
 
 	@Test
-	public final void test_a0_b0() throws IOException, InterruptedException
+	public final void test_a0_b0() throws Throwable
 	{
-		Thread th = new Thread(new Runnable()
+		RethrowingThread th = new RethrowingThread()
 		{
 			@Override
 			public void run()
@@ -43,21 +44,24 @@ public class Quest12Test
 					fail("Caught IOException...");
 				}
 			}
-		});
+		};
 		
 		th.start();
 		th.join(2000);
 		
 		if(th.isAlive())
 		{
+			th.interrupt();
 			fail("Seems like this test takes too long, maybe Quest12 unexpectedly asks for user input check that!");
 		}
+
+		th.throwCaughtThrowable();
 	}
 	
 	@Test
-	public final void test_a0_b1() throws IOException, InterruptedException
+	public final void test_a0_b1() throws Throwable
 	{
-		Thread th = new Thread(new Runnable()
+		RethrowingThread th = new RethrowingThread()
 		{
 			@Override
 			public void run()
@@ -77,21 +81,24 @@ public class Quest12Test
 					fail("Caught IOException...");
 				}
 			}
-		});
+		};
 		
 		th.start();
 		th.join(2000);
 		
 		if(th.isAlive())
 		{
+			th.interrupt();
 			fail("Seems like this test takes too long, maybe Quest12 unexpectedly asks for user input. Check that!");
 		}
+
+		th.throwCaughtThrowable();
 	}
 	
 	@Test
-	public final void test_a1_b0() throws IOException, InterruptedException
+	public final void test_a1_b0() throws Throwable
 	{
-		Thread th = new Thread(new Runnable()
+		RethrowingThread th = new RethrowingThread()
 		{
 			@Override
 			public void run()
@@ -108,21 +115,24 @@ public class Quest12Test
 					fail("Caught IOException...");
 				}
 			}
-		});
+		};
 		
 		th.start();
 		th.join(2000);
 		
 		if(th.isAlive())
 		{
+			th.interrupt();
 			fail("Seems like this test takes too long, maybe Quest12 unexpectedly asks for user input. Check that!");
 		}
+
+		th.throwCaughtThrowable();
 	}
 	
 	@Test
-	public final void test_a1_b1() throws IOException, InterruptedException
+	public final void test_a1_b1() throws Throwable
 	{
-		Thread th = new Thread(new Runnable()
+		RethrowingThread th = new RethrowingThread()
 		{
 			@Override
 			public void run()
@@ -139,15 +149,18 @@ public class Quest12Test
 					fail("Caught IOException...");
 				}
 			}
-		});
+		};
 		
 		th.start();
 		th.join(2000);
 		
 		if(th.isAlive())
 		{
+			th.interrupt();
 			fail("Seems like this test takes too long, maybe Quest12 unexpectedly asks for user input check that!");
 		}
+
+		th.throwCaughtThrowable();
 	}
 
 	@Test

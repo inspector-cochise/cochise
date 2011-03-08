@@ -13,6 +13,7 @@ import java.io.InputStream;
 import java.io.PrintStream;
 
 import org.akquinet.httpd.ConfigFile;
+import org.akquinet.test.util.RethrowingThread;
 import org.junit.Test;
 
 public class Quest7Test
@@ -53,9 +54,9 @@ public class Quest7Test
 
 	
 	@Test
-	public final void testPositiveConditional() throws IOException, InterruptedException
+	public final void testPositiveConditional() throws Throwable
 	{
-		Thread th = new Thread(new Runnable()
+		RethrowingThread th = new RethrowingThread()
 		{
 			@Override
 			public void run()
@@ -73,15 +74,18 @@ public class Quest7Test
 					fail("Caught IOException...");
 				}
 			}
-		});
+		};
 		
 		th.start();
 		th.join(2000);
 		
 		if(th.isAlive())
 		{
+			th.interrupt();
 			fail("Seems like this test takes too long, maybe Quest7 asks for user input check that!");
 		}
+		
+		th.throwCaughtThrowable();
 	}
 	
 	@Test
