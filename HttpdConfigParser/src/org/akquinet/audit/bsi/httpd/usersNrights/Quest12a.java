@@ -35,6 +35,7 @@ public class Quest12a implements YesNoQuestion
 		if(!ret)
 		{
 			_console.printAnswer(_level, false, "So this way can't work.");
+			return false;
 		}
 		
 		String user = _console.askStringQuestion(_level, "What is the name of that special user? ");
