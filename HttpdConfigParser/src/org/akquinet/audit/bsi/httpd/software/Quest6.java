@@ -35,7 +35,6 @@ public class Quest6 implements YesNoQuestion
 	public boolean answer()
 	{
 		_console.println(FormattedConsole.OutputLevel.HEADING, "----" + _id + "----");
-		//TODO: test!
 		try
 		{
 			Process p = _httpd.start();
