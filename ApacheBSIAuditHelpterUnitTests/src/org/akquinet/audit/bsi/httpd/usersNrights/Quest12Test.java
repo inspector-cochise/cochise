@@ -9,8 +9,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.akquinet.audit.bsi.httpd.software.Quest4;
-import org.akquinet.audit.bsi.httpd.software.Quest7;
 import org.akquinet.httpd.ConfigFile;
 import org.junit.Test;
 
