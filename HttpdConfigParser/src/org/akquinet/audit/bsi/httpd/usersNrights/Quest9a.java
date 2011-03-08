@@ -12,21 +12,29 @@ public class Quest9a implements YesNoQuestion
 	private static final String _id = "Quest9a";
 	private static final FormattedConsole _console = FormattedConsole.getDefault();
 	private static final FormattedConsole.OutputLevel _level = FormattedConsole.OutputLevel.Q2;
-	private static final String _command = "./quest9.sh";
+	private String _commandPath;
+	private String _command;
 	private String _serverRoot;
 	private String _user;
 
 	public Quest9a(String serverRoot, String user)
 	{
+		this(serverRoot, user, "./", "quest9.sh");
+	}
+	
+	public Quest9a(String serverRoot, String user, String commandPath, String command)
+	{
 		_serverRoot = serverRoot;
 		_user = user;
+		_commandPath = commandPath;
+		_command = command;
 	}
 
 	@Override
 	public boolean answer()
 	{
 		_console.println(FormattedConsole.OutputLevel.HEADING, "----" + _id + "----");
-		ShellAnsweredQuestion quest = new ShellAnsweredQuestion(_command, _serverRoot, _user);
+		ShellAnsweredQuestion quest = new ShellAnsweredQuestion(_commandPath + _command, _serverRoot, _user);
 		boolean ret = quest.answer();
 		StringBuffer probBuf = new StringBuffer();
 		InputStream stdOut = quest.getStdOut();

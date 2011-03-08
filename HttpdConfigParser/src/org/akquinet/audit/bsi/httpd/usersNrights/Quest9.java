@@ -14,6 +14,8 @@ public class Quest9 implements YesNoQuestion
 	private static final FormattedConsole.OutputLevel _level = FormattedConsole.OutputLevel.Q1;
 	private ConfigFile _conf;
 	private String _serverRoot;
+	private String _command9aPath;
+	private String _command9a;
 	private Quest9a _q9a;
 	private Quest9b _q9b;
 
@@ -21,6 +23,16 @@ public class Quest9 implements YesNoQuestion
 	{
 		_conf = conf;
 		_serverRoot = getServerRoot();
+		_command9aPath = null;
+		_command9a = null;
+	}
+	
+	public Quest9(ConfigFile conf, String command9aPath, String command9a)
+	{
+		_conf = conf;
+		_serverRoot = getServerRoot();
+		_command9aPath = command9aPath;
+		_command9a = command9a;
 	}
 
 	@Override
@@ -38,7 +50,14 @@ public class Quest9 implements YesNoQuestion
 				user = "root";
 			}
 			
-			_q9a = new Quest9a(_serverRoot, user);
+			if(_command9a != null && _command9aPath  != null)
+			{
+				_q9a = new Quest9a(_serverRoot, user, _command9aPath, _command9a);
+			}
+			else
+			{
+				_q9a = new Quest9a(_serverRoot, user);
+			}
 			_q9b = new Quest9b(_serverRoot);
 			
 			boolean ret = _q9a.answer();
