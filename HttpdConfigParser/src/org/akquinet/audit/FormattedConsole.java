@@ -1,8 +1,6 @@
 package org.akquinet.audit;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 public class FormattedConsole
 {
@@ -102,9 +100,8 @@ public class FormattedConsole
 			String answer = "";
 			try
 			{
-				BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 				System.out.print(buf.toString());
-				answer = in.readLine();
+				answer = readStdInLine();
 			}
 			catch (IOException e)
 			{
@@ -147,14 +144,25 @@ public class FormattedConsole
 		String answer = "";
 		try
 		{
-			BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 			System.out.print(buf.toString());
-			answer = in.readLine();
+			answer = readStdInLine();
 		}
 		catch (IOException e)
 		{
 		}
 
 		return answer;
+	}
+	
+	private String readStdInLine() throws IOException
+	{
+		StringBuffer buf = new StringBuffer();
+		int b = System.in.read();
+		while(b != -1 && b != '\n')
+		{
+			buf.append((char)b);
+			b = System.in.read();
+		}
+		return buf.toString();
 	}
 }
