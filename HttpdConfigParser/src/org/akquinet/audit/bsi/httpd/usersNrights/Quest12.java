@@ -16,9 +16,14 @@ public class Quest12 implements YesNoQuestion
 	
 	public Quest12(ConfigFile conf)
 	{
+		this(conf, "./", "quest12.sh");
+	}
+	
+	public Quest12(ConfigFile conf, String commandPath, String command)
+	{
 		_conf = conf;
-		_q12a = new Quest12a();
-		_q12b = new Quest12b(_conf);
+		_q12a = new Quest12a(commandPath, command);
+		_q12b = new Quest12b(_conf, commandPath, command);
 	}
 
 	@Override

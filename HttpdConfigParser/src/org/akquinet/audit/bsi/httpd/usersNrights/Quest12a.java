@@ -12,10 +12,18 @@ public class Quest12a implements YesNoQuestion
 	private static final String _id = "Quest12a";
 	private static final FormattedConsole _console = FormattedConsole.getDefault();
 	private static final FormattedConsole.OutputLevel _level = FormattedConsole.OutputLevel.Q2;
-	private static final String _command = "./quest12.sh";
+	private String _commandPath;
+	private String _command;
 
 	public Quest12a()
 	{
+		this("./", "quest12.sh");
+	}
+
+	public Quest12a(String commandPath, String command)
+	{
+		_commandPath = commandPath;
+		_command = command;
 	}
 
 	@Override
@@ -36,7 +44,7 @@ public class Quest12a implements YesNoQuestion
 			return false;
 		}
 		
-		ShellAnsweredQuestion quest = new ShellAnsweredQuestion(_command, user);
+		ShellAnsweredQuestion quest = new ShellAnsweredQuestion(_commandPath + _command, user);
 		ret = quest.answer();
 		
 		StringBuffer buf = new StringBuffer();
