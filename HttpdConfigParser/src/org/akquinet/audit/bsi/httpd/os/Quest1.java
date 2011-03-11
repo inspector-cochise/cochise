@@ -15,7 +15,7 @@ public class Quest1 implements YesNoQuestion
 
 	public Quest1(boolean highSecurityRequired)
 	{
-		this(highSecurityRequired, "./", "./quest1.sh");
+		this(highSecurityRequired, "./", "quest1.sh");
 	}
 	
 	public Quest1(boolean highSecurityRequired, String commandPath, String command)
