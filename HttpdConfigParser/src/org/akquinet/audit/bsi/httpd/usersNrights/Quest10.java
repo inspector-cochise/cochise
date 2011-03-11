@@ -82,7 +82,7 @@ public class Quest10 extends ModuleHelper implements YesNoQuestion
 		List<Directive> dirList = getLoadModuleList();
 		for (Directive dir : dirList)
 		{
-			ret.add(new File(dir.getValue().trim().split("[ \\t]")[1]));
+			ret.add(new File(dir.getValue().trim().split("[ \t]+")[1]));
 		}
 		
 		dirList = getLoadFileList();
