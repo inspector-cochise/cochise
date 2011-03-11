@@ -10,11 +10,19 @@ public class Quest1 implements YesNoQuestion
 	private boolean _highSecReq;
 	private static final FormattedConsole _console = FormattedConsole.getDefault();
 	private static final FormattedConsole.OutputLevel _level = FormattedConsole.OutputLevel.Q1;
-	private static final String _command = "./quest1.sh";
+	private String _commandPath;
+	private String _command;
 
 	public Quest1(boolean highSecurityRequired)
 	{
+		this(highSecurityRequired, "./", "./quest1.sh");
+	}
+	
+	public Quest1(boolean highSecurityRequired, String commandPath, String command)
+	{
 		_highSecReq = highSecurityRequired;
+		_commandPath = commandPath;
+		_command = command;
 	}
 
 	@Override
@@ -23,11 +31,11 @@ public class Quest1 implements YesNoQuestion
 		_console.println(FormattedConsole.OutputLevel.HEADING, "----" + _id + "----");
 		if(_highSecReq)
 		{
-			ShellAnsweredQuestion quest = new ShellAnsweredQuestion(_command);
+			ShellAnsweredQuestion quest = new ShellAnsweredQuestion(_commandPath + _command);
 			boolean ret = quest.answer();
 			
 			_console.printAnswer(_level, ret, ret ? "User root is correctly locked."
-								: "Please lock user root (\"passwd -l\"). After that you can't log yourself in directly as root.");
+								: "Please lock user root (\"passwd -l\"). After that you can't directly log yourself in as root.");
 			
 			return ret;
 		}
