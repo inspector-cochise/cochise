@@ -18,11 +18,19 @@ public class Quest10 extends ModuleHelper implements YesNoQuestion
 	private static final String _id = "Quest10";
 	private static final FormattedConsole _console = FormattedConsole.getDefault();
 	private static final FormattedConsole.OutputLevel _level = FormattedConsole.OutputLevel.Q1;
-	private static final String _command = "./QfileSafe.sh";
+	private String _commandPath;
+	private String _command;
 
 	public Quest10(ConfigFile conf)
 	{
+		this(conf, "./", "QfileSafe.sh");
+	}
+	
+	public Quest10(ConfigFile conf, String commandPath, String command)
+	{
 		super(conf);
+		_commandPath = commandPath;
+		_command = command;
 	}
 
 	@Override
@@ -36,7 +44,7 @@ public class Quest10 extends ModuleHelper implements YesNoQuestion
 		Set<String> probs = new HashSet<String>();
 		for (File file : moduleFiles)
 		{
-			ShellAnsweredQuestion quest = new ShellAnsweredQuestion(_command, file.getAbsolutePath(), "........-.");
+			ShellAnsweredQuestion quest = new ShellAnsweredQuestion(_commandPath + _command, file.getAbsolutePath(), "........-.");
 			boolean ans = quest.answer();
 			ret &= ans;
 			if(!ans)
@@ -44,7 +52,7 @@ public class Quest10 extends ModuleHelper implements YesNoQuestion
 				probs.add(file.getAbsolutePath());
 			}
 			//also the enclosing directory has to be safe (for the case that file is a symbolic link, which we assume)
-			quest = new ShellAnsweredQuestion(_command, file.getParent(), "........-.");
+			quest = new ShellAnsweredQuestion(_commandPath + _command, file.getParent(), "........-.");
 			ans = quest.answer();
 			ret &= ans;
 			if(!ans)
