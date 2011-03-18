@@ -29,7 +29,7 @@ public class Quest7 implements YesNoQuestion
 		_console.println(_level, "All options should be explicitly deactivated and only necessary options should be activated.");
 		_console.println(_level, "Scanning for \"Options None\" in global context");
 		
-		List<Directive> dirList = _conf.getDirective("Options");
+		List<Directive> dirList = _conf.getAllDirectives("Options");
 		List<Directive> problems = new LinkedList<Directive>();
 		boolean isSetGlobal = false;	//will be changed if at least one directive in global context is found
 		
