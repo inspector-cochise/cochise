@@ -49,8 +49,8 @@ public class Quest11b implements YesNoQuestion
 				continue;
 			}
 
-			List<Directive> orderList = dir.getDirectiveIgnoreCase("order");
-			List<Directive> denyList = dir.getDirectiveIgnoreCase("deny");
+			List<Directive> orderList = dir.getDirective("Order");
+			List<Directive> denyList = dir.getDirective("Deny");
 			if (orderList.size() == 1 &&
 				denyList.size() == 1 &&
 				orderList.get(0).getLinenumber() < denyList.get(0).getLinenumber())
@@ -59,7 +59,7 @@ public class Quest11b implements YesNoQuestion
 				Directive deny = denyList.get(0);
 				// fast evaluation ensures, that only one of these methods can
 				// output an answer-message
-				if (orderIsOK(order) || denyIsOK(deny))
+				if (orderIsOK(order) && denyIsOK(deny))
 				{
 					_console.printAnswer(_level, true, "Access to \"/\" correctly blocked via mod_access.");
 					ret = true;
