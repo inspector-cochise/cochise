@@ -51,18 +51,28 @@ public class Context extends Statement
 		{
 			throw new RuntimeException("Syntax Error. Expecting closing block for " + _name + " in line " + getActualLine() + ".");
 		}
-		eatBlanks();
-		eatRightDelimiter();
+		
 		eatBlanks();
 		
+		try
+		{
+			eatRightDelimiter();
+			eatBlanks();
+		}
+		catch(FileEndException e)
+		{
+			_endLineNumber = getActualLine();
+			return;
+		}
+		
 		_endLineNumber = getActualLine();
+		
 		try
 		{
 			eatNewline();
 		}
 		catch(FileEndException e)
 		{
-			//actually this can happen and is ok
 		}
 
 		// STAGE TWO END

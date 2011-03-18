@@ -72,15 +72,22 @@ abstract public class SyntaxElement
 	{
 		if (_parent != null)
 		{
-			_parent.readNextChar();
-			_actualChar = _parent._actualChar;
-			_actualLine = _parent._actualLine;
+			try
+			{
+				_parent.readNextChar();
+			}
+			finally
+			{
+				_actualChar = _parent._actualChar;
+				_actualLine = _parent._actualLine;
+			}
 		}
 		else
 		{
 			int tmp = _text.read();
 			if (tmp == -1)
 			{
+				_actualChar = '\n';	//this is the most harmless character
 				throw new FileEndException();
 			}
 			_actualChar = (char) tmp;
