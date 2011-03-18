@@ -2,14 +2,10 @@ package org.akquinet.audit.bsi.httpd.usersNrights;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 import org.akquinet.httpd.ConfigFile;
-import org.akquinet.test.util.RethrowingThread;
 import org.junit.Test;
 
 public class Quest11bTest
