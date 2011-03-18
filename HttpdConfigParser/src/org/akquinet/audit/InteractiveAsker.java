@@ -1,5 +1,6 @@
 package org.akquinet.audit;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.akquinet.audit.FormattedConsole.OutputLevel;
@@ -27,6 +28,15 @@ public class InteractiveAsker
 				_console.println(OutputLevel.HEADING , "You answered a question with 'no', which has effect on evaluation of future questions.");
 				_console.println(OutputLevel.HEADING , "Fix that issue and then run me again.");
 				return false;
+			}
+			
+			try
+			{
+				_console.waitForUserToContinue();
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
 			}
 		}
 		return overallAnswer;
