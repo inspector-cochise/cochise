@@ -6,9 +6,9 @@ public class FormattedConsole
 {
 	public enum OutputLevel
 	{
-		HEADING, Q1, // for main questions
-		Q2
-		// for subquestions
+		HEADING,
+		Q1, // for main questions
+		Q2	// for subquestions
 	};
 
 	private static FormattedConsole _default = null;
@@ -164,5 +164,27 @@ public class FormattedConsole
 			b = System.in.read();
 		}
 		return buf.toString();
+	}
+	
+	public void waitForUserToContinue() throws IOException
+	{
+		String anyKeyMessage = "  Hit enter to continue...";
+		System.out.println(anyKeyMessage);
+
+		System.in.read();
+	}
+	
+	public void printSeperatorLine()
+	{
+		for(int i = 0; i < getConsoleWidth(); ++i)
+		{
+			System.out.print('_');
+		}
+		System.out.print('\n');
+	}
+	
+	public int getConsoleWidth()
+	{
+		return Integer.parseInt( System.getenv("COLUMNS") == null ? "80" : System.getenv("COLUMNS") );
 	}
 }
