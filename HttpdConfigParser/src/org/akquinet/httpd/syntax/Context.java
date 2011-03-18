@@ -56,8 +56,14 @@ public class Context extends Statement
 		eatBlanks();
 		
 		_endLineNumber = getActualLine();
-		
-		eatNewline();
+		try
+		{
+			eatNewline();
+		}
+		catch(FileEndException e)
+		{
+			//actually this can happen and is ok
+		}
 
 		// STAGE TWO END
 		// //////////////////////////////////////////
