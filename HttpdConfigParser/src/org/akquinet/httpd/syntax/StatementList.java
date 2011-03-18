@@ -98,7 +98,10 @@ public class StatementList extends SyntaxElement
 		List<Directive> ret = new LinkedList<Directive>();
 		for (Statement statement : _statements)
 		{
-			ret.addAll( statement.getDirective(name) );
+			if(! (statement instanceof Context) )
+			{
+				ret.addAll( statement.getDirective(name) );
+			}
 		}
 		return ret;
 	}
@@ -108,7 +111,10 @@ public class StatementList extends SyntaxElement
 		List<Directive> ret = new LinkedList<Directive>();
 		for (Statement statement : _statements)
 		{
-			ret.addAll( statement.getDirectiveIgnoreCase(name) );
+			if(! (statement instanceof Context) )
+			{
+				ret.addAll( statement.getDirectiveIgnoreCase(name) );
+			}
 		}
 		return ret;
 	}
