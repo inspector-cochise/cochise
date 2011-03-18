@@ -14,6 +14,9 @@ import org.junit.Test;
 
 public class Quest11bTest
 {
+	private static final String _negContained1 = "./testFiles/Quest11b/neg_contained1.conf";
+	private static final String _negContained2 = "./testFiles/Quest11b/neg_contained2.conf";
+	private static final String _negContained3 = "./testFiles/Quest11b/neg_contained3.conf";
 	private static final String _negFalseOrder = "./testFiles/Quest11b/neg_falseOrder.conf";
 	private static final String _negMalformed1 = "./testFiles/Quest11b/neg_malf1.conf";
 	private static final String _negMalformed2 = "./testFiles/Quest11b/neg_malf2.conf";
@@ -28,6 +31,24 @@ public class Quest11bTest
 	private static final String _someConfig = _negTrivial;
 	
 
+	@Test
+	public final void testNegativeContained1() throws IOException
+	{
+		assertFalse(getSUT(_negContained1).answer());
+	}
+
+	@Test
+	public final void testNegativeContained2() throws IOException
+	{
+		assertFalse(getSUT(_negContained2).answer());
+	}
+
+	@Test
+	public final void testNegativeContained3() throws IOException
+	{
+		assertFalse(getSUT(_negContained3).answer());
+	}
+	
 	@Test
 	public final void testNegativeFalseOrder() throws IOException
 	{
