@@ -18,6 +18,11 @@ public class ConfigFile
 		_head = new Head(null, new MultipleMarkerInputStream(input));
 	}
 	
+	public ConfigFile(String file) throws IOException
+	{
+		this(new File(file));
+	}
+	
 	/**
 	 * 
 	 * @param name name of the directive
