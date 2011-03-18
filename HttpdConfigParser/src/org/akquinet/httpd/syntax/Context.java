@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Context extends Statement
 {
-	private StatmentList _containedStatementList;
+	private StatementList _containedStatementList;
 	private String _name;
 	private String _value;
 	private int _beginLineNumber;
@@ -38,7 +38,7 @@ public class Context extends Statement
 		// STAGE TWO END
 		// //////////////////////////////////////////
 
-		_containedStatementList = new StatmentList(this);
+		_containedStatementList = new StatementList(this);
 
 		// //////////////////////////////////////////
 		// STAGE TWO _ </ _ Name _ > _ newline
@@ -125,7 +125,7 @@ public class Context extends Statement
 		}
 	}
 	
-	public StatmentList getContainedStatementList()
+	public StatementList getContainedStatementList()
 	{
 		return _containedStatementList;
 	}

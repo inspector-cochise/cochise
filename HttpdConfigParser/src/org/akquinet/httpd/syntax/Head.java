@@ -7,7 +7,7 @@ import org.akquinet.httpd.MultipleMarkerInputStream;
 
 public class Head extends SyntaxElement
 {
-	private StatmentList _statements;
+	private StatementList _statements;
 	
 	public Head(SyntaxElement parent, MultipleMarkerInputStream text) throws IOException
 	{
@@ -18,10 +18,10 @@ public class Head extends SyntaxElement
 	@Override
 	protected void parse() throws IOException
 	{
-		_statements = new StatmentList(this);
+		_statements = new StatementList(this);
 	}
 
-	public StatmentList getStatements()
+	public StatementList getStatements()
 	{
 		return _statements;
 	}
