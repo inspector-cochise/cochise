@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.akquinet.audit.FormattedConsole;
 import org.akquinet.audit.InteractiveAsker;
 import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.bsi.httpd.os.Quest1;
@@ -29,25 +30,56 @@ public class HttpdAudit
 	 */
 	public static void main(String[] args)
 	{
-		//TODO all
-		//for now this is just for debugging
 		try
 		{
-			File configFile = null;
-			ConfigFile conf = null;
-			File apacheExecutable = null;
-			boolean highSec = true;	//TODO initialize me in some way
-			switch(args.length)
+			if(!"root".equals(System.getenv("USER")))
 			{
-			case 2:
-				configFile = new File(args[0]);
-				conf = new ConfigFile(configFile);
-				apacheExecutable = new File(args[1]);
-				break;
-			default:
-				System.err.println("parameters: apacheConfigFile apacheExecutable");
-				return;
+				System.out.println("This application has to be run as root!");
+				System.exit(1);
 			}
+			
+			FormattedConsole console = FormattedConsole.getDefault();
+			FormattedConsole.OutputLevel Q1 = FormattedConsole.OutputLevel.Q1;
+			FormattedConsole.OutputLevel Q2 = FormattedConsole.OutputLevel.Q2;
+			
+			
+			console.printSeperatorLine();
+			console.println(Q1, "Hello, during this audit I will ask you a bunch of questions.");
+			console.println(Q1, "Please rethink your answers twice before you give them to me.");
+			console.println(Q1, "");
+
+			console.println(Q1, "This audit will in most cases require you to make significant changes to your apache configuration.");
+			console.println(Q1, "Another point is that the requirements of this audit conflict with most of the administration tools");
+			console.println(Q1, "(like a2enmod, a2dismod, yast2, ...).");
+			console.println(Q1, "");
+			
+			console.println(Q1, "First of all, let's start with some basic information about your system and your security requirements.");
+			console.println(Q1, "Normally the apache the apache httpd executable is something like:");
+			console.println(Q2, "/usr/sbin/apache2    (Debian/Ubuntu)");
+			console.println(Q2, "/usr/sbin/httpd      (RedHat)");
+			console.println(Q2, "/usr/sbin/httpd2     (SUSE)");
+			File apacheExecutable = new File(console.askStringQuestion(Q1, "What is your apache executable? "));
+			
+			console.println(Q1, "");
+			
+			console.println(Q1, "The main configuration file for the apache web server normally is something like:");
+			console.println(Q2, "/etc/apache2/apache2.conf    (Debian/Ubuntu)");
+			console.println(Q2, "/etc/httpd/httpd.conf        (RedHat)");
+			console.println(Q2, "/etc/apache2/httpd.conf      (SUSE)");
+			File configFile = new File(console.askStringQuestion(Q1, "What is you apache main configuration file? "));
+			ConfigFile conf = new ConfigFile(configFile);
+			
+			console.println(Q1, "");
+			
+			String answer = console.askStringQuestion(Q1, "Does your application require a high level of security? (Yes/No) ");
+			boolean highSec = answer.equalsIgnoreCase("Yes");
+			
+			answer = console.askStringQuestion(Q1, "Does your application require a high level of privacy? (Yes/No) ");
+			boolean highPriv = answer.equalsIgnoreCase("Yes");
+			
+			console.println(Q1, "");
+			console.println(Q1, "Ok, then let's start.");
+			console.printSeperatorLine();
 			
 			List<YesNoQuestion> tmpList = new LinkedList<YesNoQuestion>();
 
