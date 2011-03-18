@@ -64,7 +64,9 @@ public class Quest11b implements YesNoQuestion
 
 			List<Directive> orderList = dir.getAllDirectives("Order");
 			List<Directive> denyList = dir.getAllDirectives("Deny");
-			if (orderList.size() == 1 &&
+			List<Directive> allowList = dir.getAllDirectivesIgnoreCase("allow");
+			if (allowList.size() == 0 &&
+				orderList.size() == 1 &&
 				denyList.size() == 1 &&
 				orderList.get(0).getLinenumber() < denyList.get(0).getLinenumber())
 			{
@@ -84,7 +86,7 @@ public class Quest11b implements YesNoQuestion
 			}
 			else
 			{
-				_console.printAnswer(_level, false, "I found multiple and/or incorrectly sorted \"Order\" and \"Deny\" directives betwenn lines "
+				_console.printAnswer(_level, false, "I found multiple and/or incorrectly sorted \"Order\", \"Deny\" or \"Allow\" directives betwenn lines "
 						+ dir.getBeginLineNumber() + " and " + dir.getEndLineNumber() + ". Please make them unique, sort them and run me again.");
 				return false;
 			}
