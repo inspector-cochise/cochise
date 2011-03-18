@@ -96,7 +96,7 @@ public class Quest12Test
 	}
 	
 	@Test
-	public final void test_a1_b0() throws Throwable
+	public final void test_a1() throws Throwable
 	{
 		RethrowingThread th = new RethrowingThread()
 		{
@@ -129,40 +129,6 @@ public class Quest12Test
 		th.throwCaughtThrowable();
 	}
 	
-	@Test
-	public final void test_a1_b1() throws Throwable
-	{
-		RethrowingThread th = new RethrowingThread()
-		{
-			@Override
-			public void run()
-			{
-				try
-				{
-					//Quest12a should not be consulted, so we don't simulate user input
-					Quest12 SUT = new Quest12(new ConfigFile(_a1), "./testFiles/", "emptyScript.bat");
-					assertTrue(SUT.answer());
-				}
-				catch (IOException e)
-				{
-					e.printStackTrace();
-					fail("Caught IOException...");
-				}
-			}
-		};
-		
-		th.start();
-		th.join(2000);
-		
-		if(th.isAlive())
-		{
-			th.interrupt();
-			fail("Seems like this test takes too long, maybe Quest12 unexpectedly asks for user input check that!");
-		}
-
-		th.throwCaughtThrowable();
-	}
-
 	@Test
 	public final void testGetID() throws IOException
 	{
