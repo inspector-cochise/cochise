@@ -3,14 +3,9 @@ package org.akquinet.audit.bsi.httpd.usersNrights;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
 import java.io.PrintStream;
 
-import org.akquinet.audit.bsi.httpd.software.Quest2;
-import org.akquinet.httpd.ConfigFile;
 import org.junit.Test;
 
 public class Quest9aTest
