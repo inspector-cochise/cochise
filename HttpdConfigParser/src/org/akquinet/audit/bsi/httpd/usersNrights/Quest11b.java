@@ -26,7 +26,20 @@ public class Quest11b implements YesNoQuestion
 	public boolean answer()
 	{
 		_console.println(FormattedConsole.OutputLevel.HEADING, "----" + _id + "----");
-		// TODO check whether all cases are handled (correctly)
+
+		//first of all let's ensure, there are no "hidden" order/allow/deny directives like in
+		//neg_contained3.conf (see JUnit tests)
+		{
+			for(String s : new String[] {"order", "allow", "deny"})
+			{
+				boolean r = checkForConditionallyActives(s);
+				if(!r)
+				{
+					return r;
+				}
+			}
+		}
+		
 		List<Statement> statList = _conf.getHeadExpression().getStatements()._statements;
 		List<Context> dirList = createDirectoryRoot_List(statList);
 
@@ -49,8 +62,8 @@ public class Quest11b implements YesNoQuestion
 				continue;
 			}
 
-			List<Directive> orderList = dir.getDirective("Order");
-			List<Directive> denyList = dir.getDirective("Deny");
+			List<Directive> orderList = dir.getAllDirectives("Order");
+			List<Directive> denyList = dir.getAllDirectives("Deny");
 			if (orderList.size() == 1 &&
 				denyList.size() == 1 &&
 				orderList.get(0).getLinenumber() < denyList.get(0).getLinenumber())
@@ -80,8 +93,33 @@ public class Quest11b implements YesNoQuestion
 		return ret;
 	}
 
+	private boolean checkForConditionallyActives(String directiveType)
+	{
+		List<Directive> dirList = _conf.getAllDirectivesIgnoreCase(directiveType);
+		for (Directive dir : dirList)
+		{
+			if(dir.getSurroundingContexts().size() > 1 &&
+			   dir.getSurroundingContexts().get(0).getName().equalsIgnoreCase("Directory") &&
+			   dir.getSurroundingContexts().get(0).getValue().trim().equals("/") &&
+			   dir.getSurroundingContexts().get(1) != null
+			   )
+			{
+				_console.printAnswer(_level, false, "The directive in line " + dir.getLinenumber() + " may only be conditionally active. Move it in a <Directory /> Context not contained in any other context.");
+				return false;
+			}
+		}
+		return true;
+	}
+
 	private static boolean denyIsOK(Directive deny)
 	{
+		if( ! deny.getSurroundingContexts().get(0).getName().equalsIgnoreCase("Directory") ||
+			! deny.getSurroundingContexts().get(0).getValue().trim().equals("/")
+		   )
+		{
+			return false;
+		}
+		
 		if (deny.getValue().matches("( |\t)*from all( |\t)*"))
 		{
 			return true;
@@ -96,6 +134,13 @@ public class Quest11b implements YesNoQuestion
 
 	private static boolean orderIsOK(Directive order)
 	{
+		if( ! order.getSurroundingContexts().get(0).getName().equalsIgnoreCase("Directory") ||
+			! order.getSurroundingContexts().get(0).getValue().trim().equals("/")
+		   )
+		{
+			return false;
+		}
+		
 		if (order.getValue().matches("( |\t)*[Dd]eny,[Aa]llow( |\t)*"))
 		{
 			return true;
