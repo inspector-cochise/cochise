@@ -19,7 +19,7 @@ public class Quest12a implements YesNoQuestion
 
 	public Quest12a(String apacheExecutable)
 	{
-		this("./", "quest12.sh", "quest12a.sh", apacheExecutable);
+		this("./", "quest12.sh", "getApacheStartingUser.sh", apacheExecutable);
 	}
 
 	public Quest12a(String commandPath, String command, String getUserNGroupCommand, String apacheExecutable)
