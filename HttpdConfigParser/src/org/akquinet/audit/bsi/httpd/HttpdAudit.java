@@ -24,6 +24,13 @@ import org.akquinet.httpd.ConfigFile;
 
 public class HttpdAudit
 {
+	enum OperatingSystem
+	{
+		Ubuntu,
+		SUSE,
+		RedHat,
+		UNKNOWN
+	}
 
 	/**
 	 * @param args
@@ -36,6 +43,32 @@ public class HttpdAudit
 			{
 				System.out.println("This application has to be run as root!");
 				System.exit(1);
+			}
+			
+			String apacheExec;
+			String apacheConf;
+			String tmp;
+			
+			OperatingSystem os = getOperatingSystem();
+			switch(os)
+			{
+			case Ubuntu:
+				apacheExec = "/usr/sbin/apache2";
+				apacheConf = "/etc/apache2/apache2.conf";
+				break;
+			case SUSE:
+				apacheExec = "/usr/sbin/httpd2";
+				apacheConf = "/etc/apache2/httpd.conf";
+				break;
+			case RedHat:
+				apacheExec = "/usr/sbin/httpd";
+				apacheConf = "/etc/httpd/httpd.conf";
+				break;
+			case UNKNOWN:
+			default:
+				apacheExec = "/usr/sbin/httpd";
+				apacheConf = "/etc/httpd/httpd.conf";
+				break;
 			}
 			
 			FormattedConsole console = FormattedConsole.getDefault();
@@ -58,7 +91,9 @@ public class HttpdAudit
 			console.println(Q2, "/usr/sbin/apache2    (Debian/Ubuntu)");
 			console.println(Q2, "/usr/sbin/httpd      (RedHat)");
 			console.println(Q2, "/usr/sbin/httpd2     (SUSE)");
-			File apacheExecutable = new File(console.askStringQuestion(Q1, "What is your apache executable? "));
+			tmp = console.askStringQuestion(Q1, "What is your apache executable? [" + apacheExec + "]");
+			apacheExec = "".equals(tmp.trim()) ? apacheExec : tmp;
+			File apacheExecutable = new File(apacheExec);
 			
 			console.println(Q1, "");
 			
@@ -66,13 +101,17 @@ public class HttpdAudit
 			console.println(Q2, "/etc/apache2/apache2.conf    (Debian/Ubuntu)");
 			console.println(Q2, "/etc/httpd/httpd.conf        (RedHat)");
 			console.println(Q2, "/etc/apache2/httpd.conf      (SUSE)");
-			File configFile = new File(console.askStringQuestion(Q1, "What is you apache main configuration file? "));
+			tmp = console.askStringQuestion(Q1, "What is you apache main configuration file? [" + apacheConf + "]");
+			apacheConf = "".equals(tmp.trim()) ? apacheConf : tmp;
+			File configFile = new File(apacheConf);
 			ConfigFile conf = new ConfigFile(configFile);
 			
 			console.println(Q1, "");
 			
 			String answer = console.askStringQuestion(Q1, "Does your application require a high level of security? (Yes/No) ");
 			boolean highSec = answer.equalsIgnoreCase("Yes");
+			
+			console.println(Q1, "");
 			
 			answer = console.askStringQuestion(Q1, "Does your application require a high level of privacy? (Yes/No) ");
 			boolean highPriv = answer.equalsIgnoreCase("Yes");
@@ -110,6 +149,33 @@ public class HttpdAudit
 			}
 		}
 		catch (IOException e) { e.printStackTrace(); }
+	}
+
+	private static OperatingSystem getOperatingSystem()
+	{
+		try
+		{
+			Process p = (new ProcessBuilder("./distro.sh")).start();
+			int exitVal = p.waitFor();
+			
+			switch(exitVal)
+			{
+			case 10:
+				return OperatingSystem.Ubuntu;
+			case 20:
+				return OperatingSystem.SUSE;
+			case 30:
+				return OperatingSystem.RedHat;
+			case 0:
+			default:
+				return OperatingSystem.UNKNOWN;
+			}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			return OperatingSystem.UNKNOWN;
+		}
 	}
 
 }
