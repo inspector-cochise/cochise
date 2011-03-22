@@ -30,7 +30,7 @@ public class Quest12 implements YesNoQuestion
 	public boolean answer()
 	{
 		_console.println(FormattedConsole.OutputLevel.HEADING, "vvvv" + _id + "vvvv");
-		_console.printAnswer(_level, null, "Ensuring tha the apache web server is running with few permissions.");
+		_console.printAnswer(_level, null, "Ensuring that the apache web server is running with few permissions.");
 		boolean ret = _q12b.answer();
 		if(!ret)
 		{
