@@ -130,7 +130,7 @@ public class HttpdAudit
 			tmpList.add(new Quest6(apacheExecutable));
 			tmpList.add(new Quest7(conf));
 			tmpList.add(new Quest8(configFile));
-			tmpList.add(new Quest9(conf));
+			tmpList.add(new Quest9(conf, apacheExecutable.getName()));
 			tmpList.add(new Quest10(conf));
 			tmpList.add(new Quest11(conf));
 			tmpList.add(new Quest12(conf, apacheExecutable.getName()));

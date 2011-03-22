@@ -1,5 +1,7 @@
 package org.akquinet.audit.bsi.httpd.usersNrights;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import org.akquinet.audit.FormattedConsole;
@@ -14,45 +16,42 @@ public class Quest9 implements YesNoQuestion
 	private static final FormattedConsole.OutputLevel _level = FormattedConsole.OutputLevel.Q1;
 	private ConfigFile _conf;
 	private String _serverRoot;
-	private String _command9aPath;
+	private String _commandPath;
 	private String _command9a;
+	private String _getUserNGroupCommand;
+	private String _apacheExecutable;
 	private Quest9a _q9a;
 	private Quest9b _q9b;
 
-	public Quest9(ConfigFile conf)
+	public Quest9(ConfigFile conf, String apacheExecutable)
 	{
-		_conf = conf;
-		_serverRoot = getServerRoot();
-		_command9aPath = null;
-		_command9a = null;
+		this(conf, "./", "quest9.sh", "getApacheStartingUser.sh", apacheExecutable);
 	}
 	
-	public Quest9(ConfigFile conf, String command9aPath, String command9a)
+	public Quest9(ConfigFile conf, String command9aPath, String command9a, String getUserNGroupCommand, String apacheExecutable)
 	{
 		_conf = conf;
 		_serverRoot = getServerRoot();
-		_command9aPath = command9aPath;
+		_commandPath = command9aPath;
 		_command9a = command9a;
+		_getUserNGroupCommand = getUserNGroupCommand;
+		_apacheExecutable = apacheExecutable;
 	}
 
 	@Override
 	public boolean answer()
 	{
-		//TODO is this everything?
 		_console.println(FormattedConsole.OutputLevel.HEADING, "vvvv" + _id + "vvvv");
 
 		_console.printAnswer(_level, null, "We'll now start to examine the permissions in your ServerRoot.");
 		if(_serverRoot != null)
 		{
-			String user = _console.askStringQuestion(_level, "Which user starts the apache web server? [root]");
-			if(user.equals(""))
-			{
-				user = "root";
-			}
+			String user = getApacheStartingUser();
+			_console.println(_level, "Seems like your apache is started by " + user + "...");
 			
-			if(_command9a != null && _command9aPath  != null)
+			if(_command9a != null && _commandPath  != null)
 			{
-				_q9a = new Quest9a(_serverRoot, user, _command9aPath, _command9a);
+				_q9a = new Quest9a(_serverRoot, user, _commandPath, _command9a);
 			}
 			else
 			{
@@ -71,6 +70,28 @@ public class Quest9 implements YesNoQuestion
 			_console.println(FormattedConsole.OutputLevel.HEADING, "^^^^" + _id + "^^^^");
 			_console.printAnswer(_level, false, "Either none or multiple ServerRoot directives found. There has to be exactly one.");
 			return false;
+		}
+	}
+
+	private String getApacheStartingUser()
+	{
+		try
+		{
+			Process p = (new ProcessBuilder(_commandPath + _getUserNGroupCommand, _apacheExecutable)).start();
+			InputStream is = p.getInputStream();
+			StringBuffer buf = new StringBuffer();
+			int b = is.read();
+			while(b != -1)
+			{
+				buf.append((char)b);
+				b = is.read();
+			}
+			return buf.toString().split("[ \t]+")[0];
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 	}
 
