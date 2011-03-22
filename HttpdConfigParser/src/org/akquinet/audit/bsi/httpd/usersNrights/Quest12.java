@@ -14,15 +14,15 @@ public class Quest12 implements YesNoQuestion
 	private Quest12a _q12a;
 	private Quest12b _q12b;
 	
-	public Quest12(ConfigFile conf)
+	public Quest12(ConfigFile conf, String apacheExecutable)
 	{
-		this(conf, "./", "quest12.sh");
+		this(conf, "./", "quest12.sh", "quest12a.sh", apacheExecutable);
 	}
 	
-	public Quest12(ConfigFile conf, String commandPath, String command)
+	public Quest12(ConfigFile conf, String commandPath, String command, String getUserNGroupCommand, String apacheExecutable)
 	{
 		_conf = conf;
-		_q12a = new Quest12a(commandPath, command);
+		_q12a = new Quest12a(commandPath, command, getUserNGroupCommand, apacheExecutable);
 		_q12b = new Quest12b(_conf, commandPath, command);
 	}
 

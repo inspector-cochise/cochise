@@ -14,16 +14,20 @@ public class Quest12a implements YesNoQuestion
 	private static final FormattedConsole.OutputLevel _level = FormattedConsole.OutputLevel.Q2;
 	private String _commandPath;
 	private String _command;
+	private String _getUserNGroupCommand;
+	private String _apacheExecutable;
 
-	public Quest12a()
+	public Quest12a(String apacheExecutable)
 	{
-		this("./", "quest12.sh");
+		this("./", "quest12.sh", "quest12a.sh", apacheExecutable);
 	}
 
-	public Quest12a(String commandPath, String command)
+	public Quest12a(String commandPath, String command, String getUserNGroupCommand, String apacheExecutable)
 	{
 		_commandPath = commandPath;
 		_command = command;
+		_getUserNGroupCommand = getUserNGroupCommand;
+		_apacheExecutable = apacheExecutable;
 	}
 
 	@Override
@@ -31,22 +35,32 @@ public class Quest12a implements YesNoQuestion
 	{
 		_console.println(FormattedConsole.OutputLevel.HEADING, "----" + _id + "----");
 		_console.println(_level, "One can customize the startup process of the apache deamon to start it as a special user with low rights.");
-		boolean ret = _console.askYesNoQuestion(_level, "Have you done so?");
-		if(!ret)
+		
+		String user = null;
+		String group = null;
+		try
 		{
-			_console.printAnswer(_level, false, "So this way can't work.");
+			Process p = (new ProcessBuilder(_commandPath + _getUserNGroupCommand, _apacheExecutable)).start();
+			InputStream is = p.getInputStream();
+			StringBuffer buf = new StringBuffer();
+			int b = is.read();
+			while(b != -1)
+			{
+				buf.append((char)b);
+				b = is.read();
+			}
+			String[] tmp = buf.toString().split("[ \t]+");
+			user = tmp[0];
+			group = tmp[1];
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
 			return false;
 		}
-		
-		String user = _console.askStringQuestion(_level, "What is the name of that special user? ");
-		if(user.equals("root"))
-		{
-			_console.printAnswer(_level, false, "root has way too much permissions to restrict apache's actions.");
-			return false;
-		}
-		
-		ShellAnsweredQuestion quest = new ShellAnsweredQuestion(_commandPath + _command, user);
-		ret = quest.answer();
+
+		ShellAnsweredQuestion quest = new ShellAnsweredQuestion(_commandPath + _command, user, group);
+		boolean ret = quest.answer();
 		
 		StringBuffer buf = new StringBuffer();
 		InputStream stdOut = quest.getStdOut();
