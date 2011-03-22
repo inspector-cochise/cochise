@@ -5,10 +5,24 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 public class InteractiveAskerTest
 {
+	@Before
+	public final void setUp()
+	{
+		FormattedConsole.getDefault().setIgnore_WaitForUserToContinue(true);
+	}
+	
+	@After
+	public final void tearDown()
+	{
+		FormattedConsole.getDefault().setIgnore_WaitForUserToContinue(false);
+	}
+	
 	@Test
 	public final void testAskQuestions_noCritical()
 	{

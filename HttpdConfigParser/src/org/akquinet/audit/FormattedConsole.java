@@ -12,9 +12,11 @@ public class FormattedConsole
 	};
 
 	private static FormattedConsole _default = null;
+	private boolean _ignore_waitForUserToContinue;
 
 	private FormattedConsole()
 	{
+		_ignore_waitForUserToContinue = false;
 	}
 
 	public static FormattedConsole getDefault()
@@ -168,10 +170,13 @@ public class FormattedConsole
 	
 	public void waitForUserToContinue() throws IOException
 	{
-		String anyKeyMessage = "  Hit enter to continue...";
-		System.out.println(anyKeyMessage);
-
-		System.in.read();
+		if(! _ignore_waitForUserToContinue )
+		{
+			String anyKeyMessage = "  Hit enter to continue...";
+			System.out.println(anyKeyMessage);
+			
+			System.in.read();
+		}
 	}
 	
 	public void printSeperatorLine()
@@ -186,5 +191,10 @@ public class FormattedConsole
 	public int getConsoleWidth()
 	{
 		return Integer.parseInt( System.getenv("COLUMNS") == null ? "80" : System.getenv("COLUMNS") );
+	}
+	
+	public void setIgnore_WaitForUserToContinue(boolean b)
+	{
+		_ignore_waitForUserToContinue = b;
 	}
 }
