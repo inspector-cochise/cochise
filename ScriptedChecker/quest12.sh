@@ -2,6 +2,13 @@
 # $1 should be the user
 # $2 (optional) should be the group
 
+
+if [ $1 = "root" ]
+then
+	echo root has too many rights
+	exit 1
+fi
+
 #does $1 exist?
 if passwd -S $1 >& /dev/null
 then
@@ -18,13 +25,6 @@ then
 else
 	group=`cat /etc/passwd |  grep -w ^$1 | awk 'BEGIN {FS=":"} {print $4;}'`
 	groupName=`cat /etc/group | grep :$group: | awk 'BEGIN {FS=":"} {print $1;}'`
-fi
-
-#is $1 locked?
-if passwd -S $1 | awk '{if($2 ~ /L/) {exit 1} else {exit 0} }'
-then
-	echo User $1 is not locked. A login would may be possible.
-	exit 1
 fi
 
 #first check $1 is the only member of $group
@@ -55,6 +55,19 @@ then
 	echo $groupName is empty and $1 is not a member of any other group.
 else
 	echo $1 is not member of $groupName but there are other members in $groupName.
+	exit 1
+fi
+
+#is $1 locked?
+#if passwd -S $1 | awk '{if($2 ~ /L/) {exit 1} else {exit 0} }'
+#then
+#	echo User $1 is not locked. A login would may be possible.
+#	exit 1
+#fi
+
+if [ `cat /etc/passwd |  grep -w ^$1 | awk 'BEGIN {FS=":"} {print $7;}'` != "/bin/false" ]
+then
+	echo User $1 has a login-shell different from /bin/false. It may be possible to login as $1 .
 	exit 1
 fi
 
