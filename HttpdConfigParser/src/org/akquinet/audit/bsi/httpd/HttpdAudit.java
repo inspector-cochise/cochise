@@ -94,11 +94,20 @@ public class HttpdAudit
 			tmpList.add(new Quest9(conf));
 			tmpList.add(new Quest10(conf));
 			tmpList.add(new Quest11(conf));
-			tmpList.add(new Quest12(conf));
+			tmpList.add(new Quest12(conf, apacheExecutable.getName()));
 			
 			InteractiveAsker asker = new InteractiveAsker(tmpList);
 			
-			asker.askQuestions();
+			boolean overallAnswer = asker.askQuestions();
+
+			if(overallAnswer)
+			{
+				System.out.println("\n\nYour apache seems to be safe.");
+			}
+			else
+			{
+				System.out.println("\n\nSeems like there are some questions. Your apache seems to be unsafe.");
+			}
 		}
 		catch (IOException e) { e.printStackTrace(); }
 	}
