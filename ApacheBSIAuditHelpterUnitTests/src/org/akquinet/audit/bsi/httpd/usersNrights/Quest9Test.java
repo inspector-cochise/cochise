@@ -24,8 +24,11 @@ public class Quest9Test
 	
 	private static final File _someConfig = _noHtdocsConf;
 	
-	private static final File _emptyExec = new File("./testFiles/emptyScript.bat");
-	private static final File _failExec = new File("./testFiles/failScript.bat");
+	private static final File _emptyExec = new File("./testFiles/Quest9/emptyScript.bat");
+	private static final File _failExec = new File("./testFiles/Quest9/failScript.bat");
+	private static final String _userNGroupsCommand = "userNgroup.bat";
+	
+	private static final String _apacheExecutable = "apache2";
 	
 
 	public final void testDriver(final String stdIn, final File malformedFile, final File executable, final boolean assertVal) throws Throwable
@@ -38,7 +41,7 @@ public class Quest9Test
 				try
 				{
 					InputStream stdInStream = System.in;
-					Quest9 SUT = new Quest9(new ConfigFile(malformedFile), executable.getAbsoluteFile().getParent() + File.separator, executable.getName());
+					Quest9 SUT = new Quest9(new ConfigFile(malformedFile), executable.getAbsoluteFile().getParent() + File.separator, executable.getName(), _userNGroupsCommand, _apacheExecutable);
 					System.setIn(new ByteArrayInputStream(stdIn.getBytes()));
 					
 					assertEquals(SUT.answer(), assertVal);
@@ -52,7 +55,6 @@ public class Quest9Test
 		};
 		
 		th.start();
-		th.join(); // TODO delete debug line
 		th.join(2000);
 		
 		if(th.isAlive())
@@ -103,14 +105,14 @@ public class Quest9Test
 	@Test
 	public final void testGetID() throws IOException
 	{
-		Quest9 SUT = new Quest9(new ConfigFile(_someConfig));
+		Quest9 SUT = new Quest9(new ConfigFile(_someConfig), _apacheExecutable);
 		assertTrue(SUT.getID().equals("Quest9"));
 	}
 
 	@Test
 	public final void testIsCritical() throws IOException
 	{
-		Quest9 SUT = new Quest9(new ConfigFile(_someConfig));
+		Quest9 SUT = new Quest9(new ConfigFile(_someConfig), _apacheExecutable);
 		assertFalse(SUT.isCritical());
 	}
 }
