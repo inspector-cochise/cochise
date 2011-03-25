@@ -41,13 +41,13 @@ public class Quest9 implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		_console.println(FormattedConsole.OutputLevel.HEADING, "vvvv" + _id + "vvvv");
+		_console.println(FormattedConsole.OutputLevel.HEADING, _id, "vvvv" + _id + "vvvv");
 
-		_console.printAnswer(_level, null, "We'll now start to examine the permissions in your ServerRoot.");
+		_console.printAnswer(_level, _id, null, "We'll now start to examine the permissions in your ServerRoot.");
 		if(_serverRoot != null)
 		{
 			String user = getApacheStartingUser();
-			_console.println(_level, "Seems like your apache is started by " + user + "...");
+			_console.println(_level, _id, "Seems like your apache is started by " + user + "...");
 			
 			if(_command9a != null && _commandPath  != null)
 			{
@@ -61,14 +61,14 @@ public class Quest9 implements YesNoQuestion
 			
 			boolean ret = _q9a.answer();
 			ret &= _q9b.answer();
-			_console.println(FormattedConsole.OutputLevel.HEADING, "^^^^" + _id + "^^^^");
-			_console.printAnswer(_level, ret, ret ? "Your ServerRoot seems ok." : "Seems like your ServerRoot is unsafe in the way mentioned above.");
+			_console.println(FormattedConsole.OutputLevel.HEADING, _id, "^^^^" + _id + "^^^^");
+			_console.printAnswer(_level, _id, ret, ret ? "Your ServerRoot seems ok." : "Seems like your ServerRoot is unsafe in the way mentioned above.");
 			return ret;
 		}
 		else
 		{
-			_console.println(FormattedConsole.OutputLevel.HEADING, "^^^^" + _id + "^^^^");
-			_console.printAnswer(_level, false, "Either none or multiple ServerRoot directives found. There has to be exactly one.");
+			_console.println(FormattedConsole.OutputLevel.HEADING, _id, "^^^^" + _id + "^^^^");
+			_console.printAnswer(_level, _id, false, "Either none or multiple ServerRoot directives found. There has to be exactly one.");
 			return false;
 		}
 	}

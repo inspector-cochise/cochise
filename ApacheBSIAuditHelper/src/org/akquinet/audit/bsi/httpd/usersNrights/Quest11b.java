@@ -25,7 +25,7 @@ public class Quest11b implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		_console.println(FormattedConsole.OutputLevel.HEADING, "----" + _id + "----");
+		_console.println(FormattedConsole.OutputLevel.HEADING, _id, "----" + _id + "----");
 
 		//first of all let's ensure, there are no "hidden" order/allow/deny directives like in
 		//neg_contained3.conf (see JUnit tests)
@@ -48,11 +48,11 @@ public class Quest11b implements YesNoQuestion
 		{
 			if (!dir.getDirectiveIgnoreCase("allow").isEmpty())
 			{
-				_console.printAnswer(_level, false, "Nobody should be able to access \"/\". Remove the following \"Allow\" directives:");
+				_console.printAnswer(_level, _id, false, "Nobody should be able to access \"/\". Remove the following \"Allow\" directives:");
 				List<Directive> allowList = dir.getDirectiveIgnoreCase("allow");
 				for (Directive directive : allowList)
 				{
-					_console.println(_level, directive.getLinenumber() + ": " + directive.getName() + " " + directive.getValue());
+					_console.println(_level, _id, directive.getLinenumber() + ": " + directive.getName() + " " + directive.getValue());
 				}
 				return false;
 			}
@@ -76,7 +76,7 @@ public class Quest11b implements YesNoQuestion
 				// output an answer-message
 				if (orderIsOK(order) && denyIsOK(deny))
 				{
-					_console.printAnswer(_level, true, "Access to \"/\" correctly blocked via mod_access.");
+					_console.printAnswer(_level, _id, true, "Access to \"/\" correctly blocked via mod_access.");
 					ret = true;
 				}
 				else
@@ -86,7 +86,7 @@ public class Quest11b implements YesNoQuestion
 			}
 			else
 			{
-				_console.printAnswer(_level, false, "I found multiple and/or incorrectly sorted \"Order\", \"Deny\" or \"Allow\" directives betwenn lines "
+				_console.printAnswer(_level, _id, false, "I found multiple and/or incorrectly sorted \"Order\", \"Deny\" or \"Allow\" directives betwenn lines "
 						+ dir.getBeginLineNumber() + " and " + dir.getEndLineNumber() + ". Please make them unique, sort them and run me again.");
 				return false;
 			}
@@ -106,7 +106,7 @@ public class Quest11b implements YesNoQuestion
 			   dir.getSurroundingContexts().get(1) != null
 			   )
 			{
-				_console.printAnswer(_level, false, "The directive in line " + dir.getLinenumber() + " may only be conditionally active. Move it in a <Directory /> Context not contained in any other context.");
+				_console.printAnswer(_level, _id, false, "The directive in line " + dir.getLinenumber() + " may only be conditionally active. Move it in a <Directory /> Context not contained in any other context.");
 				return false;
 			}
 		}
@@ -128,8 +128,8 @@ public class Quest11b implements YesNoQuestion
 		}
 		else
 		{
-			_console.printAnswer(_level, false, "Nobody should be able to access \"/\". Correct the following directive to \"Deny from all\".");
-			_console.println(_level, deny.getLinenumber() + ": " + deny.getName() + " " + deny.getValue());
+			_console.printAnswer(_level, _id, false, "Nobody should be able to access \"/\". Correct the following directive to \"Deny from all\".");
+			_console.println(_level, _id, deny.getLinenumber() + ": " + deny.getName() + " " + deny.getValue());
 			return false;
 		}
 	}
@@ -149,8 +149,8 @@ public class Quest11b implements YesNoQuestion
 		}
 		else
 		{
-			_console.printAnswer(_level, false, "Nobody should be able to access \"/\". Correct the following directive to \"Order Deny,Allow\".");
-			_console.println(_level, order.getLinenumber() + ": " + order.getName() + " " + order.getValue());
+			_console.printAnswer(_level, _id, false, "Nobody should be able to access \"/\". Correct the following directive to \"Order Deny,Allow\".");
+			_console.println(_level, _id, order.getLinenumber() + ": " + order.getName() + " " + order.getValue());
 			return false;
 		}
 	}

@@ -24,7 +24,7 @@ public class DummyQuestion implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		_console.println(_level, _message);
+		_console.println(_level, _id, _message);
 		return true;
 	}
 

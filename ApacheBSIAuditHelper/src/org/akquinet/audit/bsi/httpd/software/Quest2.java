@@ -29,7 +29,7 @@ public class Quest2 implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		_console.println(FormattedConsole.OutputLevel.HEADING, "----" + _id + "----");
+		_console.println(FormattedConsole.OutputLevel.HEADING, _id, "----" + _id + "----");
 		Process p;
 		String version = "(couldn't retrieve version information)";
 		try
@@ -55,9 +55,9 @@ public class Quest2 implements YesNoQuestion
 		{
 			e.printStackTrace();
 		}
-		_console.println(_level, "Version information of your apache httpd:\n" + version);
-		boolean ret = _console.askYesNoQuestion(_level, "Is your apache httpd well patched and have you checked that recently?");
-		_console.printAnswer(_level, ret, ret ? "Well done."
+		_console.println(_level, _id, "Version information of your apache httpd:\n" + version);
+		boolean ret = _console.askYesNoQuestion(_level, _id, "Is your apache httpd well patched and have you checked that recently?");
+		_console.printAnswer(_level, _id, ret, ret ? "Well done."
 				: "Please check for new patches and install them.");
 		return ret;
 	}

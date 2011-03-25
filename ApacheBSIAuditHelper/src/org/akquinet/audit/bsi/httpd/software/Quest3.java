@@ -23,7 +23,7 @@ public class Quest3 extends ModuleHelper implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		_console.println(FormattedConsole.OutputLevel.HEADING, "----" + _id + "----");
+		_console.println(FormattedConsole.OutputLevel.HEADING, _id, "----" + _id + "----");
 
 		List<Directive> loadList = getLoadModuleList();
 		for (Directive directive : loadList)
@@ -37,8 +37,8 @@ public class Quest3 extends ModuleHelper implements YesNoQuestion
 			if(arguments[0].equals("security2_module"))
 			{
 				Directive modSec = directive;
-				_console.printAnswer(_level, true, "ModSecurity is being loaded:");
-				_console.println(_level, modSec.getLinenumber() + ": " + modSec.getName() + " " + modSec.getValue());
+				_console.printAnswer(_level, _id, true, "ModSecurity is being loaded:");
+				_console.println(_level, _id, modSec.getLinenumber() + ": " + modSec.getName() + " " + modSec.getValue());
 				return true;
 			}
 			
@@ -50,12 +50,12 @@ public class Quest3 extends ModuleHelper implements YesNoQuestion
 		{
 			if(str.matches("( |\t)*mod_security.c( |\t)*"))
 			{
-				_console.printAnswer(_level, true, "ModSecurity is compiled into the httpd binary.");
+				_console.printAnswer(_level, _id, true, "ModSecurity is compiled into the httpd binary.");
 				return true;
 			}
 		}
 		
-		_console.printAnswer(_level, false, "ModSecurity seems not to be loaded.");
+		_console.printAnswer(_level, _id, false, "ModSecurity seems not to be loaded.");
 		return false;
 	}
 

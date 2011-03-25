@@ -36,8 +36,8 @@ public class Quest10 extends ModuleHelper implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		_console.println(FormattedConsole.OutputLevel.HEADING, "----" + _id + "----");
-		_console.println(_level, "I'll now check whether any user not in root has access to one of the modules you load...");
+		_console.println(FormattedConsole.OutputLevel.HEADING, _id, "----" + _id + "----");
+		_console.println(_level, _id, "I'll now check whether any user not in root has access to one of the modules you load...");
 		
 		boolean ret = true;
 		List<File> moduleFiles = getModuleFiles();
@@ -63,14 +63,14 @@ public class Quest10 extends ModuleHelper implements YesNoQuestion
 
 		if(!probs.isEmpty())
 		{
-			_console.println(_level, "I found some files causing problems (in most cases this means some user not in root has write access)");
+			_console.println(_level, _id, "I found some files causing problems (in most cases this means some user not in root has write access)");
 			for (String str : probs)
 			{
-				_console.println(_level, str);
+				_console.println(_level, _id, str);
 			}
 		}
 		
-		_console.printAnswer(_level, ret, ret ? "Seems like only users in root have access to the dynamically loadable modules."
+		_console.printAnswer(_level, _id, ret, ret ? "Seems like only users in root have access to the dynamically loadable modules."
 							: "Other users than users in root may have access to the above listed modules or their containing directories.\n");
 		
 		return ret;

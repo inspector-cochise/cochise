@@ -30,11 +30,11 @@ public class Quest8 implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		_console.println(FormattedConsole.OutputLevel.HEADING, "----" + _id + "----");
+		_console.println(FormattedConsole.OutputLevel.HEADING, _id, "----" + _id + "----");
 		ShellAnsweredQuestion quest = new ShellAnsweredQuestion(_commandPath + _command, _configFile.getAbsolutePath());
 		boolean ret = quest.answer();
 		
-		_console.printAnswer(_level, ret, ret ? "Your main configuration file seems to be safe."
+		_console.printAnswer(_level, _id, ret, ret ? "Your main configuration file seems to be safe."
 							: "Users not in the group \"root\" may have some access to your configuration file. They should get no rights (no read, no write, no execute)");
 		
 		return ret;

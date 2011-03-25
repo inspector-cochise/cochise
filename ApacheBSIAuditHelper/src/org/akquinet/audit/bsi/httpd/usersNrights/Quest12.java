@@ -29,17 +29,17 @@ public class Quest12 implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		_console.println(FormattedConsole.OutputLevel.HEADING, "vvvv" + _id + "vvvv");
-		_console.printAnswer(_level, null, "Ensuring that the apache web server is running with few permissions.");
+		_console.println(FormattedConsole.OutputLevel.HEADING, _id, "vvvv" + _id + "vvvv");
+		_console.printAnswer(_level, _id, null, "Ensuring that the apache web server is running with few permissions.");
 		boolean ret = _q12b.answer();
 		if(!ret)
 		{
-			_console.println(_level, "There is also another way to ensure few permissions:");
+			_console.println(_level, _id, "There is also another way to ensure few permissions:");
 			 ret = _q12a.answer();
 		}
 		
-		_console.println(FormattedConsole.OutputLevel.HEADING, "^^^^" + _id + "^^^^");
-		_console.printAnswer(_level, ret, ret ?
+		_console.println(FormattedConsole.OutputLevel.HEADING, _id, "^^^^" + _id + "^^^^");
+		_console.printAnswer(_level, _id, ret, ret ?
 					"The apache web server is correctly running with few permissions."
 					: "The apache web server is maybe running with too many permissions.");
 		return ret;

@@ -16,9 +16,9 @@ public class Quest11a implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		_console.println(FormattedConsole.OutputLevel.HEADING, "----" + _id + "----");
-		boolean ret = _console.askYesNoQuestion(_level, "Have you properly set up a chroot environment for the apache httpd server which will block access outside of the servers root directory?");
-		_console.printAnswer(_level, ret, ret ? 
+		_console.println(FormattedConsole.OutputLevel.HEADING, _id, "----" + _id + "----");
+		boolean ret = _console.askYesNoQuestion(_level, _id, "Have you properly set up a chroot environment for the apache httpd server which will block access outside of the servers root directory?");
+		_console.printAnswer(_level, _id, ret, ret ? 
 						"Ok this should block access to files outside of the servers root directory."
 						: "No chroot - it may be possible to access files outside of the servers root directory if not sealed otherwise.");
 		return ret;

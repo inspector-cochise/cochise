@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.akquinet.audit.FormattedConsole;
 import org.akquinet.audit.YesNoQuestion;
-import org.akquinet.audit.FormattedConsole.OutputLevel;
 import org.akquinet.httpd.ConfigFile;
 import org.akquinet.httpd.syntax.Directive;
 
@@ -26,21 +25,21 @@ public class Quest5a implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		_console.println(FormattedConsole.OutputLevel.HEADING, "----" + _id + "----");
+		_console.println(FormattedConsole.OutputLevel.HEADING, _id, "----" + _id + "----");
 		List<Directive> incList = _conf.getAllDirectivesIgnoreCase("Include");
 		
 		if(!incList.isEmpty())
 		{
-			_console.printAnswer(_level, false, "There are Include-directives in your apache configuration:");
+			_console.printAnswer(_level, _id, false, "There are Include-directives in your apache configuration:");
 			for (Directive directive : incList)
 			{
-				_console.println(_level, "line " + directive.getLinenumber() + ": " + directive.getName() + " " + directive.getValue());
+				_console.println(_level, _id, "line " + directive.getLinenumber() + ": " + directive.getName() + " " + directive.getValue());
 			}
 			return false;
 		}
 		else
 		{
-			_console.printAnswer(OutputLevel.Q2, true, "No Include-directives found.");
+			_console.printAnswer(_level, _id, true, "No Include-directives found.");
 			return true;
 		}
 	}

@@ -8,7 +8,8 @@ public class FormattedConsole
 	{
 		HEADING,
 		Q1, // for main questions
-		Q2	// for subquestions
+		Q2,	// for subquestions
+		RAW	// this is for the main function an similar functions
 	};
 
 	private static FormattedConsole _default = null;
@@ -28,28 +29,14 @@ public class FormattedConsole
 		return _default;
 	}
 
-	public void println(OutputLevel level, String str)
+	public void println(OutputLevel level, String printerId, String str)
 	{
-		StringBuffer buf = new StringBuffer(str);
-		switch (level)
-		{
-		case HEADING:
-			buf = (new StringBuffer("  ")).append(buf);
-			break;
-		case Q1:
-			buf = (new StringBuffer("  \t")).append(buf);
-			break;
-		case Q2:
-			buf = (new StringBuffer("  \t\t")).append(buf);
-			break;
-		}
-		System.out.println(buf);
+		print(level, printerId, str + "\n");
 	}
 
-	public void printAnswer(OutputLevel level, Boolean answer, String comment)
+	public void printAnswer(OutputLevel level, String printerId, Boolean answer, String comment)
 	{
-		StringBuffer buf = new StringBuffer();
-		String str_answer = "--";
+		String str_answer;
 		if (answer == null)
 		{
 			str_answer = "--";
@@ -62,38 +49,18 @@ public class FormattedConsole
 		{
 			str_answer = "NN";
 		}
-
-		switch (level)
+		
+		if(level == OutputLevel.Q2)
 		{
-		case HEADING:
-			buf.append("  ").append(comment);
-			break;
-		case Q1:
-			buf = buf.append(str_answer).append("  \t").append(comment);
-			break;
-		case Q2:
-			str_answer = "|" + str_answer.substring(1);
-			buf = buf.append(str_answer).append("  \t\t").append(comment);
-			break;
+			str_answer.replaceFirst(".", "|");
 		}
-		System.out.println(buf);
+
+		print(level, printerId, comment, str_answer);
 	}
 
-	public boolean askYesNoQuestion(OutputLevel level, String question)
+	public boolean askYesNoQuestion(OutputLevel level, String askerId, String question)
 	{
-		StringBuffer buf = new StringBuffer();
-		switch (level)
-		{
-		case HEADING:
-			buf.append(question);
-			break;
-		case Q1:
-			buf = buf.append("  \t").append(question).append(" (Yes/No) [No]: ");
-			break;
-		case Q2:
-			buf = buf.append("  \t\t").append(question).append(" (Yes/No) [No]: ");
-			break;
-		}
+		print(level, askerId, question + (level == OutputLevel.RAW ? "" : " Yes/No [No] "));
 
 		Boolean ret = null;
 
@@ -102,58 +69,94 @@ public class FormattedConsole
 			String answer = "";
 			try
 			{
-				System.out.print(buf.toString());
 				answer = readStdInLine();
 			}
 			catch (IOException e)
 			{
+				throw new RuntimeException(e);
 			}
 
-			// String answer = System.console().readLine(buf.toString());
-			if (answer.equalsIgnoreCase("yes"))
+			if (isYes(answer))
 			{
 				ret = true;
 			}
-			else if (answer.equalsIgnoreCase("no") || answer.equalsIgnoreCase(""))
+			else if (isNo(answer) || answer.equalsIgnoreCase(""))
 			{
 				ret = false;
 			}
 			else
 			{
-				println(level, "Unrecognized answer. Please answer with \"no\" or \"yes\".");
+				print(level, askerId, "Unrecognized answer. Please answer with \"no\" or \"yes\".");
 			}
 		}
 
 		return ret;
 	}
 
-	public String askStringQuestion(OutputLevel level, String question)
+	public String askStringQuestion(OutputLevel level, String askerId, String question)
 	{
-		StringBuffer buf = new StringBuffer();
-		switch (level)
+		return askStringQuestion(level, askerId, question, null);
+	}
+	
+	public String askStringQuestion(OutputLevel level, String askerId, String question, String defaultAnswer)
+	{
+		if(defaultAnswer != null)
 		{
-		case HEADING:
-			buf.append(question);
-			break;
-		case Q1:
-			buf = buf.append("  \t").append(question).append(" ");
-			break;
-		case Q2:
-			buf = buf.append("  \t\t").append(question).append(" ");
-			break;
+			print(level, askerId, question + " [Hit enter for default value " + defaultAnswer + "] ");
+		}
+		else
+		{
+			print(level, askerId, question + " ");
+			defaultAnswer = "";
 		}
 
 		String answer = "";
 		try
 		{
-			System.out.print(buf.toString());
 			answer = readStdInLine();
+			
+			if(isYes(answer) || "".equals(answer))
+			{
+				return defaultAnswer;
+			}
+			
+			if(isNo(answer))
+			{
+				print(level, askerId, "Please enter your custom value. ");
+				answer = readStdInLine();
+			}
 		}
 		catch (IOException e)
 		{
+			throw new RuntimeException(e);
 		}
-
+		
 		return answer;
+	}
+	
+	private void print(OutputLevel level, String printerId, String str)
+	{
+		print(level, printerId, str, "  ");
+	}
+	
+	private void print(OutputLevel level, String printerId, String str, String answer)
+	{
+		StringBuffer buf = new StringBuffer(str);
+		switch (level)
+		{
+		case HEADING:
+			buf = (new StringBuffer(answer)).append(buf);
+			break;
+		case Q1:
+			buf = (new StringBuffer(answer)).append("\t").append(buf);
+			break;
+		case Q2:
+			buf = (new StringBuffer(answer)).append("\t\t").append(buf);
+			break;
+		case RAW:
+			break;
+		}
+		System.out.print(buf);
 	}
 	
 	private String readStdInLine() throws IOException
@@ -172,7 +175,7 @@ public class FormattedConsole
 	{
 		if(! _ignore_waitForUserToContinue )
 		{
-			String anyKeyMessage = "  Hit enter to continue...";
+			String anyKeyMessage = "\n  Hit enter to continue...";
 			System.out.println(anyKeyMessage);
 			
 			System.in.read();
@@ -196,5 +199,15 @@ public class FormattedConsole
 	public void setIgnore_WaitForUserToContinue(boolean b)
 	{
 		_ignore_waitForUserToContinue = b;
+	}
+	
+	private static boolean isYes(String str)
+	{
+		return str.equalsIgnoreCase("yes") || str.equalsIgnoreCase("y") || str.equalsIgnoreCase("yy");
+	}
+
+	private static boolean isNo(String str)
+	{
+		return str.equalsIgnoreCase("no") || str.equalsIgnoreCase("n") || str.equalsIgnoreCase("nn");
 	}
 }

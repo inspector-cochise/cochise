@@ -9,6 +9,7 @@ public class InteractiveAsker
 {
 	private List<YesNoQuestion> _questions;
 	private static final FormattedConsole _console = FormattedConsole.getDefault();
+	public static final String _id = "InteractiveAsker";
 	
 	public InteractiveAsker(List<YesNoQuestion> questions)
 	{
@@ -25,8 +26,8 @@ public class InteractiveAsker
 			
 			if(!answer && question.isCritical())
 			{
-				_console.println(OutputLevel.HEADING , "You answered a question with 'no', which has effect on evaluation of future questions.");
-				_console.println(OutputLevel.HEADING , "Fix that issue and then run me again.");
+				_console.println(OutputLevel.HEADING , _id, "You answered a question with 'no', which has effect on evaluation of future questions.");
+				_console.println(OutputLevel.HEADING , _id, "Fix that issue and then run me again.");
 				return false;
 			}
 			

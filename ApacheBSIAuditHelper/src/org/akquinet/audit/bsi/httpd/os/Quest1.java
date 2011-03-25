@@ -28,20 +28,20 @@ public class Quest1 implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		_console.println(FormattedConsole.OutputLevel.HEADING, "----" + _id + "----");
+		_console.println(FormattedConsole.OutputLevel.HEADING, _id, "----" + _id + "----");
 		if(_highSecReq)
 		{
 			ShellAnsweredQuestion quest = new ShellAnsweredQuestion(_commandPath + _command);
 			boolean ret = quest.answer();
 			
-			_console.printAnswer(_level, ret, ret ? "User root is correctly locked."
+			_console.printAnswer(_level, _id, ret, ret ? "User root is correctly locked."
 								: "Please lock user root (\"passwd -l\"). After that you can't directly log yourself in as root.");
 			
 			return ret;
 		}
 		else
 		{
-			_console.printAnswer(_level, null, "skipping question... (no high level of security requested))");
+			_console.printAnswer(_level, _id, null, "skipping question... (no high level of security requested))");
 			return true;
 		}
 	}

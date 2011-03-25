@@ -34,9 +34,9 @@ public class Quest4 extends ModuleHelper implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		_console.println(FormattedConsole.OutputLevel.HEADING, "----" + _id + "----");
-		_console.println(_level, "It is necessary, that only modules you really need are being loaded.");
-		_console.println(_level, "Cause I don't know what modules you need and this is usally a longer list, I will give you a list in " + _listFileName + " .");
+		_console.println(FormattedConsole.OutputLevel.HEADING, _id, "----" + _id + "----");
+		_console.println(_level, _id, "It is necessary, that only modules you really need are being loaded.");
+		_console.println(_level, _id, "Cause I don't know what modules you need and this is usally a longer list, I will give you a list in " + _listFileName + " .");
 		
 		try
 		{
@@ -78,9 +78,9 @@ public class Quest4 extends ModuleHelper implements YesNoQuestion
 			e.printStackTrace();
 		}
 		
-		_console.println(_level, "Please check whether you need all of these modules.");
-		boolean ret = _console.askYesNoQuestion(_level, "Do you need all of these modules?");
-		_console.printAnswer(_level, ret, ret ? "No redundant modules loaded."
+		_console.println(_level, _id, "Please check whether you need all of these modules.");
+		boolean ret = _console.askYesNoQuestion(_level, _id, "Do you need all of these modules?");
+		_console.printAnswer(_level, _id, ret, ret ? "No redundant modules loaded."
 				: "Please remove these modules, if necessary recompile your apache.");
 		return ret;
 	}

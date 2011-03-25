@@ -33,8 +33,8 @@ public class Quest12a implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		_console.println(FormattedConsole.OutputLevel.HEADING, "----" + _id + "----");
-		_console.println(_level, "One can customize the startup process of the apache deamon to start it as a special user with low rights.");
+		_console.println(FormattedConsole.OutputLevel.HEADING, _id, "----" + _id + "----");
+		_console.println(_level, _id, "One can customize the startup process of the apache deamon to start it as a special user with low rights.");
 		
 		String user = null;
 		String group = null;
@@ -78,7 +78,7 @@ public class Quest12a implements YesNoQuestion
 			e.printStackTrace();
 		}
 		
-		_console.printAnswer(_level, ret, buf.toString());
+		_console.printAnswer(_level, _id, ret, buf.toString());
 		
 		
 		return ret;

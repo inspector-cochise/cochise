@@ -32,15 +32,15 @@ public class Quest12b implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		_console.println(FormattedConsole.OutputLevel.HEADING, "----" + _id + "----");
+		_console.println(FormattedConsole.OutputLevel.HEADING, _id, "----" + _id + "----");
 
-		_console.println(_level, "Looking for directives User and Group in the apache configuration file...");
+		_console.println(_level, _id, "Looking for directives User and Group in the apache configuration file...");
 		
 		String user = null;
 		String group = null;
 		if(_conf.getDirective("User").size() == 0 || _conf.getDirective("Group").size() == 0)
 		{
-			_console.printAnswer(_level, false, "User or Group directive not found. No dedicated user specified.");
+			_console.printAnswer(_level, _id, false, "User or Group directive not found. No dedicated user specified.");
 			return false;
 		}
 		
@@ -66,7 +66,7 @@ public class Quest12b implements YesNoQuestion
 			e.printStackTrace();
 		}
 		
-		_console.printAnswer(_level, ret, buf.toString());
+		_console.printAnswer(_level, _id, ret, buf.toString());
 		
 		return ret;
 	}

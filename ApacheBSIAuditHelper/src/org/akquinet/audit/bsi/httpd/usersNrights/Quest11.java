@@ -28,17 +28,17 @@ public class Quest11 implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		_console.println(FormattedConsole.OutputLevel.HEADING, "vvvv" + _id + "vvvv");
-		_console.printAnswer(_level, null, "Evaluating whether it may be possible to access files outside of the servers root directory.");
+		_console.println(FormattedConsole.OutputLevel.HEADING, _id, "vvvv" + _id + "vvvv");
+		_console.printAnswer(_level, _id, null, "Evaluating whether it may be possible to access files outside of the servers root directory.");
 		boolean ret = _q11b.answer();
 		if(!ret)
 		{
-			_console.println(_level, "There is also another way to block access to files outside of the servers root directory:");
+			_console.println(_level, _id, "There is also another way to block access to files outside of the servers root directory:");
 			 ret = _q11a.answer();
 		}
 		
-		_console.println(FormattedConsole.OutputLevel.HEADING, "^^^^" + _id + "^^^^");
-		_console.printAnswer(_level, ret, ret ?
+		_console.println(FormattedConsole.OutputLevel.HEADING, _id, "^^^^" + _id + "^^^^");
+		_console.printAnswer(_level, _id, ret, ret ?
 					"Access to files outside of the servers root directory is correctly blocked."
 					: "In some way it may be possible to access files outside of the servers root directory.");
 		return ret;

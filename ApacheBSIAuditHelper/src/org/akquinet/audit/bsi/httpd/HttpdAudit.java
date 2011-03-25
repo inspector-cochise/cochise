@@ -75,49 +75,50 @@ public class HttpdAudit
 			FormattedConsole.OutputLevel Q1 = FormattedConsole.OutputLevel.Q1;
 			FormattedConsole.OutputLevel Q2 = FormattedConsole.OutputLevel.Q2;
 			
+			String id = "main";
 			
 			console.printSeperatorLine();
-			console.println(Q1, "Hello, during this audit I will ask you a bunch of questions.");
-			console.println(Q1, "Please rethink your answers twice before you give them to me.");
-			console.println(Q1, "");
+			console.println(Q1, id, "Hello, during this audit I will ask you a bunch of questions.");
+			console.println(Q1, id, "Please rethink your answers twice before you give them to me.");
+			console.println(Q1, id, "");
 
-			console.println(Q1, "This audit will in most cases require you to make significant changes to your apache configuration.");
-			console.println(Q1, "Another point is that the requirements of this audit conflict with most of the administration tools");
-			console.println(Q1, "(like a2enmod, a2dismod, yast2, ...).");
-			console.println(Q1, "");
+			console.println(Q1, id, "This audit will in most cases require you to make significant changes to your apache configuration.");
+			console.println(Q1, id, "Another point is that the requirements of this audit conflict with most of the administration tools");
+			console.println(Q1, id, "(like a2enmod, a2dismod, yast2, ...).");
+			console.println(Q1, id, "");
 			
-			console.println(Q1, "First of all, let's start with some basic information about your system and your security requirements.");
-			console.println(Q1, "Normally the apache the apache httpd executable is something like:");
-			console.println(Q2, "/usr/sbin/apache2    (Debian/Ubuntu)");
-			console.println(Q2, "/usr/sbin/httpd      (RedHat)");
-			console.println(Q2, "/usr/sbin/httpd2     (SUSE)");
-			tmp = console.askStringQuestion(Q1, "What is your apache executable? [" + apacheExec + "]");
+			console.println(Q1, id, "First of all, let's start with some basic information about your system and your security requirements.");
+			console.println(Q1, id, "Normally the apache the apache httpd executable is something like:");
+			console.println(Q2, id, "/usr/sbin/apache2    (Debian/Ubuntu)");
+			console.println(Q2, id, "/usr/sbin/httpd      (RedHat)");
+			console.println(Q2, id, "/usr/sbin/httpd2     (SUSE)");
+			tmp = console.askStringQuestion(Q1, id, "What is your apache executable? [" + apacheExec + "]");
 			apacheExec = "".equals(tmp.trim()) ? apacheExec : tmp;
 			File apacheExecutable = new File(apacheExec);
 			
-			console.println(Q1, "");
+			console.println(Q1, id, "");
 			
-			console.println(Q1, "The main configuration file for the apache web server normally is something like:");
-			console.println(Q2, "/etc/apache2/apache2.conf    (Debian/Ubuntu)");
-			console.println(Q2, "/etc/httpd/httpd.conf        (RedHat)");
-			console.println(Q2, "/etc/apache2/httpd.conf      (SUSE)");
-			tmp = console.askStringQuestion(Q1, "What is you apache main configuration file? [" + apacheConf + "]");
+			console.println(Q1, id, "The main configuration file for the apache web server normally is something like:");
+			console.println(Q2, id, "/etc/apache2/apache2.conf    (Debian/Ubuntu)");
+			console.println(Q2, id, "/etc/httpd/httpd.conf        (RedHat)");
+			console.println(Q2, id, "/etc/apache2/httpd.conf      (SUSE)");
+			tmp = console.askStringQuestion(Q1, id, "What is you apache main configuration file? [" + apacheConf + "]");
 			apacheConf = "".equals(tmp.trim()) ? apacheConf : tmp;
 			File configFile = new File(apacheConf);
 			ConfigFile conf = new ConfigFile(configFile);
 			
-			console.println(Q1, "");
+			console.println(Q1, id, "");
 			
-			String answer = console.askStringQuestion(Q1, "Does your application require a high level of security? (Yes/No) ");
+			String answer = console.askStringQuestion(Q1, id, "Does your application require a high level of security? (Yes/No) ");
 			boolean highSec = answer.equalsIgnoreCase("Yes");
 			
-			console.println(Q1, "");
+			console.println(Q1, id, "");
 			
-			answer = console.askStringQuestion(Q1, "Does your application require a high level of privacy? (Yes/No) ");
+			answer = console.askStringQuestion(Q1, id, "Does your application require a high level of privacy? (Yes/No) ");
 			boolean highPriv = answer.equalsIgnoreCase("Yes");
 			
-			console.println(Q1, "");
-			console.println(Q1, "Ok, then let's start.");
+			console.println(Q1, id, "");
+			console.println(Q1, id, "Ok, then let's start.");
 			console.printSeperatorLine();
 			
 			List<YesNoQuestion> tmpList = new LinkedList<YesNoQuestion>();
@@ -141,11 +142,13 @@ public class HttpdAudit
 
 			if(overallAnswer)
 			{
-				System.out.println("\n\nYour apache seems to be safe.");
+				console.println(Q1, id, "");
+				console.println(Q1, id, "Your apache seems to be safe.");
 			}
 			else
 			{
-				System.out.println("\n\nSeems like there are some questions. Your apache seems to be unsafe.");
+				console.println(Q1, id, "");
+				console.println(Q1, id, "Seems like there are some questions. Your apache seems to be unsafe.");
 			}
 		}
 		catch (IOException e) { e.printStackTrace(); }

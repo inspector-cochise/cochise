@@ -33,7 +33,7 @@ public class Quest9a implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		_console.println(FormattedConsole.OutputLevel.HEADING, "----" + _id + "----");
+		_console.println(FormattedConsole.OutputLevel.HEADING, _id, "----" + _id + "----");
 		ShellAnsweredQuestion quest = new ShellAnsweredQuestion(_commandPath + _command, _serverRoot, _user);
 		boolean ret = quest.answer();
 		StringBuffer probBuf = new StringBuffer();
@@ -54,7 +54,7 @@ public class Quest9a implements YesNoQuestion
 		
 		String problems = probBuf.toString();
 		
-		_console.printAnswer(_level, ret, ret ? "Your ServerRoot (not speaking about a possible htdocs file/directory) seems to be ok."
+		_console.printAnswer(_level, _id, ret, ret ? "Your ServerRoot (not speaking about a possible htdocs file/directory) seems to be ok."
 							: "Other users than " + _user + " have access to the following files/directories. Please change permissions." + problems);
 		
 		return ret;

@@ -27,7 +27,7 @@ public class Quest5b implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		_console.println(FormattedConsole.OutputLevel.HEADING, "----" + _id + "----");
+		_console.println(FormattedConsole.OutputLevel.HEADING, _id, "----" + _id + "----");
 		List<Directive> dirList = _conf.getAllDirectives("AllowOverride");
 		List<Directive> problems = new LinkedList<Directive>();
 		boolean isSetGlobalRoot = false;	//will be changed if at least one directive in global context is found
@@ -54,10 +54,10 @@ public class Quest5b implements YesNoQuestion
 		String overrides = problems.isEmpty() ?
 						"Directive \"AllowOverride\" correctly doesn't appear with a parameter other than \"None\"" :
 						"You have stated the directive \"AllowOverrid\" with parameters other than \"None\". Remove these:";
-		_console.printAnswer(_level, isSetGlobalRoot & problems.isEmpty(), global + " " + overrides);
+		_console.printAnswer(_level, _id, isSetGlobalRoot & problems.isEmpty(), global + " " + overrides);
 		for (Directive directive : problems)
 		{
-			_console.println(_level, "line " + directive.getLinenumber() + ": " + directive.getName() + " " + directive.getValue());
+			_console.println(_level, _id, "line " + directive.getLinenumber() + ": " + directive.getName() + " " + directive.getValue());
 		}
 
 		

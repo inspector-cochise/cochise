@@ -34,7 +34,7 @@ public class Quest6 implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		_console.println(FormattedConsole.OutputLevel.HEADING, "----" + _id + "----");
+		_console.println(FormattedConsole.OutputLevel.HEADING, _id, "----" + _id + "----");
 		try
 		{
 			Process p = _httpd.start();
@@ -43,12 +43,12 @@ public class Quest6 implements YesNoQuestion
 			
 			if(exit == 0)
 			{
-				_console.printAnswer(_level, true, "Syntax of main configuration file OK.");
+				_console.printAnswer(_level, _id, true, "Syntax of main configuration file OK.");
 				return true;
 			}
 			else
 			{
-				_console.printAnswer(_level, false, "Syntax errors in main configuration file:");
+				_console.printAnswer(_level, _id, false, "Syntax errors in main configuration file:");
 				StringBuffer buf = new StringBuffer();
 				int b = _stdErr.read();
 				while(b != -1)
@@ -56,7 +56,7 @@ public class Quest6 implements YesNoQuestion
 					buf.append((char)b);
 					b = _stdErr.read();
 				}
-				_console.println(_level, buf.toString());
+				_console.println(_level, _id, buf.toString());
 				
 				return false;
 			}
@@ -64,12 +64,12 @@ public class Quest6 implements YesNoQuestion
 		catch (IOException e)
 		{
 			e.printStackTrace();
-			_console.printAnswer(_level, false, "Problem while answering question. Caught an IOException (see stderr).");
+			_console.printAnswer(_level, _id, false, "Problem while answering question. Caught an IOException (see stderr).");
 		}
 		catch (InterruptedException e)
 		{
 			e.printStackTrace();
-			_console.printAnswer(_level, false, "Problem while answering question. Caught an InterruptedException (see stderr).");
+			_console.printAnswer(_level, _id, false, "Problem while answering question. Caught an InterruptedException (see stderr).");
 		}
 		return false;
 	}
