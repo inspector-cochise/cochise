@@ -1,6 +1,8 @@
 package org.akquinet.audit.ui;
 
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 public class FormattedConsole
 {
@@ -60,17 +62,20 @@ public class FormattedConsole
 	{
 		if(defaultAnswer == null)
 		{
-			print(level, question +  " Yes/No ");
+			String tmp = wrapString(question +  " Yes/No ", level);
+			print(level, tmp);
 		}
 		else
 		{
 			if(defaultAnswer)
 			{
-				print(level, question + (level == OutputLevel.RAW ? "" : " Yes/No [Yes] "));
+				String tmp = wrapString(question + (level == OutputLevel.RAW ? "" : " Yes/No [Yes] "), level);
+				print(level, tmp);
 			}
 			else
 			{
-				print(level, question + (level == OutputLevel.RAW ? "" : " Yes/No [No] "));
+				String tmp = wrapString(question + (level == OutputLevel.RAW ? "" : " Yes/No [No] "), level);
+				print(level, tmp);
 			}
 		}
 
@@ -118,11 +123,14 @@ public class FormattedConsole
 	{
 		if (defaultAnswer != null)
 		{
-			print(level, question + " [Hit enter for default value "
-					+ defaultAnswer + "] ");
-		} else
+			String tmp = wrapString(question +
+					" [Hit enter for default value "	+ defaultAnswer + "] ", level);
+			print(level, tmp);
+		}
+		else
 		{
-			print(level, question + " ");
+			String tmp = wrapString(question + " ", level);
+			print(level, tmp);
 		}
 
 		String answer = "";
@@ -169,10 +177,10 @@ public class FormattedConsole
 			buf = (new StringBuffer(answer)).append(buf);
 			break;
 		case Q1:
-			buf = (new StringBuffer(answer)).append("\t").append(buf);
+			buf = (new StringBuffer(answer)).append("    ").append(buf);
 			break;
 		case Q2:
-			buf = (new StringBuffer(answer)).append("\t\t").append(buf);
+			buf = (new StringBuffer(answer)).append("        ").append(buf);
 			break;
 		case RAW:
 			break;
@@ -216,6 +224,22 @@ public class FormattedConsole
 	{
 		return System.getProperty("COLUMNS") == null ? 80 : Integer.parseInt(System.getProperty("COLUMNS"));
 	}
+	
+	public static int getIndentation(OutputLevel level)
+	{
+		switch (level)
+		{
+		case HEADING:
+			return 2;
+		case Q1:
+			return 6;
+		case Q2:
+			return 10;
+		case RAW:
+		default:
+			return 0;
+		}
+	}
 
 	public void setIgnore_WaitForUserToContinue(boolean b)
 	{
@@ -232,5 +256,75 @@ public class FormattedConsole
 	{
 		return str.equalsIgnoreCase("no") || str.equalsIgnoreCase("n")
 				|| str.equalsIgnoreCase("nn");
+	}
+	
+	public String wrapString(String text, OutputLevel level)
+	{
+		int maxLength = getConsoleWidth();
+		String prepend = "";
+		
+		{
+			StringBuffer buf = new StringBuffer();
+			for(int i = 0; i < getIndentation(level); ++i)
+			{
+				buf = buf.append(" ");
+			}
+			prepend = buf.toString();
+		}
+		
+		List<String> wrappedText = new LinkedList<String>();
+		int i = 0;
+		int split = -1;
+
+		while(! text.isEmpty() )
+		{
+			if(text.length() + getIndentation(level) <= maxLength)
+			{
+				wrappedText.add(text);
+				text = "";
+				i = -1;
+				continue;
+			}
+			
+			char c = text.charAt(i);
+			if(c == '\n')
+			{
+				wrappedText.add(text.substring(0, i));
+				text = prepend + ( i+1 < text.length() ? text.substring(i+1) : "" );
+			}
+			else if(c == ' ' || c == '-' || c == '\t' || c == '/' || c == ',' || c == '.' || c == '!' || c == '?')
+			{
+				if(maxLength - i - prepend.length() <= 0)
+				{
+					if(split == -1)
+					{
+						wrappedText.add(text.substring(0, maxLength + 1));
+						text = prepend + ( maxLength+1 < text.length() ? text.substring(maxLength+1) : "" );
+					}
+					else
+					{
+						wrappedText.add(text.substring(0, split+1));
+						text = prepend + ( split+1 < text.length() ? text.substring(split+1) : "" );
+					}
+					i = 0;
+					split = -1;
+					continue;
+				}
+				else
+				{
+					split = i;
+				}
+			}
+			
+			++i;
+		}
+		
+		StringBuffer buf = new StringBuffer();
+		for (String str : wrappedText)
+		{
+			buf = buf.append(str).append('\n');
+		}
+		
+		return buf.toString().substring(0, buf.length()-1);	//without last '\n'
 	}
 }

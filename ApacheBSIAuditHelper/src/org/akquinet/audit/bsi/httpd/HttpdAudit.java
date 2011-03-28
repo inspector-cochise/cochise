@@ -71,12 +71,12 @@ public class HttpdAudit
 			
 			String id = "main";
 			
-			uc.printParagraph("Hello, during this audit I will ask you a bunch of questions." +
+			uc.printParagraph("Hello, during this audit I will ask you a bunch of questions. " +
 					"Please rethink your answers twice before you give them to me.");
 
-			uc.printParagraph("This audit will in most cases require you to make significant changes to your apache configuration." +
-					"This audit will in most cases require you to make significant changes to your apache configuration." +
-					"Another point is that the requirements of this audit conflict with most of the administration tools" +
+			uc.printParagraph("This audit will in most cases require you to make significant changes to your apache configuration. " +
+					"This audit will in most cases require you to make significant changes to your apache configuration. " +
+					"Another point is that the requirements of this audit conflict with most of the administration tools " +
 					"(like a2enmod, a2dismod, yast2, ...).");
 			
 			uc.println("First of all, let's start with some basic information about your system and your security requirements.");
