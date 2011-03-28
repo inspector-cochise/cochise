@@ -4,14 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.akquinet.audit.FormattedConsole;
 import org.akquinet.audit.YesNoQuestion;
+import org.akquinet.audit.ui.UserCommunicator;
 
 public class Quest2 implements YesNoQuestion
 {
 	private static final String _id = "Quest2";
-	private static final FormattedConsole _console = FormattedConsole.getDefault();
-	private static final FormattedConsole.OutputLevel _level = FormattedConsole.OutputLevel.Q1;
+	private static final UserCommunicator _uc = UserCommunicator.getDefault();
 	private ProcessBuilder _httpd;
 	
 	public Quest2(File apacheExecutable)
@@ -29,7 +28,7 @@ public class Quest2 implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		_console.println(FormattedConsole.OutputLevel.HEADING, _id, "----" + _id + "----");
+		_uc.printHeading3(_id);
 		Process p;
 		String version = "(couldn't retrieve version information)";
 		try
@@ -55,9 +54,9 @@ public class Quest2 implements YesNoQuestion
 		{
 			e.printStackTrace();
 		}
-		_console.println(_level, _id, "Version information of your apache httpd:\n" + version);
-		boolean ret = _console.askYesNoQuestion(_level, _id, "Is your apache httpd well patched and have you checked that recently?");
-		_console.printAnswer(_level, _id, ret, ret ? "Well done."
+		_uc.println("Version information of your apache httpd:\n" + version);
+		boolean ret = _uc.askYesNoQuestion("Is your apache httpd well patched and have you checked that recently?");
+		_uc.printAnswer(ret, ret ? "Well done."
 				: "Please check for new patches and install them.");
 		return ret;
 	}

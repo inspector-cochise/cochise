@@ -1,15 +1,14 @@
 package org.akquinet.audit.bsi.httpd.software;
 
-import org.akquinet.audit.FormattedConsole;
 import org.akquinet.audit.YesNoQuestion;
+import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
 
 public class Quest5 implements YesNoQuestion
 {
 	private static final String _id = "Quest5";
 	private ConfigFile _conf;
-	private static final FormattedConsole _console = FormattedConsole.getDefault();
-	private static final FormattedConsole.OutputLevel _level = FormattedConsole.OutputLevel.Q1;
+	private static final UserCommunicator _uc = UserCommunicator.getDefault();
 	
 	private Quest5a _q5a;
 	private Quest5b _q5b;
@@ -28,12 +27,14 @@ public class Quest5 implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		_console.println(FormattedConsole.OutputLevel.HEADING, _id, "vvvv" + _id + "vvvv");
-		_console.printAnswer(_level, _id, null, "Evaluating whether your main configuration file is your only possible configuration file...");
+		_uc.printHeading3(_id);
+		_uc.println("Evaluating whether your main configuration file is your only possible configuration file...");
+		_uc.beginIndent();
 		boolean ret = _q5a.answer() && _q5b.answer();
 		
-		_console.println(FormattedConsole.OutputLevel.HEADING, _id, "^^^^" + _id + "^^^^");
-		_console.printAnswer(_level, _id, ret, ret ?
+		_uc.endIndent();
+		_uc.println("Back to " + _id);
+		_uc.printAnswer(ret, ret ?
 					"Your main configuration file is your only possible configuration file."
 					: "Your main configuration file is not your only possible configuration file.");
 		return ret;

@@ -3,12 +3,12 @@
     <!--this file was created by Eclipse Runnable JAR Export Wizard-->
     <!--ANT 1.7 is required                                        -->
     <target name="create_run_jar">
-        <jar destfile="/home/immanuel/workspace/ApacheBSIAuditHelper/jar/audit.jar" filesetmanifest="mergewithoutmain">
+        <jar destfile="/home/immanuel/git-main-repository/apache-cochise/ApacheBSIAuditHelper/jar/audit.jar" filesetmanifest="mergewithoutmain">
             <manifest>
                 <attribute name="Main-Class" value="org.akquinet.audit.bsi.httpd.HttpdAudit"/>
                 <attribute name="Class-Path" value="."/>
             </manifest>
-            <fileset dir="/home/immanuel/workspace/ApacheBSIAuditHelper/bin"/>
+            <fileset dir="/home/immanuel/git-main-repository/apache-cochise/ApacheBSIAuditHelper/bin"/>
         </jar>
     </target>
 </project>

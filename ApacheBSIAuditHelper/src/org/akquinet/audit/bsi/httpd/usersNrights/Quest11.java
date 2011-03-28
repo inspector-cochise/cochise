@@ -1,15 +1,14 @@
 package org.akquinet.audit.bsi.httpd.usersNrights;
 
-import org.akquinet.audit.FormattedConsole;
 import org.akquinet.audit.YesNoQuestion;
+import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
 
 public class Quest11 implements YesNoQuestion
 {
 	private static final String _id = "Quest11";
 	private ConfigFile _conf;
-	private static final FormattedConsole _console = FormattedConsole.getDefault();
-	private static final FormattedConsole.OutputLevel _level = FormattedConsole.OutputLevel.Q1;
+	private static final UserCommunicator _uc = UserCommunicator.getDefault();
 	
 	private Quest11a _q11a;
 	private Quest11b _q11b;
@@ -28,17 +27,21 @@ public class Quest11 implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		_console.println(FormattedConsole.OutputLevel.HEADING, _id, "vvvv" + _id + "vvvv");
-		_console.printAnswer(_level, _id, null, "Evaluating whether it may be possible to access files outside of the servers root directory.");
+		_uc.printHeading3(_id);
+		_uc.println("Evaluating whether it may be possible to access files outside of the servers root directory.");
+		_uc.beginIndent();
 		boolean ret = _q11b.answer();
+		_uc.endIndent();
 		if(!ret)
 		{
-			_console.println(_level, _id, "There is also another way to block access to files outside of the servers root directory:");
-			 ret = _q11a.answer();
+			_uc.println("There is also another way to block access to files outside of the servers root directory:");
+			_uc.beginIndent();
+			 	ret = _q11a.answer();
+			_uc.endIndent();
 		}
 		
-		_console.println(FormattedConsole.OutputLevel.HEADING, _id, "^^^^" + _id + "^^^^");
-		_console.printAnswer(_level, _id, ret, ret ?
+		_uc.println("Back to " + _id);
+		_uc.printAnswer(ret, ret ?
 					"Access to files outside of the servers root directory is correctly blocked."
 					: "In some way it may be possible to access files outside of the servers root directory.");
 		return ret;

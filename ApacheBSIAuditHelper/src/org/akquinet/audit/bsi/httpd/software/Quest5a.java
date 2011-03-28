@@ -2,8 +2,8 @@ package org.akquinet.audit.bsi.httpd.software;
 
 import java.util.List;
 
-import org.akquinet.audit.FormattedConsole;
 import org.akquinet.audit.YesNoQuestion;
+import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
 import org.akquinet.httpd.syntax.Directive;
 
@@ -11,8 +11,7 @@ public class Quest5a implements YesNoQuestion
 {
 	private static final String _id = "Quest5a";
 	private ConfigFile _conf;
-	private static final FormattedConsole _console = FormattedConsole.getDefault();
-	private static final FormattedConsole.OutputLevel _level = FormattedConsole.OutputLevel.Q2;
+	private static final UserCommunicator _uc = UserCommunicator.getDefault();
 	
 	public Quest5a(ConfigFile conf)
 	{
@@ -25,21 +24,21 @@ public class Quest5a implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		_console.println(FormattedConsole.OutputLevel.HEADING, _id, "----" + _id + "----");
+		_uc.printHeading3(_id);
 		List<Directive> incList = _conf.getAllDirectivesIgnoreCase("Include");
 		
 		if(!incList.isEmpty())
 		{
-			_console.printAnswer(_level, _id, false, "There are Include-directives in your apache configuration:");
+			_uc.printAnswer(false, "There are Include-directives in your apache configuration:");
 			for (Directive directive : incList)
 			{
-				_console.println(_level, _id, "line " + directive.getLinenumber() + ": " + directive.getName() + " " + directive.getValue());
+				_uc.println("line " + directive.getLinenumber() + ": " + directive.getName() + " " + directive.getValue());
 			}
 			return false;
 		}
 		else
 		{
-			_console.printAnswer(_level, _id, true, "No Include-directives found.");
+			_uc.printAnswer(true, "No Include-directives found.");
 			return true;
 		}
 	}

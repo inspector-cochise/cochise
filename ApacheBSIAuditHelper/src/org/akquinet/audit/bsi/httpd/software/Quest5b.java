@@ -3,8 +3,8 @@ package org.akquinet.audit.bsi.httpd.software;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.akquinet.audit.FormattedConsole;
 import org.akquinet.audit.YesNoQuestion;
+import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
 import org.akquinet.httpd.syntax.Directive;
 
@@ -12,8 +12,7 @@ public class Quest5b implements YesNoQuestion
 {
 	private static final String _id = "Quest5b";
 	private ConfigFile _conf;
-	private static final FormattedConsole _console = FormattedConsole.getDefault();
-	private static final FormattedConsole.OutputLevel _level = FormattedConsole.OutputLevel.Q2;
+	private static final UserCommunicator _console = UserCommunicator.getDefault();
 	
 	public Quest5b(ConfigFile conf)
 	{
@@ -27,7 +26,7 @@ public class Quest5b implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		_console.println(FormattedConsole.OutputLevel.HEADING, _id, "----" + _id + "----");
+		_console.printHeading3(_id);
 		List<Directive> dirList = _conf.getAllDirectives("AllowOverride");
 		List<Directive> problems = new LinkedList<Directive>();
 		boolean isSetGlobalRoot = false;	//will be changed if at least one directive in global context is found
@@ -54,10 +53,10 @@ public class Quest5b implements YesNoQuestion
 		String overrides = problems.isEmpty() ?
 						"Directive \"AllowOverride\" correctly doesn't appear with a parameter other than \"None\"" :
 						"You have stated the directive \"AllowOverrid\" with parameters other than \"None\". Remove these:";
-		_console.printAnswer(_level, _id, isSetGlobalRoot & problems.isEmpty(), global + " " + overrides);
+		_console.printAnswer(isSetGlobalRoot & problems.isEmpty(), global + " " + overrides);
 		for (Directive directive : problems)
 		{
-			_console.println(_level, _id, "line " + directive.getLinenumber() + ": " + directive.getName() + " " + directive.getValue());
+			_console.println("line " + directive.getLinenumber() + ": " + directive.getName() + " " + directive.getValue());
 		}
 
 		

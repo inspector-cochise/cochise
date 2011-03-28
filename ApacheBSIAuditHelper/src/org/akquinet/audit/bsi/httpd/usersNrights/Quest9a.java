@@ -3,15 +3,14 @@ package org.akquinet.audit.bsi.httpd.usersNrights;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.akquinet.audit.FormattedConsole;
 import org.akquinet.audit.ShellAnsweredQuestion;
 import org.akquinet.audit.YesNoQuestion;
+import org.akquinet.audit.ui.UserCommunicator;
 
 public class Quest9a implements YesNoQuestion
 {
 	private static final String _id = "Quest9a";
-	private static final FormattedConsole _console = FormattedConsole.getDefault();
-	private static final FormattedConsole.OutputLevel _level = FormattedConsole.OutputLevel.Q2;
+	private static final UserCommunicator _uc = UserCommunicator.getDefault();
 	private String _commandPath;
 	private String _command;
 	private String _serverRoot;
@@ -33,7 +32,7 @@ public class Quest9a implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		_console.println(FormattedConsole.OutputLevel.HEADING, _id, "----" + _id + "----");
+		_uc.printHeading3(_id);
 		ShellAnsweredQuestion quest = new ShellAnsweredQuestion(_commandPath + _command, _serverRoot, _user);
 		boolean ret = quest.answer();
 		StringBuffer probBuf = new StringBuffer();
@@ -54,7 +53,7 @@ public class Quest9a implements YesNoQuestion
 		
 		String problems = probBuf.toString();
 		
-		_console.printAnswer(_level, _id, ret, ret ? "Your ServerRoot (not speaking about a possible htdocs file/directory) seems to be ok."
+		_uc.printAnswer(ret, ret ? "Your ServerRoot (not speaking about a possible htdocs file/directory) seems to be ok."
 							: "Other users than " + _user + " have access to the following files/directories. Please change permissions." + problems);
 		
 		return ret;

@@ -4,16 +4,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import org.akquinet.audit.FormattedConsole;
 import org.akquinet.audit.YesNoQuestion;
+import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
 import org.akquinet.httpd.syntax.Directive;
 
 public class Quest9 implements YesNoQuestion
 {
 	private static final String _id = "Quest9";
-	private static final FormattedConsole _console = FormattedConsole.getDefault();
-	private static final FormattedConsole.OutputLevel _level = FormattedConsole.OutputLevel.Q1;
+	private static final UserCommunicator _uc = UserCommunicator.getDefault();
 	private ConfigFile _conf;
 	private String _serverRoot;
 	private String _commandPath;
@@ -41,13 +40,13 @@ public class Quest9 implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		_console.println(FormattedConsole.OutputLevel.HEADING, _id, "vvvv" + _id + "vvvv");
+		_uc.printHeading3(_id);
 
-		_console.printAnswer(_level, _id, null, "We'll now start to examine the permissions in your ServerRoot.");
+		_uc.println("We'll now start to examine the permissions in your ServerRoot.");
 		if(_serverRoot != null)
 		{
 			String user = getApacheStartingUser();
-			_console.println(_level, _id, "Seems like your apache is started by " + user + "...");
+			_uc.println("Seems like your apache is started by " + user + "...");
 			
 			if(_command9a != null && _commandPath  != null)
 			{
@@ -59,16 +58,18 @@ public class Quest9 implements YesNoQuestion
 			}
 			_q9b = new Quest9b(_serverRoot);
 			
-			boolean ret = _q9a.answer();
-			ret &= _q9b.answer();
-			_console.println(FormattedConsole.OutputLevel.HEADING, _id, "^^^^" + _id + "^^^^");
-			_console.printAnswer(_level, _id, ret, ret ? "Your ServerRoot seems ok." : "Seems like your ServerRoot is unsafe in the way mentioned above.");
+			_uc.beginIndent();
+				boolean ret = _q9a.answer();
+				ret &= _q9b.answer();
+			_uc.endIndent();
+			_uc.println("Back to " + _id);
+			_uc.printAnswer(ret, ret ? "Your ServerRoot seems ok." : "Seems like your ServerRoot is unsafe in the way mentioned above.");
 			return ret;
 		}
 		else
 		{
-			_console.println(FormattedConsole.OutputLevel.HEADING, _id, "^^^^" + _id + "^^^^");
-			_console.printAnswer(_level, _id, false, "Either none or multiple ServerRoot directives found. There has to be exactly one.");
+			_uc.println("Back to " + _id);
+			_uc.printAnswer(false, "Either none or multiple ServerRoot directives found. There has to be exactly one.");
 			return false;
 		}
 	}

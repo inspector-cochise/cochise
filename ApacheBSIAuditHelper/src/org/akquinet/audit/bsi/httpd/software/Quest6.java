@@ -4,15 +4,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.akquinet.audit.FormattedConsole;
 import org.akquinet.audit.YesNoQuestion;
+import org.akquinet.audit.ui.UserCommunicator;
 
 public class Quest6 implements YesNoQuestion
 {
 	private static final String _id = "Quest6";
 	private ProcessBuilder _httpd;
-	private static final FormattedConsole _console = FormattedConsole.getDefault();
-	private static final FormattedConsole.OutputLevel _level = FormattedConsole.OutputLevel.Q1;
+	private static final UserCommunicator _uc = UserCommunicator.getDefault();
 	private InputStream _stdErr;
 	
 	public Quest6(File apacheExecutable)
@@ -34,7 +33,7 @@ public class Quest6 implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		_console.println(FormattedConsole.OutputLevel.HEADING, _id, "----" + _id + "----");
+		_uc.printHeading3(_id);
 		try
 		{
 			Process p = _httpd.start();
@@ -43,12 +42,12 @@ public class Quest6 implements YesNoQuestion
 			
 			if(exit == 0)
 			{
-				_console.printAnswer(_level, _id, true, "Syntax of main configuration file OK.");
+				_uc.printAnswer(true, "Syntax of main configuration file OK.");
 				return true;
 			}
 			else
 			{
-				_console.printAnswer(_level, _id, false, "Syntax errors in main configuration file:");
+				_uc.printAnswer(false, "Syntax errors in main configuration file:");
 				StringBuffer buf = new StringBuffer();
 				int b = _stdErr.read();
 				while(b != -1)
@@ -56,7 +55,7 @@ public class Quest6 implements YesNoQuestion
 					buf.append((char)b);
 					b = _stdErr.read();
 				}
-				_console.println(_level, _id, buf.toString());
+				_uc.println(buf.toString());
 				
 				return false;
 			}
@@ -64,12 +63,12 @@ public class Quest6 implements YesNoQuestion
 		catch (IOException e)
 		{
 			e.printStackTrace();
-			_console.printAnswer(_level, _id, false, "Problem while answering question. Caught an IOException (see stderr).");
+			_uc.printAnswer(false, "Problem while answering question. Caught an IOException (see stderr).");
 		}
 		catch (InterruptedException e)
 		{
 			e.printStackTrace();
-			_console.printAnswer(_level, _id, false, "Problem while answering question. Caught an InterruptedException (see stderr).");
+			_uc.printAnswer(false, "Problem while answering question. Caught an InterruptedException (see stderr).");
 		}
 		return false;
 	}

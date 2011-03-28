@@ -1,13 +1,12 @@
 package org.akquinet.audit.bsi.httpd.usersNrights;
 
-import org.akquinet.audit.FormattedConsole;
 import org.akquinet.audit.YesNoQuestion;
+import org.akquinet.audit.ui.UserCommunicator;
 
 public class Quest11a implements YesNoQuestion
 {
 	private static final String _id = "Quest11a";
-	private static final FormattedConsole _console = FormattedConsole.getDefault();
-	private static final FormattedConsole.OutputLevel _level = FormattedConsole.OutputLevel.Q2;
+	private static final UserCommunicator _uc = UserCommunicator.getDefault();
 
 	public Quest11a()
 	{
@@ -16,9 +15,9 @@ public class Quest11a implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		_console.println(FormattedConsole.OutputLevel.HEADING, _id, "----" + _id + "----");
-		boolean ret = _console.askYesNoQuestion(_level, _id, "Have you properly set up a chroot environment for the apache httpd server which will block access outside of the servers root directory?");
-		_console.printAnswer(_level, _id, ret, ret ? 
+		_uc.printHeading3(_id);
+		boolean ret = _uc.askYesNoQuestion("Have you properly set up a chroot environment for the apache httpd server which will block access outside of the servers root directory?");
+		_uc.printAnswer(ret, ret ? 
 						"Ok this should block access to files outside of the servers root directory."
 						: "No chroot - it may be possible to access files outside of the servers root directory if not sealed otherwise.");
 		return ret;

@@ -3,17 +3,16 @@ package org.akquinet.audit.bsi.httpd.usersNrights;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.akquinet.audit.FormattedConsole;
 import org.akquinet.audit.ShellAnsweredQuestion;
 import org.akquinet.audit.YesNoQuestion;
+import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
 
 public class Quest12b implements YesNoQuestion
 {
 	private static final String _id = "Quest12b";
 	private ConfigFile _conf;
-	private static final FormattedConsole _console = FormattedConsole.getDefault();
-	private static final FormattedConsole.OutputLevel _level = FormattedConsole.OutputLevel.Q2;
+	private static final UserCommunicator _uc = UserCommunicator.getDefault();
 	private static String _command;
 	private static String _commandPath;
 
@@ -32,15 +31,15 @@ public class Quest12b implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		_console.println(FormattedConsole.OutputLevel.HEADING, _id, "----" + _id + "----");
+		_uc.printHeading3(_id);
 
-		_console.println(_level, _id, "Looking for directives User and Group in the apache configuration file...");
+		_uc.println("Looking for directives User and Group in the apache configuration file...");
 		
 		String user = null;
 		String group = null;
 		if(_conf.getDirective("User").size() == 0 || _conf.getDirective("Group").size() == 0)
 		{
-			_console.printAnswer(_level, _id, false, "User or Group directive not found. No dedicated user specified.");
+			_uc.printAnswer(false, "User or Group directive not found. No dedicated user specified.");
 			return false;
 		}
 		
@@ -66,7 +65,7 @@ public class Quest12b implements YesNoQuestion
 			e.printStackTrace();
 		}
 		
-		_console.printAnswer(_level, _id, ret, buf.toString());
+		_uc.printAnswer(ret, buf.toString());
 		
 		return ret;
 	}

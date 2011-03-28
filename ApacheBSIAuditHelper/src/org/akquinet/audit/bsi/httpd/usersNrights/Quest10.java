@@ -6,18 +6,17 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.akquinet.audit.FormattedConsole;
 import org.akquinet.audit.ModuleHelper;
 import org.akquinet.audit.ShellAnsweredQuestion;
 import org.akquinet.audit.YesNoQuestion;
+import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
 import org.akquinet.httpd.syntax.Directive;
 
 public class Quest10 extends ModuleHelper implements YesNoQuestion
 {
 	private static final String _id = "Quest10";
-	private static final FormattedConsole _console = FormattedConsole.getDefault();
-	private static final FormattedConsole.OutputLevel _level = FormattedConsole.OutputLevel.Q1;
+	private static final UserCommunicator _uc = UserCommunicator.getDefault();
 	private String _commandPath;
 	private String _command;
 
@@ -36,8 +35,8 @@ public class Quest10 extends ModuleHelper implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		_console.println(FormattedConsole.OutputLevel.HEADING, _id, "----" + _id + "----");
-		_console.println(_level, _id, "I'll now check whether any user not in root has access to one of the modules you load...");
+		_uc.printHeading3(_id);
+		_uc.println("I'll now check whether any user not in root has access to one of the modules you load...");
 		
 		boolean ret = true;
 		List<File> moduleFiles = getModuleFiles();
@@ -63,14 +62,14 @@ public class Quest10 extends ModuleHelper implements YesNoQuestion
 
 		if(!probs.isEmpty())
 		{
-			_console.println(_level, _id, "I found some files causing problems (in most cases this means some user not in root has write access)");
+			_uc.println("I found some files causing problems (in most cases this means some user not in root has write access)");
 			for (String str : probs)
 			{
-				_console.println(_level, _id, str);
+				_uc.println(str);
 			}
 		}
 		
-		_console.printAnswer(_level, _id, ret, ret ? "Seems like only users in root have access to the dynamically loadable modules."
+		_uc.printAnswer(ret, ret ? "Seems like only users in root have access to the dynamically loadable modules."
 							: "Other users than users in root may have access to the above listed modules or their containing directories.\n");
 		
 		return ret;

@@ -3,15 +3,14 @@ package org.akquinet.audit.bsi.httpd.usersNrights;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.akquinet.audit.FormattedConsole;
 import org.akquinet.audit.ShellAnsweredQuestion;
 import org.akquinet.audit.YesNoQuestion;
+import org.akquinet.audit.ui.UserCommunicator;
 
 public class Quest12a implements YesNoQuestion
 {
 	private static final String _id = "Quest12a";
-	private static final FormattedConsole _console = FormattedConsole.getDefault();
-	private static final FormattedConsole.OutputLevel _level = FormattedConsole.OutputLevel.Q2;
+	private static final UserCommunicator _uc = UserCommunicator.getDefault();
 	private String _commandPath;
 	private String _command;
 	private String _getUserNGroupCommand;
@@ -33,8 +32,8 @@ public class Quest12a implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		_console.println(FormattedConsole.OutputLevel.HEADING, _id, "----" + _id + "----");
-		_console.println(_level, _id, "One can customize the startup process of the apache deamon to start it as a special user with low rights.");
+		_uc.printHeading3(_id);
+		_uc.println("One can customize the startup process of the apache deamon to start it as a special user with low rights.");
 		
 		String user = null;
 		String group = null;
@@ -78,7 +77,7 @@ public class Quest12a implements YesNoQuestion
 			e.printStackTrace();
 		}
 		
-		_console.printAnswer(_level, _id, ret, buf.toString());
+		_uc.printAnswer(ret, buf.toString());
 		
 		
 		return ret;

@@ -7,17 +7,16 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
-import org.akquinet.audit.FormattedConsole;
 import org.akquinet.audit.ModuleHelper;
 import org.akquinet.audit.YesNoQuestion;
+import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
 import org.akquinet.httpd.syntax.Directive;
 
 public class Quest4 extends ModuleHelper implements YesNoQuestion
 {
 	private static final String _id = "Quest4";
-	private static final FormattedConsole _console = FormattedConsole.getDefault();
-	private static final FormattedConsole.OutputLevel _level = FormattedConsole.OutputLevel.Q1;
+	private static final UserCommunicator _uc = UserCommunicator.getDefault();
 	private String _listFileName;
 	
 	public Quest4(ConfigFile conf, File apacheExecutable, String tempDirectory)
@@ -34,9 +33,9 @@ public class Quest4 extends ModuleHelper implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		_console.println(FormattedConsole.OutputLevel.HEADING, _id, "----" + _id + "----");
-		_console.println(_level, _id, "It is necessary, that only modules you really need are being loaded.");
-		_console.println(_level, _id, "Cause I don't know what modules you need and this is usally a longer list, I will give you a list in " + _listFileName + " .");
+		_uc.printHeading3(_id);
+		_uc.println("It is necessary, that only modules you really need are being loaded.");
+		_uc.println("Cause I don't know what modules you need and this is usally a longer list, I will give you a list in " + _listFileName + " .");
 		
 		try
 		{
@@ -78,9 +77,9 @@ public class Quest4 extends ModuleHelper implements YesNoQuestion
 			e.printStackTrace();
 		}
 		
-		_console.println(_level, _id, "Please check whether you need all of these modules.");
-		boolean ret = _console.askYesNoQuestion(_level, _id, "Do you need all of these modules?");
-		_console.printAnswer(_level, _id, ret, ret ? "No redundant modules loaded."
+		_uc.println("Please check whether you need all of these modules.");
+		boolean ret = _uc.askYesNoQuestion("Do you need all of these modules?");
+		_uc.printAnswer(ret, ret ? "No redundant modules loaded."
 				: "Please remove these modules, if necessary recompile your apache.");
 		return ret;
 	}

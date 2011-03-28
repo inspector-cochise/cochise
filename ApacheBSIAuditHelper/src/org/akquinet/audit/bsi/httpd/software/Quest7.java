@@ -5,8 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.akquinet.audit.FormattedConsole;
 import org.akquinet.audit.YesNoQuestion;
+import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
 import org.akquinet.httpd.syntax.Directive;
 
@@ -14,8 +14,7 @@ public class Quest7 implements YesNoQuestion
 {
 	private static final String _id = "Quest7";
 	private ConfigFile _conf;
-	private static final FormattedConsole _console = FormattedConsole.getDefault();
-	private static final FormattedConsole.OutputLevel _level = FormattedConsole.OutputLevel.Q1;
+	private static final UserCommunicator _uc = UserCommunicator.getDefault();
 	
 	public Quest7(ConfigFile conf)
 	{
@@ -25,9 +24,9 @@ public class Quest7 implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		_console.println(FormattedConsole.OutputLevel.HEADING, _id, "----" + _id + "----");
-		_console.println(_level, _id, "All options should be explicitly deactivated and only necessary options should be activated.");
-		_console.println(_level, _id, "Scanning for \"Options None\" in global context");
+		_uc.printHeading3(_id);
+		_uc.println("All options should be explicitly deactivated and only necessary options should be activated.");
+		_uc.println("Scanning for \"Options None\" in global context...");
 		
 		List<Directive> dirList = _conf.getAllDirectives("Options");
 		List<Directive> problems = new LinkedList<Directive>();
@@ -47,23 +46,23 @@ public class Quest7 implements YesNoQuestion
 				isSetGlobal = true;
 			}
 		}
-		_console.println(_level, _id, isSetGlobal ?
+		_uc.println(isSetGlobal ?
 						"Directive \"Options None\" is correctly stated in global context." :
 						"You haven't stated the directive \"Options None\" in global context.");
 		boolean allOk = problems.isEmpty();
 		if(!allOk)
 		{
-			_console.println(_level, _id, "As expected you activated some options. I will give you the line of each in you configuration file." );
-			_console.println(_level, _id, "Please check whether you really need all these options." );
+			_uc.println("As expected you activated some options. I will give you the line of each in you configuration file." );
+			_uc.println("Please check whether you really need all these options." );
 			for (Directive directive : problems)
 			{
-				_console.println(_level, _id, "line " + directive.getLinenumber() + ": " + directive.getName() + " " + directive.getValue());
+				_uc.println("line " + directive.getLinenumber() + ": " + directive.getName() + " " + directive.getValue());
 			}
-			allOk = _console.askYesNoQuestion(_level, _id, "Do you really need all these options?");
+			allOk = _uc.askYesNoQuestion("Do you really need all these options?");
 		}
 		
 		boolean ret = isSetGlobal && allOk;
-		_console.printAnswer(_level, _id, ret, ret ? "(De-)Activation of options is well done." : "Please state \"Options None\" in the global context and/or do not activate unneeded options.");
+		_uc.printAnswer(ret, ret ? "(De-)Activation of options is well done." : "Please state \"Options None\" in the global context and/or do not activate unneeded options.");
 		return ret;
 	}
 
@@ -106,7 +105,7 @@ public class Quest7 implements YesNoQuestion
 			{
 				if(plugin.matches(regex))
 				{
-					_console.println(_level, _id, optionsValue + "\t " + warnDB.get(regex));
+					_uc.println(optionsValue + "\t " + warnDB.get(regex));
 				}
 			}
 		}

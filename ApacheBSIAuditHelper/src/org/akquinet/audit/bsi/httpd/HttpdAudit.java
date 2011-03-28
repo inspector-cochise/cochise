@@ -2,12 +2,7 @@ package org.akquinet.audit.bsi.httpd;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
 
-import org.akquinet.audit.FormattedConsole;
-import org.akquinet.audit.InteractiveAsker;
-import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.bsi.httpd.os.Quest1;
 import org.akquinet.audit.bsi.httpd.software.Quest2;
 import org.akquinet.audit.bsi.httpd.software.Quest3;
@@ -20,6 +15,7 @@ import org.akquinet.audit.bsi.httpd.usersNrights.Quest11;
 import org.akquinet.audit.bsi.httpd.usersNrights.Quest12;
 import org.akquinet.audit.bsi.httpd.usersNrights.Quest8;
 import org.akquinet.audit.bsi.httpd.usersNrights.Quest9;
+import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
 
 public class HttpdAudit
@@ -71,84 +67,79 @@ public class HttpdAudit
 				break;
 			}
 			
-			FormattedConsole console = FormattedConsole.getDefault();
-			FormattedConsole.OutputLevel Q1 = FormattedConsole.OutputLevel.Q1;
-			FormattedConsole.OutputLevel Q2 = FormattedConsole.OutputLevel.Q2;
+			UserCommunicator uc = UserCommunicator.getDefault();
 			
 			String id = "main";
 			
-			console.printSeperatorLine();
-			console.println(Q1, id, "Hello, during this audit I will ask you a bunch of questions.");
-			console.println(Q1, id, "Please rethink your answers twice before you give them to me.");
-			console.println(Q1, id, "");
+			uc.printParagraph("Hello, during this audit I will ask you a bunch of questions." +
+					"Please rethink your answers twice before you give them to me.");
 
-			console.println(Q1, id, "This audit will in most cases require you to make significant changes to your apache configuration.");
-			console.println(Q1, id, "Another point is that the requirements of this audit conflict with most of the administration tools");
-			console.println(Q1, id, "(like a2enmod, a2dismod, yast2, ...).");
-			console.println(Q1, id, "");
+			uc.printParagraph("This audit will in most cases require you to make significant changes to your apache configuration." +
+					"This audit will in most cases require you to make significant changes to your apache configuration." +
+					"Another point is that the requirements of this audit conflict with most of the administration tools" +
+					"(like a2enmod, a2dismod, yast2, ...).");
 			
-			console.println(Q1, id, "First of all, let's start with some basic information about your system and your security requirements.");
-			console.println(Q1, id, "Normally the apache the apache httpd executable is something like:");
-			console.println(Q2, id, "/usr/sbin/apache2    (Debian/Ubuntu)");
-			console.println(Q2, id, "/usr/sbin/httpd      (RedHat)");
-			console.println(Q2, id, "/usr/sbin/httpd2     (SUSE)");
-			tmp = console.askStringQuestion(Q1, id, "What is your apache executable? [" + apacheExec + "]");
+			uc.println("First of all, let's start with some basic information about your system and your security requirements.");
+			uc.println("Normally the apache the apache httpd executable is something like:");
+			uc.printExample("/usr/sbin/apache2    (Debian/Ubuntu)\n" +
+					"/usr/sbin/httpd      (RedHat)\n" +
+					"/usr/sbin/httpd2     (SUSE)");
+			tmp = uc.askStringQuestion("What is your apache executable?", apacheExec);
 			apacheExec = "".equals(tmp.trim()) ? apacheExec : tmp;
 			File apacheExecutable = new File(apacheExec);
 			
-			console.println(Q1, id, "");
+			uc.println("");
 			
-			console.println(Q1, id, "The main configuration file for the apache web server normally is something like:");
-			console.println(Q2, id, "/etc/apache2/apache2.conf    (Debian/Ubuntu)");
-			console.println(Q2, id, "/etc/httpd/httpd.conf        (RedHat)");
-			console.println(Q2, id, "/etc/apache2/httpd.conf      (SUSE)");
-			tmp = console.askStringQuestion(Q1, id, "What is you apache main configuration file? [" + apacheConf + "]");
+			uc.println("The main configuration file for the apache web server normally is something like:");
+			uc.printExample("/etc/apache2/apache2.conf    (Debian/Ubuntu)\n" +
+					"/etc/httpd/httpd.conf        (RedHat)\n" +
+					"/etc/apache2/httpd.conf      (SUSE)");
+			tmp = uc.askStringQuestion("What is you apache main configuration file?", apacheConf);
 			apacheConf = "".equals(tmp.trim()) ? apacheConf : tmp;
 			File configFile = new File(apacheConf);
 			ConfigFile conf = new ConfigFile(configFile);
 			
-			console.println(Q1, id, "");
+			uc.println("");
 			
-			String answer = console.askStringQuestion(Q1, id, "Does your application require a high level of security? (Yes/No) ");
-			boolean highSec = answer.equalsIgnoreCase("Yes");
+			boolean highSec = uc.askYesNoQuestion("Does your application require a high level of security?", true);
 			
-			console.println(Q1, id, "");
+			uc.println("");
 			
-			answer = console.askStringQuestion(Q1, id, "Does your application require a high level of privacy? (Yes/No) ");
-			boolean highPriv = answer.equalsIgnoreCase("Yes");
+			boolean highPriv = uc.askYesNoQuestion("Does your application require a high level of privacy?", true);
 			
-			console.println(Q1, id, "");
-			console.println(Q1, id, "Ok, then let's start.");
-			console.printSeperatorLine();
+			uc.println("");
+			uc.printParagraph("Ok, then let's start.");
 			
-			List<YesNoQuestion> tmpList = new LinkedList<YesNoQuestion>();
+			boolean overallAnswer = true;
+			
 
-			tmpList.add(new Quest1(highSec));
-			tmpList.add(new Quest2(apacheExecutable));
-			tmpList.add(new Quest3(conf, apacheExecutable));
-			tmpList.add(new Quest4(conf, apacheExecutable));
-			tmpList.add(new Quest5(conf));
-			tmpList.add(new Quest6(apacheExecutable));
-			tmpList.add(new Quest7(conf));
-			tmpList.add(new Quest8(configFile));
-			tmpList.add(new Quest9(conf, apacheExecutable.getName()));
-			tmpList.add(new Quest10(conf));
-			tmpList.add(new Quest11(conf));
-			tmpList.add(new Quest12(conf, apacheExecutable.getName()));
+			uc.printHeading2("Section Operating System:");
+			overallAnswer &= (new Quest1(highSec)).answer();
 			
-			InteractiveAsker asker = new InteractiveAsker(tmpList);
+			uc.printHeading2("Section Software:");
+			overallAnswer &= (new Quest2(apacheExecutable)).answer();
+			overallAnswer &= (new Quest3(conf, apacheExecutable)).answer();
+			overallAnswer &= (new Quest4(conf, apacheExecutable)).answer();
+			overallAnswer &= (new Quest5(conf)).answer();
+			overallAnswer &= (new Quest6(apacheExecutable)).answer();
+			overallAnswer &= (new Quest7(conf)).answer();
 			
-			boolean overallAnswer = asker.askQuestions();
-
+			uc.printHeading2("Section Management of Users and Permissions:");
+			overallAnswer &= (new Quest8(configFile)).answer();
+			overallAnswer &= (new Quest9(conf, apacheExecutable.getName())).answer();
+			overallAnswer &= (new Quest10(conf)).answer();
+			overallAnswer &= (new Quest11(conf)).answer();
+			overallAnswer &= (new Quest12(conf, apacheExecutable.getName())).answer();
+			
 			if(overallAnswer)
 			{
-				console.println(Q1, id, "");
-				console.println(Q1, id, "Your apache seems to be safe.");
+				uc.printHeading1("Conclusion");
+				uc.printParagraph("Your apache seems to be safe.");
 			}
 			else
 			{
-				console.println(Q1, id, "");
-				console.println(Q1, id, "Seems like there are some questions. Your apache seems to be unsafe.");
+				uc.printHeading1("Conclusion");
+				uc.printParagraph("Seems like there are some questions. Your apache seems to be unsafe.");
 			}
 		}
 		catch (IOException e) { e.printStackTrace(); }

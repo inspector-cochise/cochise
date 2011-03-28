@@ -1,15 +1,14 @@
 package org.akquinet.audit.bsi.httpd.os;
 
-import org.akquinet.audit.FormattedConsole;
 import org.akquinet.audit.ShellAnsweredQuestion;
 import org.akquinet.audit.YesNoQuestion;
+import org.akquinet.audit.ui.UserCommunicator;
 
 public class Quest1 implements YesNoQuestion
 {
 	private static final String _id = "Quest1";
 	private boolean _highSecReq;
-	private static final FormattedConsole _console = FormattedConsole.getDefault();
-	private static final FormattedConsole.OutputLevel _level = FormattedConsole.OutputLevel.Q1;
+	private static final UserCommunicator _uc = UserCommunicator.getDefault();
 	private String _commandPath;
 	private String _command;
 
@@ -28,20 +27,20 @@ public class Quest1 implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		_console.println(FormattedConsole.OutputLevel.HEADING, _id, "----" + _id + "----");
+		_uc.printHeading3(_id);
 		if(_highSecReq)
 		{
 			ShellAnsweredQuestion quest = new ShellAnsweredQuestion(_commandPath + _command);
 			boolean ret = quest.answer();
 			
-			_console.printAnswer(_level, _id, ret, ret ? "User root is correctly locked."
+			_uc.printAnswer(ret, ret ? "User root is correctly locked."
 								: "Please lock user root (\"passwd -l\"). After that you can't directly log yourself in as root.");
 			
 			return ret;
 		}
 		else
 		{
-			_console.printAnswer(_level, _id, null, "skipping question... (no high level of security requested))");
+			_uc.println("skipping question... (no high level of security requested))");
 			return true;
 		}
 	}

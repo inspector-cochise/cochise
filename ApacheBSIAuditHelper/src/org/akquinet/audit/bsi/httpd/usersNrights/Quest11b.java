@@ -3,8 +3,8 @@ package org.akquinet.audit.bsi.httpd.usersNrights;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.akquinet.audit.FormattedConsole;
 import org.akquinet.audit.YesNoQuestion;
+import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
 import org.akquinet.httpd.syntax.Context;
 import org.akquinet.httpd.syntax.Directive;
@@ -14,8 +14,7 @@ public class Quest11b implements YesNoQuestion
 {
 	private static final String _id = "Quest11b";
 	private ConfigFile _conf;
-	private static final FormattedConsole _console = FormattedConsole.getDefault();
-	private static final FormattedConsole.OutputLevel _level = FormattedConsole.OutputLevel.Q2;
+	private static final UserCommunicator _uc = UserCommunicator.getDefault();
 
 	public Quest11b(ConfigFile conf)
 	{
@@ -25,7 +24,7 @@ public class Quest11b implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		_console.println(FormattedConsole.OutputLevel.HEADING, _id, "----" + _id + "----");
+		_uc.printHeading3(_id);
 
 		//first of all let's ensure, there are no "hidden" order/allow/deny directives like in
 		//neg_contained3.conf (see JUnit tests)
@@ -48,11 +47,11 @@ public class Quest11b implements YesNoQuestion
 		{
 			if (!dir.getDirectiveIgnoreCase("allow").isEmpty())
 			{
-				_console.printAnswer(_level, _id, false, "Nobody should be able to access \"/\". Remove the following \"Allow\" directives:");
+				_uc.printAnswer(false, "Nobody should be able to access \"/\". Remove the following \"Allow\" directives:");
 				List<Directive> allowList = dir.getDirectiveIgnoreCase("allow");
 				for (Directive directive : allowList)
 				{
-					_console.println(_level, _id, directive.getLinenumber() + ": " + directive.getName() + " " + directive.getValue());
+					_uc.println(directive.getLinenumber() + ": " + directive.getName() + " " + directive.getValue());
 				}
 				return false;
 			}
@@ -76,7 +75,7 @@ public class Quest11b implements YesNoQuestion
 				// output an answer-message
 				if (orderIsOK(order) && denyIsOK(deny))
 				{
-					_console.printAnswer(_level, _id, true, "Access to \"/\" correctly blocked via mod_access.");
+					_uc.printAnswer(true, "Access to \"/\" correctly blocked via mod_access.");
 					ret = true;
 				}
 				else
@@ -86,7 +85,7 @@ public class Quest11b implements YesNoQuestion
 			}
 			else
 			{
-				_console.printAnswer(_level, _id, false, "I found multiple and/or incorrectly sorted \"Order\", \"Deny\" or \"Allow\" directives betwenn lines "
+				_uc.printAnswer(false, "I found multiple and/or incorrectly sorted \"Order\", \"Deny\" or \"Allow\" directives betwenn lines "
 						+ dir.getBeginLineNumber() + " and " + dir.getEndLineNumber() + ". Please make them unique, sort them and run me again.");
 				return false;
 			}
@@ -106,7 +105,7 @@ public class Quest11b implements YesNoQuestion
 			   dir.getSurroundingContexts().get(1) != null
 			   )
 			{
-				_console.printAnswer(_level, _id, false, "The directive in line " + dir.getLinenumber() + " may only be conditionally active. Move it in a <Directory /> Context not contained in any other context.");
+				_uc.printAnswer(false, "The directive in line " + dir.getLinenumber() + " may only be conditionally active. Move it in a <Directory /> Context not contained in any other context.");
 				return false;
 			}
 		}
@@ -128,8 +127,8 @@ public class Quest11b implements YesNoQuestion
 		}
 		else
 		{
-			_console.printAnswer(_level, _id, false, "Nobody should be able to access \"/\". Correct the following directive to \"Deny from all\".");
-			_console.println(_level, _id, deny.getLinenumber() + ": " + deny.getName() + " " + deny.getValue());
+			_uc.printAnswer(false, "Nobody should be able to access \"/\". Correct the following directive to \"Deny from all\".");
+			_uc.println(deny.getLinenumber() + ": " + deny.getName() + " " + deny.getValue());
 			return false;
 		}
 	}
@@ -149,8 +148,8 @@ public class Quest11b implements YesNoQuestion
 		}
 		else
 		{
-			_console.printAnswer(_level, _id, false, "Nobody should be able to access \"/\". Correct the following directive to \"Order Deny,Allow\".");
-			_console.println(_level, _id, order.getLinenumber() + ": " + order.getName() + " " + order.getValue());
+			_uc.printAnswer(false, "Nobody should be able to access \"/\". Correct the following directive to \"Order Deny,Allow\".");
+			_uc.println(order.getLinenumber() + ": " + order.getName() + " " + order.getValue());
 			return false;
 		}
 	}
