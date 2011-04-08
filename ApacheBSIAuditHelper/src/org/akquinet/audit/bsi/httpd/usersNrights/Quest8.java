@@ -33,8 +33,8 @@ public class Quest8 implements YesNoQuestion
 		ShellAnsweredQuestion quest = new ShellAnsweredQuestion(_commandPath + _command, _configFile.getAbsolutePath());
 		boolean ret = quest.answer();
 		
-		_uc.printAnswer(ret, ret ? "Your main configuration file seems to be safe."
-							: "Users not in the group \"root\" may have some access to your configuration file. They should get no rights (no read, no write, no execute)");
+		_uc.printAnswer(ret, ret ? "Your main configuration file seems to be safe. I.e. only members of root have any access to it."
+							: "Users not in the group \"root\" may have some access to your configuration file. They shouldn't get any permissions (no read, no write, no execute)");
 		
 		return ret;
 	}
