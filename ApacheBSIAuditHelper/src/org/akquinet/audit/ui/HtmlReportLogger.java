@@ -49,6 +49,9 @@ public class HtmlReportLogger
 		
 		HtmlTagPair css = new HtmlTagPair("style");
 		css.addAttribute("type", "text/css");
+		
+		css.addContent(new HtmlText(". { width: auto; }\n"));
+		
 		css.addContent(new HtmlText(".indented { padding-left: 3em; }\n"));
 		
 		css.addContent(new HtmlText(".example {" +
@@ -90,6 +93,11 @@ public class HtmlReportLogger
 		{
 			_indentSerialStack.pop();
 		}
+		
+		while(! _hidingSerialStack.empty())
+		{
+			_hidingSerialStack.pop();
+		}
 	}
 	
 	public void printHeading1(String heading)
@@ -118,13 +126,8 @@ public class HtmlReportLogger
 	{
 		HtmlTagPair h3 = new HtmlTagPair("h3");
 		_openTags.peek().addContent(h3);
-		HtmlTagPair div = new HtmlTagPair("div");
-		_openTags.peek().addContent(div);
 		
 		h3.addContent(new HtmlText(heading));
-		div.addAttribute("class", "indented");
-		
-		_openTags.push(div);
 	}
 	
 	public void printParagraph(String text)
@@ -141,7 +144,7 @@ public class HtmlReportLogger
 	
 	public void printExample(String example)
 	{
-		HtmlTagPair div = new HtmlTagPair("div");
+		HtmlTagPair div = new HtmlTagPair("pre");
 		div.addAttribute("class", "example");
 		div.addContent(new HtmlText(example));
 		
@@ -172,7 +175,7 @@ public class HtmlReportLogger
 	{
 		if(_hidingSerialStack.empty())
 		{
-			throw new RuntimeException("Attempted to close nonexistent hiding paragraph.");
+			return;	//quietly ignore this call
 		}
 		
 		while(! _openTags.empty())
@@ -205,7 +208,7 @@ public class HtmlReportLogger
 	{
 		if(_indentSerialStack.empty())
 		{
-			throw new RuntimeException("Attempted to close nonexistent indent block.");
+			return;	//quietly ignore this call
 		}
 		
 		while(! _openTags.empty())

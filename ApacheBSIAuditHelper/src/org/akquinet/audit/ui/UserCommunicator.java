@@ -190,8 +190,6 @@ public class UserCommunicator
 	{
 		boolean answer = askYesNoQuestion(question, false);
 		
-		_htmlLogger.printParagraph(question + (answer ? " Yes." : " No."));
-		
 		return answer;
 	}
 	
@@ -199,7 +197,7 @@ public class UserCommunicator
 	{
 		boolean answer = _console.askYesNoQuestion(getLevel(), question, defaultAnswer);
 		
-		_htmlLogger.printParagraph(question + (answer ? " Yes." : " No."));
+		_htmlLogger.printParagraph(question + " <i>" + (answer ? "Yes." : "No.") + "</i>");
 		
 		return answer;
 	}
@@ -208,7 +206,7 @@ public class UserCommunicator
 	{
 		String answer = askStringQuestion(question, null);
 		
-		_htmlLogger.printParagraph(question + " " + answer);
+		_htmlLogger.printParagraph(question + " <i>" + answer + "</i>");
 		
 		return answer;
 	}
@@ -217,7 +215,7 @@ public class UserCommunicator
 	{
 		String answer = _console.askStringQuestion(getLevel(), question, defaultAnswer);
 		
-		_htmlLogger.printParagraph(question + " " + answer);
+		_htmlLogger.printParagraph(question + " <i>" + answer + "</i>");
 		
 		return answer;
 	}
