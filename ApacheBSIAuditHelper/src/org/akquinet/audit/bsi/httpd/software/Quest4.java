@@ -40,7 +40,7 @@ public class Quest4 extends ModuleHelper implements YesNoQuestion
 			buf = new StringBuffer();
 			
 			_uc.println("If there is any module you don't need please recompile your apache. " +
-					"(It's not too hard to select modules which get compiled into.)\n");
+					"(It's not too hard to select modules which get compiled into.)");
 
 			_uc.println("");
 			
@@ -52,7 +52,6 @@ public class Quest4 extends ModuleHelper implements YesNoQuestion
 				buf = buf.append(dir.getLinenumber() + ": " + dir.getName() + " " + dir.getValue() + "\n");
 			}
 			_uc.printExample(buf.toString());
-			_uc.println("");
 		}
 		
 		_uc.println("Please check whether you need all of these modules.");

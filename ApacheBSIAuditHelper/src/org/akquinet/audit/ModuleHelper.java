@@ -48,15 +48,14 @@ public class ModuleHelper
 		try
 		{
 			Process p = _httpd.start();
-			InputStream stdErr = p.getErrorStream();
+			InputStream stdOut = p.getInputStream();
 			
 			StringBuffer buf = new StringBuffer();
-//			int b = stdErr.read();
 			int b;
 			Thread.sleep(100);
-			while(stdErr.available() >= 1)
+			while(stdOut.available() >= 1)
 			{
-				b = stdErr.read();
+				b = stdOut.read();
 				buf.append((char)b);
 			}
 			p.waitFor();
