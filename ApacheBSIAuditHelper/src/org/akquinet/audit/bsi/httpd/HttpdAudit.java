@@ -43,7 +43,7 @@ public class HttpdAudit
 			
 			String apacheExec;
 			String apacheConf;
-			String tmp;
+			String tmp = "";
 			
 			OperatingSystem os = getOperatingSystem();
 			switch(os)
@@ -69,7 +69,9 @@ public class HttpdAudit
 			
 			try
 			{
-				UserCommunicator.setDefault(new UserCommunicator(new File("/tmp/htmlReport.htm")));
+				File htmlReport = new File("./htmlReport.htm");
+				System.out.println("I will save a detailed and more readable report of this audit in " + htmlReport.getCanonicalPath() + " .");
+				UserCommunicator.setDefault(new UserCommunicator(htmlReport));
 			}
 			catch (Exception e) //shouldn't happen
 			{
@@ -93,9 +95,16 @@ public class HttpdAudit
 			uc.printExample("/usr/sbin/apache2    (Debian/Ubuntu)\n" +
 					"/usr/sbin/httpd      (RedHat)\n" +
 					"/usr/sbin/httpd2     (SUSE)");
+			
 			tmp = uc.askStringQuestion("What is your apache executable?", apacheExec);
 			apacheExec = "".equals(tmp.trim()) ? apacheExec : tmp;
 			File apacheExecutable = new File(apacheExec);
+
+			while(! apacheExecutable.exists() )
+			{
+				tmp = uc.askStringQuestion(tmp + " doesn't exist. So what is your apache executable? ");
+				apacheExecutable = new File(tmp.trim());
+			}
 			
 			uc.println("");
 			
@@ -106,6 +115,13 @@ public class HttpdAudit
 			tmp = uc.askStringQuestion("What is you apache main configuration file?", apacheConf);
 			apacheConf = "".equals(tmp.trim()) ? apacheConf : tmp;
 			File configFile = new File(apacheConf);
+			
+			while(! configFile.exists() )
+			{
+				tmp = uc.askStringQuestion(tmp + " doesn't exist. So what is you apache main configuration file? ");
+				configFile = new File(tmp.trim());
+			}
+			
 			ConfigFile conf = new ConfigFile(configFile);
 			
 			uc.println("");
