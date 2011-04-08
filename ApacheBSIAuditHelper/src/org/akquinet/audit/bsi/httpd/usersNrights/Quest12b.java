@@ -33,18 +33,21 @@ public class Quest12b implements YesNoQuestion
 	{
 		_uc.printHeading3(_id);
 
-		_uc.println("Looking for directives User and Group in the apache configuration file...");
+		_uc.println("Looking for directives User and Group in the apache configuration file. I.e. something like");
+		_uc.printExample("User apache-user\nGroup apache-group");
 		
 		String user = null;
 		String group = null;
 		if(_conf.getDirective("User").size() == 0 || _conf.getDirective("Group").size() == 0)
 		{
-			_uc.printAnswer(false, "User or Group directive not found. No dedicated user specified.");
+			_uc.printAnswer(false, "User- or Group-directive not found. I.e. no dedicated user (with low rights) to run the apache has been specified.");
 			return false;
 		}
 		
 		user = _conf.getDirective("User").get(0).getValue().trim();
 		group = _conf.getDirective("Group").get(0).getValue().trim();
+		
+		_uc.println("User (" + user + ") and group (" + group + ") have been specified. Evaluating their permissions...");
 		
 		ShellAnsweredQuestion quest = new ShellAnsweredQuestion(_commandPath + _command, user, group);
 		boolean ret = quest.answer();

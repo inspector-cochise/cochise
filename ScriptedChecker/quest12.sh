@@ -36,25 +36,25 @@ then
 	#is $1 the only member of $group
 	if test $nmbrOfMembers -ne 1
 	then
-		echo $1 is not the only member of $groupName.
+		echo The user $1 is not the only member of the group $groupName.
 		exit 1
 	fi
 	
 	#is $1 member of any other group?
 	if cat /etc/group | grep -v :$group: | awk 'BEGIN {FS=":"} {print $4;}' | awk 'BEGIN {RS=","} {print $0;}' | grep $1 >& /dev/null
 	then
-		echo $1 is member of another group than only $groupName.
+		echo The user $1 is member of another group than only $groupName.
 		exit 1
 	fi
 	
-	echo Seems like $1 is the only member of $groupName and not member of any other group.
+	echo Seems like the user $1 is the only member of $groupName and not member of any other group.
 	
 #is there any member in $group
 elif test $nmbrOfMembers -eq 0
 then
-	echo $groupName is empty and $1 is not a member of any other group.
+	echo The group $groupName is empty and $1 is not a member of any other group.
 else
-	echo $1 is not member of $groupName but there are other members in $groupName.
+	echo The user $1 is not member of $groupName but there are other members in $groupName.
 	exit 1
 fi
 
