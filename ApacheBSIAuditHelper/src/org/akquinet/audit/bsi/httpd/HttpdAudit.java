@@ -128,8 +128,6 @@ public class HttpdAudit
 			
 			boolean highSec = uc.askYesNoQuestion("Does your application require a high level of security?", true);
 			
-			uc.println("");
-			
 			boolean highPriv = uc.askYesNoQuestion("Does your application require a high level of privacy?", true);
 			
 			uc.println("");
