@@ -56,7 +56,7 @@ public class Quest7 implements YesNoQuestion
 			_uc.println("Please check whether you really need all these options." );
 			for (Directive directive : problems)
 			{
-				_uc.println("line " + directive.getLinenumber() + ": " + directive.getName() + " " + directive.getValue());
+				_uc.printExample("line " + directive.getLinenumber() + ": " + directive.getName() + " " + directive.getValue());
 			}
 			allOk = _uc.askYesNoQuestion("Do you really need all these options?");
 		}
@@ -105,7 +105,7 @@ public class Quest7 implements YesNoQuestion
 			{
 				if(plugin.matches(regex))
 				{
-					_uc.println(optionsValue + "\t " + warnDB.get(regex));
+					_uc.printExample(optionsValue + "\t " + warnDB.get(regex));
 				}
 			}
 		}

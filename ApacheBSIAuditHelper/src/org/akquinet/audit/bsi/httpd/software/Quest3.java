@@ -37,7 +37,7 @@ public class Quest3 extends ModuleHelper implements YesNoQuestion
 			{
 				Directive modSec = directive;
 				_uc.printAnswer(true, "ModSecurity is being loaded:");
-				_uc.println(modSec.getLinenumber() + ": " + modSec.getName() + " " + modSec.getValue());
+				_uc.printExample(modSec.getLinenumber() + ": " + modSec.getName() + " " + modSec.getValue());
 				return true;
 			}
 			

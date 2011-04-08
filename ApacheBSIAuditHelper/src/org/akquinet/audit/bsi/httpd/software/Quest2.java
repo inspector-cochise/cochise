@@ -54,7 +54,8 @@ public class Quest2 implements YesNoQuestion
 		{
 			e.printStackTrace();
 		}
-		_uc.println("Version information of your apache httpd:\n" + version);
+		_uc.println("Version information of your apache httpd:");
+		_uc.printExample(version);
 		boolean ret = _uc.askYesNoQuestion("Is your apache httpd well patched and have you checked that recently?");
 		_uc.printAnswer(ret, ret ? "Well done."
 				: "Please check for new patches and install them.");
