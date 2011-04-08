@@ -1,10 +1,6 @@
 package org.akquinet.audit.bsi.httpd.software;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.List;
 
 import org.akquinet.audit.ModuleHelper;
@@ -17,17 +13,10 @@ public class Quest4 extends ModuleHelper implements YesNoQuestion
 {
 	private static final String _id = "Quest4";
 	private static final UserCommunicator _uc = UserCommunicator.getDefault();
-	private String _listFileName;
-	
-	public Quest4(ConfigFile conf, File apacheExecutable, String tempDirectory)
-	{
-		super(conf, apacheExecutable);
-		_listFileName = tempDirectory + File.separator + "moduleList.txt";
-	}
 	
 	public Quest4(ConfigFile conf, File apacheExecutable)
 	{
-		this(conf, apacheExecutable, "/tmp/apacheAudit");
+		super(conf, apacheExecutable);
 	}
 
 	@Override
@@ -35,46 +24,35 @@ public class Quest4 extends ModuleHelper implements YesNoQuestion
 	{
 		_uc.printHeading3(_id);
 		_uc.println("It is necessary, that only modules you really need are being loaded.");
-		_uc.println("Cause I don't know what modules you need and this is usally a longer list, I will give you a list in " + _listFileName + " .");
+		_uc.println("Cause I don't know what modules you need I will give you a list of all modules that are loaded or have been compiled into your httpd binary.");
 		
-		try
 		{
-			File listFile = new File(_listFileName);
-			listFile.getParentFile().mkdirs();
-			listFile.createNewFile();
-			BufferedWriter writer = new BufferedWriter(new FileWriter(listFile));
+			StringBuffer buf = new StringBuffer();
 			
-			writer.write("First a list of the modules which have been compiled into your apache executable:\n");
-			writer.write("----\n");
+			_uc.println("First a list of the modules which have been compiled into your apache executable:\n");
 			String[] compModules = getCompiledIntoModulesList();
 			for (String mod : compModules)
 			{
-				writer.write(mod + "\n");
+				buf = buf.append(mod + "\n");
 			}
-			writer.write("----\n");
-			writer.write("If there is any module you don't need please recompile your apache. " +
-					"(It't not too hard to select modules which get compiled into.)\n");
-
-			writer.write("\n");
 			
-			writer.write("Now let's get to the dynamically loaded modules. The following LoadModule directives in you apache" +
+			_uc.printExample(buf.toString());
+			buf = new StringBuffer();
+			
+			_uc.println("If there is any module you don't need please recompile your apache. " +
+					"(It's not too hard to select modules which get compiled into.)\n");
+
+			_uc.println("");
+			
+			_uc.println("Now let's get to the dynamically loaded modules. The following LoadModule directives in you apache" +
 					"-configuration-file may get invoked:\n");
-			writer.write("----\n");
 			List<Directive> loadModules = getLoadModuleList();
 			for (Directive dir : loadModules)
 			{
-				writer.write(dir.getLinenumber() + ": " + dir.getName() + " " + dir.getValue() + "\n");
+				buf = buf.append(dir.getLinenumber() + ": " + dir.getName() + " " + dir.getValue() + "\n");
 			}
-			writer.write("----\n");
-			writer.close();
-		}
-		catch (FileNotFoundException e)
-		{
-			e.printStackTrace();
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
+			_uc.printExample(buf.toString());
+			_uc.println("");
 		}
 		
 		_uc.println("Please check whether you need all of these modules.");
