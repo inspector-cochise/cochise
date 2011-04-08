@@ -67,9 +67,18 @@ public class HttpdAudit
 				break;
 			}
 			
+			try
+			{
+				UserCommunicator.setDefault(new UserCommunicator(new File("/tmp/htmlReport.htm")));
+			}
+			catch (Exception e) //shouldn't happen
+			{
+				e.printStackTrace();
+			}
+			
 			UserCommunicator uc = UserCommunicator.getDefault();
 			
-			String id = "main";
+			uc.printHeading1("Introduction");
 			
 			uc.printParagraph("Hello, during this audit I will ask you a bunch of questions. " +
 					"Please rethink your answers twice before you give them to me.");
@@ -109,6 +118,7 @@ public class HttpdAudit
 			
 			uc.println("");
 			uc.printParagraph("Ok, then let's start.");
+			uc.printHeading1("The actual audit");
 			
 			boolean overallAnswer = true;
 			
@@ -139,8 +149,10 @@ public class HttpdAudit
 			else
 			{
 				uc.printHeading1("Conclusion");
-				uc.printParagraph("Seems like there are some questions. Your apache seems to be unsafe.");
+				uc.printParagraph("Seems like there are some questions answered with no. Your apache seems to be unsafe.");
 			}
+			
+			uc.finishCommunication();
 		}
 		catch (IOException e) { e.printStackTrace(); }
 	}
