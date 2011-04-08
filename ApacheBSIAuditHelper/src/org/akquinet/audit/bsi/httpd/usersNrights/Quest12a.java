@@ -33,7 +33,7 @@ public class Quest12a implements YesNoQuestion
 	public boolean answer()
 	{
 		_uc.printHeading3(_id);
-		_uc.println("One can customize the startup process of the apache deamon to start it as a special user with low rights.");
+		_uc.printParagraph("One can customize the startup process of the apache deamon to start it as a special user with low rights. I will now check whether you have done so...");
 		
 		String user = null;
 		String group = null;
@@ -58,6 +58,8 @@ public class Quest12a implements YesNoQuestion
 			return false;
 		}
 
+		_uc.println("Seems like your apache deamon has been started by the user " + user + "of group " + group + " .");
+		_uc.println("Evaluating the permissions of tha combination...");
 		ShellAnsweredQuestion quest = new ShellAnsweredQuestion(_commandPath + _command, user, group);
 		boolean ret = quest.answer();
 		
