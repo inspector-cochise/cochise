@@ -54,9 +54,10 @@ public class HtmlReportLogger
 		
 		css.addContent(new HtmlText(".indented { padding-left: 3em; }\n"));
 		
-		css.addContent(new HtmlText(".example {" +
-				"border-width: thin;\n" +
-				"background-color: #F8E0F7;\n" +
+		css.addContent(new HtmlText(".example {\n" +
+				"border:3px dashed #d5d5d5;\n" +
+				"background-color: #EFFBFB;\n" +
+				"padding-left: 2em;\n" +
 				"}\n"));
 		
 		css.addContent(new HtmlText(".positive { background-color: #A9F5A9; }\n"));
