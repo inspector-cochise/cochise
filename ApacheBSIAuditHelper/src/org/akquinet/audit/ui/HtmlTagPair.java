@@ -1,5 +1,6 @@
 package org.akquinet.audit.ui;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -10,11 +11,28 @@ public class HtmlTagPair implements HtmlElement
 	
 	private String _name;
 	private Map<String,String> _attributes;
+	private Integer _serial;
 	
 	public HtmlTagPair(String name)
 	{
+		this(name, null);
+	}
+	
+	public HtmlTagPair(String name, Integer serial)
+	{
 		_content = new LinkedList<HtmlElement>();
 		_name = name;
+		_serial = serial;
+		_attributes = new HashMap<String, String>();
+	}
+	
+	/**
+	 * 
+	 * @return The serial number. Null if not set!
+	 */
+	public Integer getSerial()
+	{
+		return _serial;
 	}
 	
 	public void addAttribute(String name, String value)
