@@ -74,7 +74,7 @@ public class Quest12b implements YesNoQuestion
 		}
 		
 		String[] shellOut = buf.toString().split("[ |\t]");
-		if(shellOut.length == 1)
+		if(shellOut.length == 1 && ! buf.toString().equals(""))
 		{
 			_uc.printAnswer(ret, _labels.getString(shellOut[0]) );
 		}
