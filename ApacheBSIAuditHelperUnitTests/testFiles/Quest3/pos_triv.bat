@@ -1,6 +1,6 @@
-echo Compiled in modules: 1>&2
-echo   core.c 1>&2
-echo   mod_log_config.c 1>&2
-echo   mod_logio.c 1>&2
-echo   mod_so.c 1>&2
-echo   mod_security.c 1>&2
+echo Compiled in modules: 
+echo   core.c
+echo   mod_log_config.c
+echo   mod_logio.c
+echo   mod_so.c
+echo   mod_security.c

@@ -1,5 +1,5 @@
-echo   core.c 1>&2
-echo Compiled in modules: 1>&2
-echo   m..od_logio.c 1>&2
+echo   core.c
+echo Compiled in modules:
+echo   m..od_logio.c
 echo
-echo   mod_security.c 1>&2
+echo   mod_security.c
