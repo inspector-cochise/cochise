@@ -47,42 +47,14 @@ public class HtmlReportLogger
 		HtmlTagPair title = new HtmlTagPair("title");
 		title.addContent(new HtmlText("Cochise audit report"));
 		
-		HtmlTagPair css = new HtmlTagPair("style");
+		HtmlTagPair css = new HtmlTagPair("link");
+		css.addAttribute("rel", "stylesheet");
 		css.addAttribute("type", "text/css");
-		
-		css.addContent(new HtmlText(". { width: auto; }\n"));
-		
-		css.addContent(new HtmlText(".indented { padding-left: 3em; }\n"));
-		
-		css.addContent(new HtmlText(".example {\n" +
-				"border:3px dashed #d5d5d5;\n" +
-				"background-color: #EFFBFB;\n" +
-				"padding-left: 2em;\n" +
-				"}\n"));
-		
-		css.addContent(new HtmlText(".hidden {\n" +
-				"background-color: #F7F8E0;\n" +
-				"display: none;\n" +
-				"padding: 2em;\n" +
-				"border:2px dashed #d5d5d5;\n" +
-				"}\n"));
-		
-		css.addContent(new HtmlText(".positive { background-color: #A9F5A9; }\n"));
-		css.addContent(new HtmlText(".negative { background-color: #F78181; }\n"));
-		
+		css.addAttribute("href", "./html/style.css");
+
 		HtmlTagPair javascript = new HtmlTagPair("script");
 		javascript.addAttribute("language", "javascript");
-		javascript.addContent(new HtmlText(
-				"function toggle(showHideDiv, switchTextDiv) {\n" +
-				"	var ele = document.getElementById(showHideDiv);\n" +
-				"	var text = document.getElementById(switchTextDiv);\n" +
-				"	if(ele.style.display == \"block\") {\n" +
-				"    		ele.style.display = \"none\";\n" +
-				"  	}\n" +
-				"	else {\n" +
-				"		ele.style.display = \"block\";\n" +
-				"	}\n" +
-				"}\n"));
+		javascript.addAttribute("src", "./html/script.js");
 		
 		head.addContent(title);
 		head.addContent(css);

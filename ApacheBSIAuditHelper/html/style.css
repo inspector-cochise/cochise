@@ -1,0 +1,29 @@
+
+. {
+	width: auto;
+}
+
+.indented {
+	padding-left: 3em;
+}
+
+.example {
+		border:3px dashed #d5d5d5;
+		background-color: #EFFBFB;
+		padding-left: 2em;
+}
+
+.hidden {
+		border:2px dashed #d5d5d5;
+		background-color: #F7F8E0;
+		padding: 2em;
+		display: none;
+}
+
+.positive {
+	background-color: #A9F5A9;
+}
+
+.negative {
+	background-color: #F78181;
+}
