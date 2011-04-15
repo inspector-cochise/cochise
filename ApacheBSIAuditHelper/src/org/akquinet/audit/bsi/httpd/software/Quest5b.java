@@ -2,6 +2,8 @@ package org.akquinet.audit.bsi.httpd.software;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.ui.UserCommunicator;
@@ -12,11 +14,13 @@ public class Quest5b implements YesNoQuestion
 {
 	private static final String _id = "Quest5b";
 	private ConfigFile _conf;
+	private ResourceBundle _labels;
 	private static final UserCommunicator _console = UserCommunicator.getDefault();
 	
 	public Quest5b(ConfigFile conf)
 	{
 		_conf = conf;
+		_labels = ResourceBundle.getBundle(_id, Locale.getDefault());
 	}
 
 	/**
@@ -48,15 +52,15 @@ public class Quest5b implements YesNoQuestion
 			}
 		}
 		String global = isSetGlobalRoot ?
-						"Directive \"AllowOverride None\" is correctly stated in context for root directory being in global context." :
-						"You haven't stated the directive \"AllowOverride None\" in a directory context for the root directory which is itself placed in global context.";
+						  _labels.getString("S1")
+						: _labels.getString("S2");
 		String overrides = problems.isEmpty() ?
-						"Directive \"AllowOverride\" correctly doesn't appear with a parameter other than \"None\"" :
-						"You have stated the directive \"AllowOverrid\" with parameters other than \"None\". Remove these:";
+				  _labels.getString("S3")
+				: _labels.getString("S4");
 		_console.printAnswer(isSetGlobalRoot & problems.isEmpty(), global + " " + overrides);
 		for (Directive directive : problems)
 		{
-			_console.println("line " + directive.getLinenumber() + ": " + directive.getName() + " " + directive.getValue());
+			_console.println(_labels.getString("S5") + directive.getLinenumber() + ": " + directive.getName() + " " + directive.getValue());
 		}
 
 		

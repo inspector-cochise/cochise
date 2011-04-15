@@ -3,6 +3,8 @@ package org.akquinet.audit.bsi.httpd.software;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.ui.UserCommunicator;
@@ -12,16 +14,18 @@ public class Quest2 implements YesNoQuestion
 	private static final String _id = "Quest2";
 	private static final UserCommunicator _uc = UserCommunicator.getDefault();
 	private ProcessBuilder _httpd;
+	private ResourceBundle _labels;
 	
 	public Quest2(File apacheExecutable)
 	{
+		_labels = ResourceBundle.getBundle(_id, Locale.getDefault());
 		try
 		{
 			_httpd = new ProcessBuilder(apacheExecutable.getCanonicalPath(), "-v");
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -30,7 +34,7 @@ public class Quest2 implements YesNoQuestion
 	{
 		_uc.printHeading3(_id);
 		Process p;
-		String version = "(couldn't retrieve version information)";
+		String version = _labels.getString("S1");
 		try
 		{
 			p = _httpd.start();
@@ -54,11 +58,11 @@ public class Quest2 implements YesNoQuestion
 		{
 			e.printStackTrace();
 		}
-		_uc.println("Version information of your apache httpd:");
+		_uc.println(_labels.getString("S2"));
 		_uc.printExample(version);
-		boolean ret = _uc.askYesNoQuestion("Is your apache httpd well patched and have you checked that recently?");
-		_uc.printAnswer(ret, ret ? "Well done."
-				: "Please check for new patches and install them.");
+		boolean ret = _uc.askYesNoQuestion(_labels.getString("Q1"));
+		_uc.printAnswer(ret, ret ? _labels.getString("S3_good")
+				: _labels.getString("S3_bad"));
 		return ret;
 	}
 

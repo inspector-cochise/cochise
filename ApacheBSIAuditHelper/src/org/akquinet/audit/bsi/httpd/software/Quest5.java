@@ -1,5 +1,9 @@
 package org.akquinet.audit.bsi.httpd.software;
 
+import java.text.MessageFormat;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
@@ -12,9 +16,11 @@ public class Quest5 implements YesNoQuestion
 	
 	private Quest5a _q5a;
 	private Quest5b _q5b;
+	private ResourceBundle _labels;
 	
 	public Quest5(ConfigFile conf)
 	{
+		_labels = ResourceBundle.getBundle(_id, Locale.getDefault());
 		_conf = conf;
 		_q5a = new Quest5a(_conf);
 		_q5b = new Quest5b(_conf);
@@ -28,15 +34,15 @@ public class Quest5 implements YesNoQuestion
 	public boolean answer()
 	{
 		_uc.printHeading3(_id);
-		_uc.println("Evaluating whether your main configuration file is your only possible configuration file...");
+		_uc.println( _labels.getString("L1") );
 		_uc.beginIndent();
 		boolean ret = _q5a.answer() && _q5b.answer();
 		
 		_uc.endIndent();
-		_uc.println("Back to " + _id);
+		_uc.println(MessageFormat.format( _labels.getString("L2") , _id));
 		_uc.printAnswer(ret, ret ?
-					"Your main configuration file is your only possible configuration file."
-					: "Your main configuration file is not your only possible configuration file.");
+				  _labels.getString("S1_good") 
+				: _labels.getString("S1_bad") );
 		return ret;
 	}
 

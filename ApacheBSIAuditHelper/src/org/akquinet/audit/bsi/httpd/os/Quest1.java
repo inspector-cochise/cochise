@@ -1,5 +1,8 @@
 package org.akquinet.audit.bsi.httpd.os;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 import org.akquinet.audit.ShellAnsweredQuestion;
 import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.ui.UserCommunicator;
@@ -11,6 +14,7 @@ public class Quest1 implements YesNoQuestion
 	private static final UserCommunicator _uc = UserCommunicator.getDefault();
 	private String _commandPath;
 	private String _command;
+	private ResourceBundle _labels;
 
 	public Quest1(boolean highSecurityRequired)
 	{
@@ -22,6 +26,7 @@ public class Quest1 implements YesNoQuestion
 		_highSecReq = highSecurityRequired;
 		_commandPath = commandPath;
 		_command = command;
+		_labels = ResourceBundle.getBundle(_id, Locale.getDefault());
 	}
 
 	@Override
@@ -33,26 +38,22 @@ public class Quest1 implements YesNoQuestion
 			ShellAnsweredQuestion quest = new ShellAnsweredQuestion(_commandPath + _command);
 			boolean ret = quest.answer();
 			
-			_uc.printAnswer(ret, ret ? "User root is correctly locked."
-								: "Please lock user root (\"passwd -l\"). After that you can't directly log yourself in as root.");
+			_uc.printAnswer(ret, ret ? _labels.getString("S1_good")
+								: _labels.getString("S1_bad"));
 			
-			_uc.beginHidingParagraph("(more Information)");
-			_uc.printParagraph("For a high level of security you should block access to the standard administrative accounts. " +
-					"This adds security to your server because an attacker in many cases also needs to know the name of an administrative account.");
-			_uc.printParagraph("On most Linux systems you can lock the root account by executing the following command (USE WITH CARE!)");
-			_uc.printExample("passwd -l root");
-			_uc.printParagraph("Please ensure that you first created another account with administrative rights. " +
-					"Because you won't be able to login as root anymore after that. " +
-					"(But you can still use sudo.) " +
-					"If you ever need to unlock your root account you can do so by executing the following command.");
-			_uc.printExample("passwd -u root");
+			_uc.beginHidingParagraph( _labels.getString("S2") );
+			_uc.printParagraph( _labels.getString("P1") );
+			_uc.printParagraph( _labels.getString("P2") );
+			_uc.printExample( _labels.getString("S3") );
+			_uc.printParagraph( _labels.getString("P3"));
+			_uc.printExample( _labels.getString("S4") );
 			_uc.endHidingParagraph();
 			
 			return ret;
 		}
 		else
 		{
-			_uc.println("skipping question... (no high level of security requested))");
+			_uc.println( _labels.getString("S5") );
 			return true;
 		}
 	}

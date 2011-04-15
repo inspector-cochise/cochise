@@ -2,6 +2,8 @@ package org.akquinet.audit.bsi.httpd.software;
 
 import java.io.File;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import org.akquinet.audit.ModuleHelper;
 import org.akquinet.audit.YesNoQuestion;
@@ -13,10 +15,12 @@ public class Quest3 extends ModuleHelper implements YesNoQuestion
 {
 	private static final String _id = "Quest3";
 	private static final UserCommunicator _uc = UserCommunicator.getDefault();
+	private ResourceBundle _labels;
 	
 	public Quest3(ConfigFile conf, File apacheExecutable)
 	{
 		super(conf, apacheExecutable);
+		_labels = ResourceBundle.getBundle(_id, Locale.getDefault());
 	}
 
 	@Override
@@ -36,7 +40,7 @@ public class Quest3 extends ModuleHelper implements YesNoQuestion
 			if(arguments[0].equals("security2_module"))
 			{
 				Directive modSec = directive;
-				_uc.printAnswer(true, "ModSecurity is being loaded:");
+				_uc.printAnswer(true, _labels.getString("S1"));
 				_uc.printExample(modSec.getLinenumber() + ": " + modSec.getName() + " " + modSec.getValue());
 				return true;
 			}
@@ -49,12 +53,12 @@ public class Quest3 extends ModuleHelper implements YesNoQuestion
 		{
 			if(str.matches("( |\t)*mod_security.c( |\t)*"))
 			{
-				_uc.printAnswer(true, "ModSecurity is compiled into the httpd binary.");
+				_uc.printAnswer(true, _labels.getString("S2"));
 				return true;
 			}
 		}
 		
-		_uc.printAnswer(false, "ModSecurity seems not to be loaded.");
+		_uc.printAnswer(false, _labels.getString("S3"));
 		return false;
 	}
 

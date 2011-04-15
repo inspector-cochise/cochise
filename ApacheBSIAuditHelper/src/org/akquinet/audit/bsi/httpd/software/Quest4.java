@@ -2,6 +2,8 @@ package org.akquinet.audit.bsi.httpd.software;
 
 import java.io.File;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import org.akquinet.audit.ModuleHelper;
 import org.akquinet.audit.YesNoQuestion;
@@ -13,23 +15,26 @@ public class Quest4 extends ModuleHelper implements YesNoQuestion
 {
 	private static final String _id = "Quest4";
 	private static final UserCommunicator _uc = UserCommunicator.getDefault();
+	private ResourceBundle _labels;
 	
 	public Quest4(ConfigFile conf, File apacheExecutable)
 	{
 		super(conf, apacheExecutable);
+		_labels = ResourceBundle.getBundle(_id, Locale.getDefault());
 	}
 
 	@Override
 	public boolean answer()
 	{
 		_uc.printHeading3(_id);
-		_uc.println("It is necessary, that only modules you really need are being loaded.");
-		_uc.println("Cause I don't know what modules you need I will give you a list of all modules that are loaded or have been compiled into your httpd binary.");
+		_uc.println( _labels.getString("L1") );
+		_uc.println( _labels.getString("L2") );
 		
 		{
 			StringBuffer buf = new StringBuffer();
 			
-			_uc.println("First a list of the modules which have been compiled into your apache executable:\n");
+			_uc.println( _labels.getString("L3") );
+			_uc.println("");
 			String[] compModules = getCompiledIntoModulesList();
 			for (String mod : compModules)
 			{
@@ -39,13 +44,12 @@ public class Quest4 extends ModuleHelper implements YesNoQuestion
 			_uc.printExample(buf.toString());
 			buf = new StringBuffer();
 			
-			_uc.println("If there is any module you don't need please recompile your apache. " +
-					"(It's not too hard to select modules which get compiled into.)");
+			_uc.println( _labels.getString("L4") );
 
 			_uc.println("");
 			
-			_uc.println("Now let's get to the dynamically loaded modules. The following LoadModule directives in you apache" +
-					"-configuration-file may get invoked:\n");
+			_uc.println( _labels.getString("L5") );
+			_uc.println("");
 			List<Directive> loadModules = getLoadModuleList();
 			for (Directive dir : loadModules)
 			{
@@ -54,10 +58,10 @@ public class Quest4 extends ModuleHelper implements YesNoQuestion
 			_uc.printExample(buf.toString());
 		}
 		
-		_uc.println("Please check whether you need all of these modules.");
-		boolean ret = _uc.askYesNoQuestion("Do you need all of these modules?");
-		_uc.printAnswer(ret, ret ? "No redundant modules loaded."
-				: "Please remove these modules, if necessary recompile your apache.");
+		_uc.println( _labels.getString("L6") );
+		boolean ret = _uc.askYesNoQuestion( _labels.getString("Q1") );
+		_uc.printAnswer(ret, ret ?  _labels.getString("S1_good") 
+				: _labels.getString("S1_bad") );
 		return ret;
 	}
 

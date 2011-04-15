@@ -3,7 +3,9 @@ package org.akquinet.audit.bsi.httpd.software;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.ui.UserCommunicator;
@@ -14,19 +16,21 @@ public class Quest7 implements YesNoQuestion
 {
 	private static final String _id = "Quest7";
 	private ConfigFile _conf;
+	private ResourceBundle _labels;
 	private static final UserCommunicator _uc = UserCommunicator.getDefault();
 	
 	public Quest7(ConfigFile conf)
 	{
 		_conf = conf;
+		_labels = ResourceBundle.getBundle(_id, Locale.getDefault());
 	}
 
 	@Override
 	public boolean answer()
 	{
 		_uc.printHeading3(_id);
-		_uc.println("All options should be explicitly deactivated and only necessary options should be activated.");
-		_uc.println("Scanning for \"Options None\" in global context...");
+		_uc.println( _labels.getString("L1") );
+		_uc.println( _labels.getString("L2") );
 		
 		List<Directive> dirList = _conf.getAllDirectives("Options");
 		List<Directive> problems = new LinkedList<Directive>();
@@ -47,22 +51,23 @@ public class Quest7 implements YesNoQuestion
 			}
 		}
 		_uc.println(isSetGlobal ?
-						"Directive \"Options None\" is correctly stated in global context." :
-						"You haven't stated the directive \"Options None\" in global context.");
+				   _labels.getString("L3")
+				 : _labels.getString("L4") );
 		boolean allOk = problems.isEmpty();
 		if(!allOk)
 		{
-			_uc.println("As expected you activated some options. I will give you the line of each in you configuration file." );
-			_uc.println("Please check whether you really need all these options." );
+			_uc.println( _labels.getString("L5") );
+			_uc.println( _labels.getString("L6") );
 			for (Directive directive : problems)
 			{
-				_uc.printExample("line " + directive.getLinenumber() + ": " + directive.getName() + " " + directive.getValue());
+				_uc.printExample( _labels.getString("S1")  + directive.getLinenumber() + ": " + directive.getName() + " " + directive.getValue());
 			}
-			allOk = _uc.askYesNoQuestion("Do you really need all these options?");
+			allOk = _uc.askYesNoQuestion( _labels.getString("Q1") );
 		}
 		
 		boolean ret = isSetGlobal && allOk;
-		_uc.printAnswer(ret, ret ? "(De-)Activation of options is well done." : "Please state \"Options None\" in the global context and/or do not activate unneeded options.");
+		_uc.printAnswer(ret, ret ?  _labels.getString("S2_good") 
+								:   _labels.getString("S2_bad") );
 		return ret;
 	}
 
@@ -96,8 +101,8 @@ public class Quest7 implements YesNoQuestion
 		
 		Map<String,String> warnDB = new HashMap<String, String>(); //format regex -> warn-message
 		//TODO maybe do a lookup in some database or file for this -> in future it may grows!
-		warnDB.put("[Ii]ndexes", "Use this one with care! You probably show information by accident that should not be shown.");
-		warnDB.put("[Ii]ncludes", "This one is a security risk. Please disable. (Will be topic of a later question)");
+		warnDB.put("[Ii]ndexes",  _labels.getString("S3") );
+		warnDB.put("[Ii]ncludes",  _labels.getString("S4") );
 		
 		for (String plugin : pluginArr)
 		{

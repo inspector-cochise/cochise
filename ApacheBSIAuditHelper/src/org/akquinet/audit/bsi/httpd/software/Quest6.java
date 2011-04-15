@@ -3,6 +3,8 @@ package org.akquinet.audit.bsi.httpd.software;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.ui.UserCommunicator;
@@ -13,9 +15,11 @@ public class Quest6 implements YesNoQuestion
 	private ProcessBuilder _httpd;
 	private static final UserCommunicator _uc = UserCommunicator.getDefault();
 	private InputStream _stdErr;
+	private ResourceBundle _labels;
 	
 	public Quest6(File apacheExecutable)
 	{
+		_labels = ResourceBundle.getBundle(_id, Locale.getDefault());
 		try
 		{
 			_httpd = new ProcessBuilder(apacheExecutable.getCanonicalPath(), "-t");
@@ -42,12 +46,12 @@ public class Quest6 implements YesNoQuestion
 			
 			if(exit == 0)
 			{
-				_uc.printAnswer(true, "Syntax of main configuration file OK.");
+				_uc.printAnswer(true, _labels.getString("S1") );
 				return true;
 			}
 			else
 			{
-				_uc.printAnswer(false, "Syntax errors in main configuration file:");
+				_uc.printAnswer(false, _labels.getString("S2") );
 				StringBuffer buf = new StringBuffer();
 				int b = _stdErr.read();
 				while(b != -1)
@@ -62,15 +66,12 @@ public class Quest6 implements YesNoQuestion
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
-			_uc.printAnswer(false, "Problem while answering question. Caught an IOException (see stderr).");
+			throw new RuntimeException(e);
 		}
 		catch (InterruptedException e)
 		{
-			e.printStackTrace();
-			_uc.printAnswer(false, "Problem while answering question. Caught an InterruptedException (see stderr).");
+			throw new RuntimeException(e);
 		}
-		return false;
 	}
 
 	@Override

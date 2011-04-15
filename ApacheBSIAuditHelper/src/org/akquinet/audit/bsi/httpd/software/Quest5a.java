@@ -1,6 +1,8 @@
 package org.akquinet.audit.bsi.httpd.software;
 
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.ui.UserCommunicator;
@@ -11,11 +13,13 @@ public class Quest5a implements YesNoQuestion
 {
 	private static final String _id = "Quest5a";
 	private ConfigFile _conf;
+	private ResourceBundle _labels;
 	private static final UserCommunicator _uc = UserCommunicator.getDefault();
 	
 	public Quest5a(ConfigFile conf)
 	{
 		_conf = conf;
+		_labels = ResourceBundle.getBundle(_id, Locale.getDefault());
 	}
 
 	/**
@@ -29,16 +33,16 @@ public class Quest5a implements YesNoQuestion
 		
 		if(!incList.isEmpty())
 		{
-			_uc.printAnswer(false, "There are Include-directives in your apache configuration:");
+			_uc.printAnswer(false, _labels.getString("S1_bad") );
 			for (Directive directive : incList)
 			{
-				_uc.println("line " + directive.getLinenumber() + ": " + directive.getName() + " " + directive.getValue());
+				_uc.println(_labels.getString("S2") + directive.getLinenumber() + ": " + directive.getName() + " " + directive.getValue());
 			}
 			return false;
 		}
 		else
 		{
-			_uc.printAnswer(true, "No Include-directives found.");
+			_uc.printAnswer(true, _labels.getString("S1_good") );
 			return true;
 		}
 	}
