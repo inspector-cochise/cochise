@@ -52,6 +52,7 @@ then
 elif test $nmbrOfMembers -eq 0
 then
 # this is ok meesage will be echoed later
+	false
 else
 	echo SHELL6 $1 $groupName
 	exit 1
