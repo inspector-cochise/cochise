@@ -60,7 +60,10 @@ public class Quest9a implements YesNoQuestion
 		
 		_uc.printAnswer(ret, ret ? _labels.getString("S1")
 							: MessageFormat.format( _labels.getString("S2"), _user));
-		_uc.printExample(problems);
+		if(!ret)
+		{
+			_uc.printExample(problems);
+		}
 		
 		return ret;
 	}
