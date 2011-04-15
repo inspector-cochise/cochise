@@ -3,6 +3,8 @@ package org.akquinet.audit.ui;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class FormattedConsole
 {
@@ -16,10 +18,12 @@ public class FormattedConsole
 
 	private static FormattedConsole _default = null;
 	private boolean _ignore_waitForUserToContinue;
+	private ResourceBundle _labels;
 
 	private FormattedConsole()
 	{
 		_ignore_waitForUserToContinue = false;
+		_labels = ResourceBundle.getBundle("global", Locale.getDefault());
 	}
 
 	public static FormattedConsole getDefault()
@@ -41,13 +45,13 @@ public class FormattedConsole
 		String str_answer;
 		if (answer == null)
 		{
-			str_answer = "--";
+			str_answer = _labels.getString("S1_--");
 		} else if (answer)
 		{
-			str_answer = "yy";
+			str_answer = _labels.getString("S1_YY");
 		} else
 		{
-			str_answer = "NN";
+			str_answer = _labels.getString("S1_NN");
 		}
 
 		if (level == OutputLevel.Q2)
@@ -62,19 +66,23 @@ public class FormattedConsole
 	{
 		if(defaultAnswer == null)
 		{
-			String tmp = wrapString(question +  " Yes/No ", level);
+			String tmp = wrapString(question +  " " + _labels.getString("S2") + " ", level);
 			print(level, tmp);
 		}
 		else
 		{
 			if(defaultAnswer)
 			{
-				String tmp = wrapString(question + (level == OutputLevel.RAW ? "" : " Yes/No [Yes] "), level);
+				String tmp = wrapString(question + (level == OutputLevel.RAW ? 
+					""
+					: " " + _labels.getString("S2_yes") + " "), level);
 				print(level, tmp);
 			}
 			else
 			{
-				String tmp = wrapString(question + (level == OutputLevel.RAW ? "" : " Yes/No [No] "), level);
+				String tmp = wrapString(question + (level == OutputLevel.RAW ?
+					""
+					: " " + _labels.getString("S2_no") + " "), level);
 				print(level, tmp);
 			}
 		}
@@ -107,7 +115,7 @@ public class FormattedConsole
 			}
 			else
 			{
-				print(level, "Unrecognized answer. Please answer with \"no\" or \"yes\": ");
+				print(level, _labels.getString("S3"));
 			}
 		}
 
@@ -124,7 +132,7 @@ public class FormattedConsole
 		if (defaultAnswer != null)
 		{
 			String tmp = wrapString(question +
-					" [Hit enter for default value "	+ defaultAnswer + "] ", level);
+					" [" + _labels.getString("S4")	+ defaultAnswer + "] ", level);
 			print(level, tmp);
 		}
 		else
@@ -147,7 +155,7 @@ public class FormattedConsole
 			{
 				if (defaultAnswer != null)
 				{
-					print(level, "Please enter your custom value. ");
+					print(level, _labels.getString("S5"));
 					answer = readStdInLine();
 					return answer;
 				} else
@@ -204,7 +212,7 @@ public class FormattedConsole
 	{
 		if (!_ignore_waitForUserToContinue)
 		{
-			String anyKeyMessage = "\n  Hit enter to continue...";
+			String anyKeyMessage = "\n  " + _labels.getString("S6");
 			System.out.println(anyKeyMessage);
 
 			System.in.read();
@@ -246,16 +254,18 @@ public class FormattedConsole
 		_ignore_waitForUserToContinue = b;
 	}
 
-	private static boolean isYes(String str)
+	private boolean isYes(String str)
 	{
-		return str.equalsIgnoreCase("yes") || str.equalsIgnoreCase("y")
-				|| str.equalsIgnoreCase("yy");
+		return str.equalsIgnoreCase( _labels.getString("S7_yes1") )
+			|| str.equalsIgnoreCase( _labels.getString("S7_yes2") )
+			|| str.equalsIgnoreCase( _labels.getString("S7_yes3") );
 	}
 
-	private static boolean isNo(String str)
+	private boolean isNo(String str)
 	{
-		return str.equalsIgnoreCase("no") || str.equalsIgnoreCase("n")
-				|| str.equalsIgnoreCase("nn");
+		return str.equalsIgnoreCase( _labels.getString("S7_no1") )
+			|| str.equalsIgnoreCase( _labels.getString("S7_no2") )
+			|| str.equalsIgnoreCase( _labels.getString("S7_no3") );
 	}
 	
 	public String wrapString(String text, OutputLevel level)

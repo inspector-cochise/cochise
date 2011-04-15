@@ -2,6 +2,8 @@ package org.akquinet.audit.ui;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import org.akquinet.audit.ui.FormattedConsole.OutputLevel;
 
@@ -13,6 +15,7 @@ public class UserCommunicator
 	private int _indentLevel;
 	private File _htmlReport;
 	private boolean _hide;
+	private ResourceBundle _labels;
 	
 	private HtmlReportLogger _htmlLogger;
 	
@@ -27,6 +30,7 @@ public class UserCommunicator
 		_indentLevel = 0;
 		_htmlLogger = new HtmlReportLogger();
 		_hide = false;
+		_labels = ResourceBundle.getBundle("global", Locale.getDefault());
 	}
 
 	public void printHeading1(String heading)
@@ -216,7 +220,7 @@ public class UserCommunicator
 	{
 		boolean answer = _console.askYesNoQuestion(getLevel(), question, defaultAnswer);
 		
-		_htmlLogger.printParagraph(question + " <i>" + (answer ? "Yes." : "No.") + "</i>");
+		_htmlLogger.printParagraph(question + " <i>" + (answer ? _labels.getString("S8_yes") : _labels.getString("S8_no")) + "</i>");
 		
 		return answer;
 	}
