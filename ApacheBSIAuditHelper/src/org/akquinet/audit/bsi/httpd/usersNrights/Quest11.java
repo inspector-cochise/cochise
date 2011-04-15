@@ -33,6 +33,8 @@ public class Quest11 implements YesNoQuestion
 	public boolean answer()
 	{
 		_uc.printHeading3(_id);
+		_uc.printParagraph( _labels.getString("Q0") );
+		
 		_uc.println( _labels.getString("L1") );
 		_uc.beginIndent();
 		

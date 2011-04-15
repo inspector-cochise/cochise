@@ -46,6 +46,7 @@ public class Quest9 implements YesNoQuestion
 	public boolean answer()
 	{
 		_uc.printHeading3(_id);
+		_uc.printParagraph( _labels.getString("Q0") );
 
 		_uc.println( _labels.getString("L1") );
 		if(_serverRoot != null)

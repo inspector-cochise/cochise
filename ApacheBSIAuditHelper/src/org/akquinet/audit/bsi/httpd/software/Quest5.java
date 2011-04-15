@@ -34,6 +34,8 @@ public class Quest5 implements YesNoQuestion
 	public boolean answer()
 	{
 		_uc.printHeading3(_id);
+		_uc.printParagraph( _labels.getString("Q0") );
+		
 		_uc.println( _labels.getString("L1") );
 		_uc.beginIndent();
 		boolean ret = _q5a.answer() && _q5b.answer();

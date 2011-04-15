@@ -33,6 +33,8 @@ public class Quest2 implements YesNoQuestion
 	public boolean answer()
 	{
 		_uc.printHeading3(_id);
+		_uc.printParagraph( _labels.getString("Q0") );
+		
 		Process p;
 		String version = _labels.getString("S1");
 		try

@@ -21,6 +21,8 @@ public class Quest11a implements YesNoQuestion
 	public boolean answer()
 	{
 		_uc.printHeading3(_id);
+		_uc.printParagraph( _labels.getString("Q0") );
+		
 		boolean ret = _uc.askYesNoQuestion( _labels.getString("Q1") );
 		_uc.printAnswer(ret, ret ? 
 				 		  _labels.getString("S1_good") 

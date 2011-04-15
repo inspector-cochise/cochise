@@ -15,7 +15,7 @@ public class Quest5b implements YesNoQuestion
 	private static final String _id = "Quest5b";
 	private ConfigFile _conf;
 	private ResourceBundle _labels;
-	private static final UserCommunicator _console = UserCommunicator.getDefault();
+	private static final UserCommunicator _uc = UserCommunicator.getDefault();
 	
 	public Quest5b(ConfigFile conf)
 	{
@@ -30,7 +30,9 @@ public class Quest5b implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		_console.printHeading3(_id);
+		_uc.printHeading3(_id);
+		_uc.printParagraph( _labels.getString("Q0") );
+		
 		List<Directive> dirList = _conf.getAllDirectives("AllowOverride");
 		List<Directive> problems = new LinkedList<Directive>();
 		boolean isSetGlobalRoot = false;	//will be changed if at least one directive in global context is found
@@ -57,10 +59,10 @@ public class Quest5b implements YesNoQuestion
 		String overrides = problems.isEmpty() ?
 				  _labels.getString("S3")
 				: _labels.getString("S4");
-		_console.printAnswer(isSetGlobalRoot & problems.isEmpty(), global + " " + overrides);
+		_uc.printAnswer(isSetGlobalRoot & problems.isEmpty(), global + " " + overrides);
 		for (Directive directive : problems)
 		{
-			_console.println(_labels.getString("S5") + directive.getLinenumber() + ": " + directive.getName() + " " + directive.getValue());
+			_uc.println(_labels.getString("S5") + directive.getLinenumber() + ": " + directive.getName() + " " + directive.getValue());
 		}
 
 		

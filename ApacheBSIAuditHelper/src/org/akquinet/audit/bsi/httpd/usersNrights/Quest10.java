@@ -40,6 +40,8 @@ public class Quest10 extends ModuleHelper implements YesNoQuestion
 	public boolean answer()
 	{
 		_uc.printHeading3(_id);
+		_uc.printParagraph( _labels.getString("Q0") );
+		
 		_uc.println( _labels.getString("L1") );
 		
 		boolean ret = true;

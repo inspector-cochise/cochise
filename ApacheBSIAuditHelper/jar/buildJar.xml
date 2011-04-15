@@ -9,6 +9,7 @@
                 <attribute name="Class-Path" value="."/>
             </manifest>
             <fileset dir="/home/immanuel/workspace-git/cochise/ApacheBSIAuditHelper/bin"/>
+			<fileset dir="/home/immanuel/workspace-git/cochise/ApacheBSIAuditHelper/properties"/>
         </jar>
     </target>
 </project>

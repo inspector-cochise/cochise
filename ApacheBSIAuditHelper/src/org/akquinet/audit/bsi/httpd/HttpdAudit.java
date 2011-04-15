@@ -93,6 +93,8 @@ public class HttpdAudit
 
 			uc.printParagraph( labels.getString("P2") );
 			
+			uc.printParagraph( labels.getString("P5") );
+			
 			uc.printParagraph( labels.getString("P3") );
 			uc.printExample("/usr/sbin/apache2    (Debian/Ubuntu)\n" +
 					"/usr/sbin/httpd      (RedHat)\n" +

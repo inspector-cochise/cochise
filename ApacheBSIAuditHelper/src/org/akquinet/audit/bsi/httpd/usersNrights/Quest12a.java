@@ -38,6 +38,8 @@ public class Quest12a implements YesNoQuestion
 	public boolean answer()
 	{
 		_uc.printHeading3(_id);
+		_uc.printParagraph( _labels.getString("Q0") );
+		
 		_uc.printParagraph("One can customize the startup process of the apache deamon to start it as a special user with low rights. I will now check whether you have done so...");
 		
 		String user = null;

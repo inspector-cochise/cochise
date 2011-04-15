@@ -27,6 +27,7 @@ public class Quest3 extends ModuleHelper implements YesNoQuestion
 	public boolean answer()
 	{
 		_uc.printHeading3(_id);
+		_uc.printParagraph( _labels.getString("Q0") );
 
 		List<Directive> loadList = getLoadModuleList();
 		for (Directive directive : loadList)

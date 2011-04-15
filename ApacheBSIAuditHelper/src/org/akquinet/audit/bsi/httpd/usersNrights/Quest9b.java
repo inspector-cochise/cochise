@@ -24,6 +24,8 @@ public class Quest9b implements YesNoQuestion
 	public boolean answer()
 	{
 		_uc.printHeading3(_id);
+		_uc.printParagraph( _labels.getString("Q0") );
+		
 		File srvRt = new File(_serverRoot + File.separator + "htdocs");
 		
 		if(!srvRt.exists())

@@ -38,6 +38,8 @@ public class Quest6 implements YesNoQuestion
 	public boolean answer()
 	{
 		_uc.printHeading3(_id);
+		_uc.printParagraph( _labels.getString("Q0") );
+		
 		try
 		{
 			Process p = _httpd.start();
