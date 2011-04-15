@@ -2,6 +2,9 @@ package org.akquinet.audit.bsi.httpd;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.MessageFormat;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import org.akquinet.audit.bsi.httpd.os.Quest1;
 import org.akquinet.audit.bsi.httpd.software.Quest2;
@@ -35,9 +38,12 @@ public class HttpdAudit
 	{
 		try
 		{
+			ResourceBundle labels = ResourceBundle.getBundle("global", Locale.getDefault());
+			
 			if(!"root".equals(System.getenv("USER")))
 			{
-				System.out.println("This application has to be run as root!");
+				//System.out.println("This application has to be run as root!");
+				System.out.println( labels.getString("E1_notRunAsRoot") );
 				System.exit(1);
 			}
 			
@@ -70,7 +76,8 @@ public class HttpdAudit
 			try
 			{
 				File htmlReport = new File("./htmlReport.htm");
-				System.out.println("I will save a detailed and more readable report of this audit in " + htmlReport.getCanonicalPath() + " .");
+				System.out.println( MessageFormat.format(labels.getString("L1_willSaveHTML"), htmlReport.getCanonicalPath()) );
+				//System.out.println("I will save a detailed and more readable report of this audit in " + htmlReport.getCanonicalPath() + " .");
 				UserCommunicator.setDefault(new UserCommunicator(htmlReport));
 			}
 			catch (Exception e) //shouldn't happen
@@ -80,45 +87,42 @@ public class HttpdAudit
 			
 			UserCommunicator uc = UserCommunicator.getDefault();
 			
-			uc.printHeading1("Introduction");
+			uc.printHeading1( labels.getString("H1") );
 			
-			uc.printParagraph("Hello, during this audit I will ask you a bunch of questions. " +
-					"Please rethink your answers twice before you give them to me.");
+			uc.printParagraph( labels.getString("P1") );
 
-			uc.printParagraph("This audit will in most cases require you to make significant changes to your apache configuration. " +
-					"This audit will in most cases require you to make significant changes to your apache configuration. " +
-					"Another point is that the requirements of this audit conflict with most of the administration tools " +
-					"(like a2enmod, a2dismod, yast2, ...).");
+			uc.printParagraph( labels.getString("P2") );
 			
-			uc.println("First of all, let's start with some basic information about your system and your security requirements.");
-			uc.println("Normally the apache the apache httpd executable is something like:");
+			uc.printParagraph( labels.getString("P3") );
 			uc.printExample("/usr/sbin/apache2    (Debian/Ubuntu)\n" +
 					"/usr/sbin/httpd      (RedHat)\n" +
 					"/usr/sbin/httpd2     (SUSE)");
 			
-			tmp = uc.askStringQuestion("What is your apache executable?", apacheExec);
+			tmp = uc.askStringQuestion( labels.getString("Q1") , apacheExec);
 			apacheExec = "".equals(tmp.trim()) ? apacheExec : tmp;
 			File apacheExecutable = new File(apacheExec);
 
 			while(! apacheExecutable.exists() )
 			{
-				tmp = uc.askStringQuestion(tmp + " doesn't exist. So what is your apache executable? ");
+				tmp = uc.askStringQuestion( MessageFormat.format(labels.getString("E2"), tmp) );
+				//tmp = uc.askStringQuestion(tmp + " doesn't exist. So what is your apache executable? ");
 				apacheExecutable = new File(tmp.trim());
 			}
 			
 			uc.println("");
 			
-			uc.println("The main configuration file for the apache web server normally is something like:");
+			uc.println( labels.getString("L2") );
 			uc.printExample("/etc/apache2/apache2.conf    (Debian/Ubuntu)\n" +
 					"/etc/httpd/httpd.conf        (RedHat)\n" +
 					"/etc/apache2/httpd.conf      (SUSE)");
-			tmp = uc.askStringQuestion("What is you apache main configuration file?", apacheConf);
+			tmp = uc.askStringQuestion( labels.getString("Q2") , apacheConf);
 			apacheConf = "".equals(tmp.trim()) ? apacheConf : tmp;
 			File configFile = new File(apacheConf);
 			
 			while(! configFile.exists() )
 			{
-				tmp = uc.askStringQuestion(tmp + " doesn't exist. So what is you apache main configuration file? ");
+				tmp = uc.askStringQuestion( MessageFormat.format(labels.getString("E3"), tmp) );
+				//tmp = uc.askStringQuestion(tmp + " doesn't exist. So what is you apache main configuration file? ");
 				configFile = new File(tmp.trim());
 			}
 			
@@ -126,21 +130,21 @@ public class HttpdAudit
 			
 			uc.println("");
 			
-			boolean highSec = uc.askYesNoQuestion("Does your application require a high level of security?", true);
+			boolean highSec = uc.askYesNoQuestion( labels.getString("Q3") , true);
 			
-			boolean highPriv = uc.askYesNoQuestion("Does your application require a high level of privacy?", true);
+			boolean highPriv = uc.askYesNoQuestion( labels.getString("Q4") , true);
 			
 			uc.println("");
-			uc.printParagraph("Ok, then let's start.");
-			uc.printHeading1("The actual audit");
+			uc.printParagraph( labels.getString("P4") );
+			uc.printHeading1( labels.getString("H2") );
 			
 			boolean overallAnswer = true;
 			
 
-			uc.printHeading2("Section Operating System:");
+			uc.printHeading2( labels.getString("H3") );
 			overallAnswer &= (new Quest1(highSec)).answer();
 			
-			uc.printHeading2("Section Software:");
+			uc.printHeading2( labels.getString("H4") );
 			overallAnswer &= (new Quest2(apacheExecutable)).answer();
 			overallAnswer &= (new Quest3(conf, apacheExecutable)).answer();
 			overallAnswer &= (new Quest4(conf, apacheExecutable)).answer();
@@ -148,7 +152,7 @@ public class HttpdAudit
 			overallAnswer &= (new Quest6(apacheExecutable)).answer();
 			overallAnswer &= (new Quest7(conf)).answer();
 			
-			uc.printHeading2("Section Management of Users and Permissions:");
+			uc.printHeading2( labels.getString("H5") );
 			overallAnswer &= (new Quest8(configFile)).answer();
 			overallAnswer &= (new Quest9(conf, apacheExecutable.getName())).answer();
 			overallAnswer &= (new Quest10(conf)).answer();
@@ -157,13 +161,13 @@ public class HttpdAudit
 			
 			if(overallAnswer)
 			{
-				uc.printHeading1("Conclusion");
-				uc.printParagraph("Your apache seems to be safe.");
+				uc.printHeading1( labels.getString("H6") );
+				uc.printParagraph( labels.getString("L3_ok") );
 			}
 			else
 			{
-				uc.printHeading1("Conclusion");
-				uc.printParagraph("Seems like there are some questions answered with no. Your apache seems to be unsafe.");
+				uc.printHeading1( labels.getString("H6") );
+				uc.printParagraph( labels.getString("L3_bad") );
 			}
 			
 			uc.finishCommunication();
