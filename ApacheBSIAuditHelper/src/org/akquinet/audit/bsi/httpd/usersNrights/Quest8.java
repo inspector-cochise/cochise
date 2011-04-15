@@ -1,6 +1,8 @@
 package org.akquinet.audit.bsi.httpd.usersNrights;
 
 import java.io.File;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import org.akquinet.audit.ShellAnsweredQuestion;
 import org.akquinet.audit.YesNoQuestion;
@@ -13,6 +15,7 @@ public class Quest8 implements YesNoQuestion
 	private String _command;
 	private String _commandPath;
 	private File _configFile;
+	private ResourceBundle _labels;
 
 	public Quest8(File configFile)
 	{
@@ -24,6 +27,7 @@ public class Quest8 implements YesNoQuestion
 		_configFile = configFile;
 		_commandPath = commandPath;
 		_command = command;
+		_labels = ResourceBundle.getBundle(_id, Locale.getDefault());
 	}
 
 	@Override
@@ -33,8 +37,8 @@ public class Quest8 implements YesNoQuestion
 		ShellAnsweredQuestion quest = new ShellAnsweredQuestion(_commandPath + _command, _configFile.getAbsolutePath());
 		boolean ret = quest.answer();
 		
-		_uc.printAnswer(ret, ret ? "Your main configuration file seems to be safe. I.e. only members of root have any access to it."
-							: "Users not in the group \"root\" may have some access to your configuration file. They shouldn't get any permissions (no read, no write, no execute)");
+		_uc.printAnswer(ret, ret ? _labels.getString("S1")
+							: _labels.getString("S2") );
 		
 		return ret;
 	}

@@ -1,5 +1,8 @@
 package org.akquinet.audit.bsi.httpd.usersNrights;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.ui.UserCommunicator;
 
@@ -7,19 +10,21 @@ public class Quest11a implements YesNoQuestion
 {
 	private static final String _id = "Quest11a";
 	private static final UserCommunicator _uc = UserCommunicator.getDefault();
+	private ResourceBundle _labels;
 
 	public Quest11a()
 	{
+		_labels = ResourceBundle.getBundle(_id, Locale.getDefault());
 	}
 
 	@Override
 	public boolean answer()
 	{
 		_uc.printHeading3(_id);
-		boolean ret = _uc.askYesNoQuestion("Have you properly set up a chroot environment for the apache httpd server which will block access outside of the servers root directory?");
+		boolean ret = _uc.askYesNoQuestion( _labels.getString("Q1") );
 		_uc.printAnswer(ret, ret ? 
-						"Ok this should block access to files outside of the servers root directory."
-						: "No chroot - it may be possible to access files outside of the servers root directory if not sealed otherwise.");
+				 		  _labels.getString("S1_good") 
+						: _labels.getString("S1_bad") );
 		return ret;
 	}
 

@@ -1,7 +1,10 @@
 package org.akquinet.audit.bsi.httpd.usersNrights;
 
+import java.text.MessageFormat;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.ui.UserCommunicator;
@@ -14,11 +17,13 @@ public class Quest11b implements YesNoQuestion
 {
 	private static final String _id = "Quest11b";
 	private ConfigFile _conf;
+	private ResourceBundle _labels;
 	private static final UserCommunicator _uc = UserCommunicator.getDefault();
 
 	public Quest11b(ConfigFile conf)
 	{
 		_conf = conf;
+		_labels = ResourceBundle.getBundle(_id, Locale.getDefault());
 	}
 
 	@Override
@@ -47,7 +52,7 @@ public class Quest11b implements YesNoQuestion
 		{
 			if (!dir.getDirectiveIgnoreCase("allow").isEmpty())
 			{
-				_uc.printAnswer(false, "Nobody should be able to access \"/\". Remove the following \"Allow\" directives:");
+				_uc.printAnswer(false, _labels.getString("S1"));
 				List<Directive> allowList = dir.getDirectiveIgnoreCase("allow");
 				for (Directive directive : allowList)
 				{
@@ -75,7 +80,7 @@ public class Quest11b implements YesNoQuestion
 				// output an answer-message
 				if (orderIsOK(order) && denyIsOK(deny))
 				{
-					_uc.printAnswer(true, "Access to \"/\" correctly blocked via mod_access.");
+					_uc.printAnswer(true, _labels.getString("S2"));
 					ret = true;
 				}
 				else
@@ -85,8 +90,9 @@ public class Quest11b implements YesNoQuestion
 			}
 			else
 			{
-				_uc.printAnswer(false, "I found multiple and/or incorrectly sorted \"Order\", \"Deny\" or \"Allow\" directives betwenn lines "
-						+ dir.getBeginLineNumber() + " and " + dir.getEndLineNumber() + ". Please make them unique, sort them and run me again.");
+				_uc.printAnswer(false, MessageFormat.format(_labels.getString("S3"), dir.getBeginLineNumber(), dir.getEndLineNumber()));
+				//_uc.printAnswer(false, "I found multiple and/or incorrectly sorted \"Order\", \"Deny\" or \"Allow\" directives betwenn lines "
+				//		+ dir.getBeginLineNumber() + " and " + dir.getEndLineNumber() + ". Please make them unique, sort them and run me again.");
 				return false;
 			}
 		}
@@ -105,14 +111,14 @@ public class Quest11b implements YesNoQuestion
 			   dir.getSurroundingContexts().get(1) != null
 			   )
 			{
-				_uc.printAnswer(false, "The directive in line " + dir.getLinenumber() + " may only be conditionally active. Move it in a <Directory /> Context not contained in any other context.");
+				_uc.printAnswer(false, MessageFormat.format(_labels.getString("S4"), dir.getLinenumber()) );
 				return false;
 			}
 		}
 		return true;
 	}
 
-	private static boolean denyIsOK(Directive deny)
+	private boolean denyIsOK(Directive deny)
 	{
 		if( ! deny.getSurroundingContexts().get(0).getName().equalsIgnoreCase("Directory") ||
 			! deny.getSurroundingContexts().get(0).getValue().trim().equals("/")
@@ -127,13 +133,13 @@ public class Quest11b implements YesNoQuestion
 		}
 		else
 		{
-			_uc.printAnswer(false, "Nobody should be able to access \"/\". Correct the following directive to \"Deny from all\".");
+			_uc.printAnswer(false, _labels.getString("S5"));
 			_uc.println(deny.getLinenumber() + ": " + deny.getName() + " " + deny.getValue());
 			return false;
 		}
 	}
 
-	private static boolean orderIsOK(Directive order)
+	private boolean orderIsOK(Directive order)
 	{
 		if( ! order.getSurroundingContexts().get(0).getName().equalsIgnoreCase("Directory") ||
 			! order.getSurroundingContexts().get(0).getValue().trim().equals("/")
@@ -148,7 +154,7 @@ public class Quest11b implements YesNoQuestion
 		}
 		else
 		{
-			_uc.printAnswer(false, "Nobody should be able to access \"/\". Correct the following directive to \"Order Deny,Allow\".");
+			_uc.printAnswer(false, _labels.getString("S6"));
 			_uc.println(order.getLinenumber() + ": " + order.getName() + " " + order.getValue());
 			return false;
 		}

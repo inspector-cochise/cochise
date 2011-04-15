@@ -5,7 +5,7 @@
 
 if [ $1 = "root" ]
 then
-	echo root has too many rights
+	echo SHELL1
 	exit 1
 fi
 
@@ -14,7 +14,7 @@ if passwd -S $1 >& /dev/null
 then
 	false
 else
-	echo User $1 does not exist.
+	echo SHELL2 $1
 	exit 1
 fi
 
@@ -36,39 +36,32 @@ then
 	#is $1 the only member of $group
 	if test $nmbrOfMembers -ne 1
 	then
-		echo The user $1 is not the only member of the group $groupName.
+		echo SHELL3 $1 $groupName
 		exit 1
 	fi
 	
 	#is $1 member of any other group?
 	if cat /etc/group | grep -v :$group: | awk 'BEGIN {FS=":"} {print $4;}' | awk 'BEGIN {RS=","} {print $0;}' | grep $1 >& /dev/null
 	then
-		echo The user $1 is member of another group than only $groupName.
+		echo SHELL4 $1 $groupName
 		exit 1
 	fi
 	
-	echo Seems like the user $1 is the only member of $groupName and not member of any other group.
 	
 #is there any member in $group
 elif test $nmbrOfMembers -eq 0
 then
-	echo The group $groupName is empty and $1 is not a member of any other group.
+# this is ok meesage will be echoed later
 else
-	echo The user $1 is not member of $groupName but there are other members in $groupName.
+	echo SHELL6 $1 $groupName
 	exit 1
 fi
-
-#is $1 locked?
-#if passwd -S $1 | awk '{if($2 ~ /L/) {exit 1} else {exit 0} }'
-#then
-#	echo User $1 is not locked. A login would may be possible.
-#	exit 1
-#fi
 
 if [ `cat /etc/passwd |  grep -w ^$1 | awk 'BEGIN {FS=":"} {print $7;}'` != "/bin/false" ]
 then
-	echo User $1 has a login-shell different from /bin/false. It may be possible to login as $1 .
+	echo SHELL7 $1
 	exit 1
 fi
 
+echo SHELL5 $1 $groupName
 exit 0

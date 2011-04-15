@@ -1,5 +1,8 @@
 package org.akquinet.audit.bsi.httpd.usersNrights;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
@@ -12,6 +15,7 @@ public class Quest12 implements YesNoQuestion
 	
 	private Quest12a _q12a;
 	private Quest12b _q12b;
+	private ResourceBundle _labels;
 	
 	public Quest12(ConfigFile conf, String apacheExecutable)
 	{
@@ -20,6 +24,7 @@ public class Quest12 implements YesNoQuestion
 	
 	public Quest12(ConfigFile conf, String commandPath, String command, String getUserNGroupCommand, String apacheExecutable)
 	{
+		_labels = ResourceBundle.getBundle(_id, Locale.getDefault());
 		_conf = conf;
 		_q12a = new Quest12a(commandPath, command, getUserNGroupCommand, apacheExecutable);
 		_q12b = new Quest12b(_conf, commandPath, command);
@@ -29,13 +34,13 @@ public class Quest12 implements YesNoQuestion
 	public boolean answer()
 	{
 		_uc.printHeading3(_id);
-		_uc.println("Ensuring that the apache web server is running with few permissions.");
+		_uc.println( _labels.getString("L1") );
 		_uc.beginIndent();
 			boolean ret = _q12b.answer();
 		_uc.endIndent();
 		if(!ret)
 		{
-			_uc.println("There is also another way to ensure few permissions:");
+			_uc.println( _labels.getString("L2") );
 			_uc.beginIndent();
 				ret = _q12a.answer();
 			_uc.endIndent();
@@ -43,8 +48,8 @@ public class Quest12 implements YesNoQuestion
 		
 		_uc.println("Back to " + _id);
 		_uc.printAnswer(ret, ret ?
-					"The apache web server is correctly running with few permissions."
-					: "The apache web server is maybe running with too many permissions.");
+				 	  _labels.getString("S1_good") 
+					: _labels.getString("S1_bad") );
 		return ret;
 	}
 

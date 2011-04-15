@@ -1,5 +1,8 @@
 package org.akquinet.audit.bsi.httpd.usersNrights;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
@@ -12,10 +15,12 @@ public class Quest11 implements YesNoQuestion
 	
 	private Quest11a _q11a;
 	private Quest11b _q11b;
+	private ResourceBundle _labels;
 	
 	public Quest11(ConfigFile conf)
 	{
 		_conf = conf;
+		_labels = ResourceBundle.getBundle(_id, Locale.getDefault());
 		_q11a = new Quest11a();
 		_q11b = new Quest11b(_conf);
 	}
@@ -28,13 +33,14 @@ public class Quest11 implements YesNoQuestion
 	public boolean answer()
 	{
 		_uc.printHeading3(_id);
-		_uc.println("Evaluating whether it may be possible to access files outside of the servers root directory.");
+		_uc.println( _labels.getString("L1") );
 		_uc.beginIndent();
+		
 		boolean ret = _q11b.answer();
 		_uc.endIndent();
 		if(!ret)
 		{
-			_uc.println("There is also another way to block access to files outside of the servers root directory:");
+			_uc.println( _labels.getString("L2") );
 			_uc.beginIndent();
 			 	ret = _q11a.answer();
 			_uc.endIndent();
@@ -42,8 +48,8 @@ public class Quest11 implements YesNoQuestion
 		
 		_uc.println("Back to " + _id);
 		_uc.printAnswer(ret, ret ?
-					"Access to files outside of the servers root directory is correctly blocked."
-					: "In some way it may be possible to access files outside of the servers root directory.");
+				 	  _labels.getString("S1_good") 
+					:  _labels.getString("S1_bad") );
 		return ret;
 	}
 

@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import org.akquinet.audit.ModuleHelper;
@@ -19,6 +21,7 @@ public class Quest10 extends ModuleHelper implements YesNoQuestion
 	private static final UserCommunicator _uc = UserCommunicator.getDefault();
 	private String _commandPath;
 	private String _command;
+	private ResourceBundle _labels;
 
 	public Quest10(ConfigFile conf)
 	{
@@ -30,13 +33,14 @@ public class Quest10 extends ModuleHelper implements YesNoQuestion
 		super(conf);
 		_commandPath = commandPath;
 		_command = command;
+		_labels = ResourceBundle.getBundle(_id, Locale.getDefault());
 	}
 
 	@Override
 	public boolean answer()
 	{
 		_uc.printHeading3(_id);
-		_uc.println("I'll now check whether any user not in root has access to one of the modules you load...");
+		_uc.println( _labels.getString("L1") );
 		
 		boolean ret = true;
 		List<File> moduleFiles = getModuleFiles();
@@ -62,15 +66,15 @@ public class Quest10 extends ModuleHelper implements YesNoQuestion
 
 		if(!probs.isEmpty())
 		{
-			_uc.println("I found some files causing problems (in most cases this means some user not in root has write access)");
+			_uc.println( _labels.getString("L2") );
 			for (String str : probs)
 			{
 				_uc.println(str);
 			}
 		}
 		
-		_uc.printAnswer(ret, ret ? "Seems like only users in root have access to the dynamically loadable modules."
-							: "Other users than users in root may have access to the above listed modules or their containing directories.\n");
+		_uc.printAnswer(ret, ret ?  _labels.getString("S1_good") 
+							:  _labels.getString("S1_bad") );
 		
 		return ret;
 	}

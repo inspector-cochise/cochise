@@ -1,6 +1,8 @@
 package org.akquinet.audit.bsi.httpd.usersNrights;
 
 import java.io.File;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.ui.UserCommunicator;
@@ -10,10 +12,12 @@ public class Quest9b implements YesNoQuestion
 	private static final String _id = "Quest9b";
 	private static final UserCommunicator _uc = UserCommunicator.getDefault();
 	private String _serverRoot;
+	private ResourceBundle _labels;
 
 	public Quest9b(String serverRoot)
 	{
 		_serverRoot = serverRoot;
+		_labels = ResourceBundle.getBundle(_id, Locale.getDefault());
 	}
 
 	@Override
@@ -24,20 +28,21 @@ public class Quest9b implements YesNoQuestion
 		
 		if(!srvRt.exists())
 		{
-			_uc.printAnswer(true, "There is no htdocs directory in your ServerRoot. (This is Ok.)");
+			_uc.printAnswer(true, _labels.getString("S1") );
 			return true;
 		}
 		else
 		{
 			if(!srvRt.isDirectory())
 			{
-				_uc.printAnswer(false, "In your ServerRoot there is a file htdocs this should be a directory or nonexistent. Please move that file and run me again");
+				_uc.printAnswer(false,  _labels.getString("S2") );
 				return false;
 			}
-			_uc.println("I found a directory named htdocs in your ServerRoot. (I suggest to move this directory out of the ServerRoot.)");
-			boolean isDoc = _uc.askYesNoQuestion("Does this directory only contain the apache httpd documentation.");
-			boolean access = _uc.askYesNoQuestion("Do only users who explicitly are supposed to access this documentation have (unix-file-)permissions to access that directory?");
-			_uc.printAnswer(isDoc && access, isDoc && access ? "Your htdocs directory seems to be ok." : "There are permission or content problems whith your htdocs directory. I suggest to move this directory out of ServerRoot to resolve these problems easier.");
+			_uc.println( _labels.getString("L1") );
+			boolean isDoc = _uc.askYesNoQuestion( _labels.getString("Q1") );
+			boolean access = _uc.askYesNoQuestion( _labels.getString("Q2") );
+			_uc.printAnswer(isDoc && access, isDoc && access ?
+									_labels.getString("S3") : _labels.getString("S4") );
 			return isDoc && access;
 		}
 	}

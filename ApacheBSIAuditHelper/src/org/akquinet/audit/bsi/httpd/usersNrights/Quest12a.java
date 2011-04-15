@@ -2,6 +2,9 @@ package org.akquinet.audit.bsi.httpd.usersNrights;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.MessageFormat;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import org.akquinet.audit.ShellAnsweredQuestion;
 import org.akquinet.audit.YesNoQuestion;
@@ -15,6 +18,7 @@ public class Quest12a implements YesNoQuestion
 	private String _command;
 	private String _getUserNGroupCommand;
 	private String _apacheExecutable;
+	private ResourceBundle _labels;
 
 	public Quest12a(String apacheExecutable)
 	{
@@ -27,6 +31,7 @@ public class Quest12a implements YesNoQuestion
 		_command = command;
 		_getUserNGroupCommand = getUserNGroupCommand;
 		_apacheExecutable = apacheExecutable;
+		_labels = ResourceBundle.getBundle(_id, Locale.getDefault());
 	}
 
 	@Override
@@ -76,11 +81,24 @@ public class Quest12a implements YesNoQuestion
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 		
-		_uc.printAnswer(ret, buf.toString());
-		
+		String[] shellOut = buf.toString().split("[ |\t]");
+		if(shellOut.length == 1)
+		{
+			_uc.printAnswer(ret, _labels.getString(shellOut[0]) );
+		}
+		else if(shellOut.length > 1)
+		{
+			String[] argArr = new String[shellOut.length - 1];
+			for(int i = 1; i < shellOut.length; ++i)
+			{
+				argArr[i-1] = shellOut[i];
+			}
+			String tmp = MessageFormat.format(_labels.getString(shellOut[0]), (Object[])argArr);
+			_uc.printAnswer(ret, tmp );
+		}
 		
 		return ret;
 	}

@@ -2,7 +2,10 @@ package org.akquinet.audit.bsi.httpd.usersNrights;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.MessageFormat;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.ui.UserCommunicator;
@@ -21,6 +24,7 @@ public class Quest9 implements YesNoQuestion
 	private String _apacheExecutable;
 	private Quest9a _q9a;
 	private Quest9b _q9b;
+	private ResourceBundle _labels;
 
 	public Quest9(ConfigFile conf, String apacheExecutable)
 	{
@@ -35,6 +39,7 @@ public class Quest9 implements YesNoQuestion
 		_command9a = command9a;
 		_getUserNGroupCommand = getUserNGroupCommand;
 		_apacheExecutable = apacheExecutable;
+		_labels = ResourceBundle.getBundle(_id, Locale.getDefault());
 	}
 
 	@Override
@@ -42,11 +47,11 @@ public class Quest9 implements YesNoQuestion
 	{
 		_uc.printHeading3(_id);
 
-		_uc.println("We'll now start to examine the permissions in your ServerRoot.");
+		_uc.println( _labels.getString("L1") );
 		if(_serverRoot != null)
 		{
 			String user = getApacheStartingUser();
-			_uc.println("Seems like your apache is started by " + user + "...");
+			_uc.println( MessageFormat.format( _labels.getString("L2") , user));
 			
 			if(_command9a != null && _commandPath  != null)
 			{
@@ -62,14 +67,14 @@ public class Quest9 implements YesNoQuestion
 				boolean ret = _q9a.answer();
 				ret &= _q9b.answer();
 			_uc.endIndent();
-			_uc.println("Back to " + _id);
-			_uc.printAnswer(ret, ret ? "Your ServerRoot seems ok." : "Seems like your ServerRoot is unsafe in the way mentioned above.");
+			_uc.println( MessageFormat.format(_labels.getString("S1"), _id));
+			_uc.printAnswer(ret, ret ?  _labels.getString("S2")  :  _labels.getString("S3") );
 			return ret;
 		}
 		else
 		{
-			_uc.println("Back to " + _id);
-			_uc.printAnswer(false, "Either none or multiple ServerRoot directives found. There has to be exactly one.");
+			_uc.println( MessageFormat.format(_labels.getString("S1"), _id));
+			_uc.printAnswer(false,  _labels.getString("S4") );
 			return false;
 		}
 	}

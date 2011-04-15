@@ -2,6 +2,9 @@ package org.akquinet.audit.bsi.httpd.usersNrights;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.MessageFormat;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import org.akquinet.audit.ShellAnsweredQuestion;
 import org.akquinet.audit.YesNoQuestion;
@@ -12,6 +15,7 @@ public class Quest12b implements YesNoQuestion
 {
 	private static final String _id = "Quest12b";
 	private ConfigFile _conf;
+	private ResourceBundle _labels;
 	private static final UserCommunicator _uc = UserCommunicator.getDefault();
 	private static String _command;
 	private static String _commandPath;
@@ -26,6 +30,7 @@ public class Quest12b implements YesNoQuestion
 		_conf = conf;
 		_commandPath = commandPath;
 		_command = command;
+		_labels = ResourceBundle.getBundle(_id, Locale.getDefault());
 	}
 
 	@Override
@@ -33,21 +38,21 @@ public class Quest12b implements YesNoQuestion
 	{
 		_uc.printHeading3(_id);
 
-		_uc.println("Looking for directives User and Group in the apache configuration file. I.e. something like");
-		_uc.printExample("User apache-user\nGroup apache-group");
+		_uc.println( _labels.getString("L1") );
+		_uc.printExample( _labels.getString("S1") );
 		
 		String user = null;
 		String group = null;
 		if(_conf.getDirective("User").size() == 0 || _conf.getDirective("Group").size() == 0)
 		{
-			_uc.printAnswer(false, "User- or Group-directive not found. I.e. no dedicated user (with low rights) to run the apache has been specified.");
+			_uc.printAnswer(false,  _labels.getString("S2") );
 			return false;
 		}
 		
 		user = _conf.getDirective("User").get(0).getValue().trim();
 		group = _conf.getDirective("Group").get(0).getValue().trim();
 		
-		_uc.println("User (" + user + ") and group (" + group + ") have been specified. Evaluating their permissions...");
+		_uc.println( MessageFormat.format( _labels.getString("L2") , user, group) );
 		
 		ShellAnsweredQuestion quest = new ShellAnsweredQuestion(_commandPath + _command, user, group);
 		boolean ret = quest.answer();
@@ -65,10 +70,24 @@ public class Quest12b implements YesNoQuestion
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 		
-		_uc.printAnswer(ret, buf.toString());
+		String[] shellOut = buf.toString().split("[ |\t]");
+		if(shellOut.length == 1)
+		{
+			_uc.printAnswer(ret, _labels.getString(shellOut[0]) );
+		}
+		else if(shellOut.length > 1)
+		{
+			String[] argArr = new String[shellOut.length - 1];
+			for(int i = 1; i < shellOut.length; ++i)
+			{
+				argArr[i-1] = shellOut[i];
+			}
+			String tmp = MessageFormat.format(_labels.getString(shellOut[0]), (Object[])argArr);
+			_uc.printAnswer(ret, tmp );
+		}
 		
 		return ret;
 	}

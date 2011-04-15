@@ -2,6 +2,9 @@ package org.akquinet.audit.bsi.httpd.usersNrights;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.MessageFormat;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import org.akquinet.audit.ShellAnsweredQuestion;
 import org.akquinet.audit.YesNoQuestion;
@@ -15,6 +18,7 @@ public class Quest9a implements YesNoQuestion
 	private String _command;
 	private String _serverRoot;
 	private String _user;
+	private ResourceBundle _labels;
 
 	public Quest9a(String serverRoot, String user)
 	{
@@ -27,6 +31,7 @@ public class Quest9a implements YesNoQuestion
 		_user = user;
 		_commandPath = commandPath;
 		_command = command;
+		_labels = ResourceBundle.getBundle(_id, Locale.getDefault());
 	}
 
 	@Override
@@ -53,8 +58,9 @@ public class Quest9a implements YesNoQuestion
 		
 		String problems = probBuf.toString();
 		
-		_uc.printAnswer(ret, ret ? "Your ServerRoot (not speaking about a possible htdocs file/directory) seems to be ok."
-							: "Other users than " + _user + " have access to the following files/directories. Please change permissions." + problems);
+		_uc.printAnswer(ret, ret ? _labels.getString("S1")
+							: MessageFormat.format( _labels.getString("S2"), _user));
+		_uc.printExample(problems);
 		
 		return ret;
 	}
