@@ -60,6 +60,13 @@ public class HtmlReportLogger
 				"padding-left: 2em;\n" +
 				"}\n"));
 		
+		css.addContent(new HtmlText(".hidden {\n" +
+				"background-color: #F7F8E0;\n" +
+				"display: none;\n" +
+				"padding: 2em;\n" +
+				"border:2px dashed #d5d5d5;\n" +
+				"}\n"));
+		
 		css.addContent(new HtmlText(".positive { background-color: #A9F5A9; }\n"));
 		css.addContent(new HtmlText(".negative { background-color: #F78181; }\n"));
 		
@@ -79,6 +86,7 @@ public class HtmlReportLogger
 		
 		head.addContent(title);
 		head.addContent(css);
+		head.addContent(javascript);
 		
 		return head;
 	}

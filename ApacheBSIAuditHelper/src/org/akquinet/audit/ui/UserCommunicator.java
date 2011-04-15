@@ -12,6 +12,7 @@ public class UserCommunicator
 	
 	private int _indentLevel;
 	private File _htmlReport;
+	private boolean _hide;
 	
 	private HtmlReportLogger _htmlLogger;
 	
@@ -25,10 +26,12 @@ public class UserCommunicator
 		_htmlReport = htmlReport;
 		_indentLevel = 0;
 		_htmlLogger = new HtmlReportLogger();
+		_hide = false;
 	}
 
 	public void printHeading1(String heading)
 	{
+		_hide = false;
 		_indentLevel = 0;
 		_console.printSeperatorLine();
 		_console.printSeperatorLine();
@@ -44,6 +47,7 @@ public class UserCommunicator
 	
 	public void printHeading2(String heading)
 	{
+		_hide = false;
 		_indentLevel = 0;
 		_console.printSeperatorLine();
 		_console.println(getLevel(), heading + "\n");
@@ -58,6 +62,7 @@ public class UserCommunicator
 	
 	public void printHeading3(String heading)
 	{
+		_hide = false;
 		_console.println(getLevel(), "---===" + heading + "===--- -- -  -");
 
 		if(_htmlReport != null)
@@ -68,8 +73,11 @@ public class UserCommunicator
 	
 	public void printParagraph(String text)
 	{
-		text = _console.wrapString(text, getLevel());
-		_console.println(getLevel(), text + "\n");
+		if(!_hide)
+		{
+			text = _console.wrapString(text, getLevel());
+			_console.println(getLevel(), text + "\n");
+		}
 
 		if(_htmlReport != null)
 		{
@@ -79,7 +87,10 @@ public class UserCommunicator
 
 	public void println(String text)
 	{
-		_console.println(getLevel(), text);
+		if(!_hide)
+		{
+			_console.println(getLevel(), text);
+		}
 
 		if(_htmlReport != null)
 		{
@@ -89,7 +100,10 @@ public class UserCommunicator
 	
 	public void printExample(String example)
 	{
-		_console.println(getLevel(), "\t" + example.replaceAll("\n", "\n\t"));
+		if(!_hide)
+		{
+			_console.println(getLevel(), "\t" + example.replaceAll("\n", "\n\t"));
+		}
 
 		if(_htmlReport != null)
 		{
@@ -120,7 +134,10 @@ public class UserCommunicator
 
 	public void printAnswer(boolean answer, String cause)
 	{
-		_console.printAnswer(getLevel(), answer, cause);
+		if(!_hide)
+		{
+			_console.printAnswer(getLevel(), answer, cause);
+		}
 
 		if(_htmlReport != null)
 		{
@@ -128,11 +145,11 @@ public class UserCommunicator
 		}
 	}
 	
-	public void printHidingParagraph(String hiddenText, String expandedText)
+	public void printHidingParagraph(String shortDescription, String expandedText)
 	{
 		if(_htmlReport != null)
 		{
-			_htmlLogger.beginHidingParagraph(hiddenText);
+			_htmlLogger.beginHidingParagraph(shortDescription);
 			_htmlLogger.printParagraph(expandedText);
 			_htmlLogger.endHidingParagraph();
 		}
@@ -140,6 +157,7 @@ public class UserCommunicator
 	
 	public void beginHidingParagraph(String hiddenText)
 	{
+		_hide = true;
 		if(_htmlReport != null)
 		{
 			_htmlLogger.beginHidingParagraph(hiddenText);
@@ -148,6 +166,7 @@ public class UserCommunicator
 	
 	public void endHidingParagraph()
 	{
+		_hide = false;
 		if(_htmlReport != null)
 		{
 			_htmlLogger.endHidingParagraph();
