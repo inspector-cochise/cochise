@@ -53,7 +53,7 @@ public class Quest9a implements YesNoQuestion
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 		
 		String problems = probBuf.toString();
