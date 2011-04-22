@@ -5,6 +5,8 @@ import java.io.FileFilter;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
@@ -117,7 +119,8 @@ public class StatementList extends SyntaxElement
 			}
 			catch (ServerRootNotSetException e)
 			{
-				UserCommunicator.getDefault().reportError("There are problems handling an Include directive: You haven't specified the ServerRoot directory but use relative paths.");
+				String message = ResourceBundle.getBundle("global", Locale.getDefault()).getString("E4");
+				UserCommunicator.getDefault().reportError(message);
 			}
 		}
 		else if(dir.getName().equalsIgnoreCase("ServerRoot"))
