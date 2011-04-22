@@ -13,6 +13,7 @@ abstract public class SyntaxElement
 	private char _markedChar;
 	private int _actualLine;
 	private int _markedLine;
+	private String _serverRoot;
 
 	/**
 	 * Default Constructor
@@ -36,6 +37,7 @@ abstract public class SyntaxElement
 	 */
 	public SyntaxElement(SyntaxElement parent, MultipleMarkerInputStream text) throws IOException
 	{
+		_serverRoot = null;
 		_parent = parent;
 		_text = text;
 		if (parent == null)
@@ -217,6 +219,27 @@ abstract public class SyntaxElement
 			_text.reset();
 			_actualChar = _markedChar;
 			_actualLine = _markedLine;
+		}
+	}
+	
+	protected void setServerRoot(String serverRoot)
+	{
+		_serverRoot = serverRoot;
+		if(_parent != null)
+		{
+			_parent.setServerRoot(serverRoot);
+		}
+	}
+	
+	public String getServerRoot()
+	{
+		if(_parent != null)
+		{
+			return _parent.getServerRoot();
+		}
+		else
+		{
+			return _serverRoot;
 		}
 	}
 	

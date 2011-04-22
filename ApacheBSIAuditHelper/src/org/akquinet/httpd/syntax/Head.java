@@ -9,14 +9,15 @@ public class Head extends SyntaxElement
 {
 	private StatementList _statements;
 	
-	public Head(SyntaxElement parent, MultipleMarkerInputStream text) throws IOException
+	public Head(SyntaxElement parent, MultipleMarkerInputStream text, String serverRoot) throws IOException
 	{
 		super(parent, text);
+		setServerRoot(serverRoot);
 		parse();
 	}
 
 	@Override
-	protected void parse() throws IOException
+	public void parse() throws IOException
 	{
 		_statements = new StatementList(this);
 	}

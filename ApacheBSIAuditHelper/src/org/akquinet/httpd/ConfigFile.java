@@ -14,8 +14,7 @@ public class ConfigFile
 	
 	public ConfigFile(File file) throws IOException
 	{
-		FileInputStream input = new FileInputStream(file);
-		_head = new Head(null, new MultipleMarkerInputStream(input));
+		this(file, null);
 	}
 	
 	public ConfigFile(String file) throws IOException
@@ -23,6 +22,12 @@ public class ConfigFile
 		this(new File(file));
 	}
 	
+	public ConfigFile(File file, String serverRoot) throws IOException
+	{
+		FileInputStream input = new FileInputStream(file);
+		_head = new Head(null, new MultipleMarkerInputStream(input), serverRoot);
+	}
+
 	/**
 	 * 
 	 * @param name name of the directive

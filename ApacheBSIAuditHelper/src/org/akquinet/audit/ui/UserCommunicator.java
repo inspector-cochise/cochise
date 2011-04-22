@@ -32,6 +32,12 @@ public class UserCommunicator
 		_hide = false;
 		_labels = ResourceBundle.getBundle("global", Locale.getDefault());
 	}
+	
+	public void reportError(String error)
+	{
+		System.err.println(error);
+		//TODO
+	}
 
 	public void printHeading1(String heading)
 	{
