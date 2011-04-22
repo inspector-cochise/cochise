@@ -27,7 +27,14 @@ public class StatementList extends SyntaxElement
 	public Context getContext()
 	{
 		//an Expression is always child of a Context or child of null
-		return (Context)getParent();
+		if(getParent() == null)
+		{
+			return null;
+		}
+		else
+		{
+			return (Context)getParent();
+		}
 	}
 
 	protected void parse() throws IOException
