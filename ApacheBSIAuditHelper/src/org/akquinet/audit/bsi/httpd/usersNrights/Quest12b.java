@@ -41,7 +41,6 @@ public class Quest12b implements YesNoQuestion
 		_uc.printExample( _labels.getString("S0") );
 
 		_uc.println( _labels.getString("L1") );
-		_uc.printExample( _labels.getString("S1") );
 		
 		String user = null;
 		String group = null;
