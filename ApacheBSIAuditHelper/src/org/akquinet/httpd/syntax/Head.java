@@ -9,9 +9,9 @@ public class Head extends SyntaxElement
 {
 	private StatementList _statements;
 	
-	public Head(SyntaxElement parent, MultipleMarkerInputStream text, String serverRoot) throws IOException
+	public Head(SyntaxElement parent, MultipleMarkerInputStream text, String serverRoot, String containingFile) throws IOException
 	{
-		super(parent, text);
+		super(parent, text, containingFile);
 		setServerRoot(serverRoot);
 		parse();
 	}

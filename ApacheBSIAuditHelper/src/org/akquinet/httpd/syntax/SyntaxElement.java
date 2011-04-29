@@ -12,6 +12,7 @@ abstract public class SyntaxElement
 	private char _actualChar;
 	private char _markedChar;
 	private int _actualLine;
+	private String _containingFile;
 	private int _markedLine;
 	private String _serverRoot;
 
@@ -23,9 +24,20 @@ abstract public class SyntaxElement
 	 */
 	public SyntaxElement(SyntaxElement parent) throws IOException
 	{
-		this(parent, null);
+		this(parent, null, null);
 	}
 
+	/**
+	 * Default Constructor
+	 * 
+	 * @param parent
+	 *            set this to null if it is the root Element
+	 */
+	public SyntaxElement(SyntaxElement parent, String containingFile) throws IOException
+	{
+		this(parent, null, containingFile);
+	}
+	
 	/**
 	 * Constructor for root Element
 	 * 
@@ -35,7 +47,7 @@ abstract public class SyntaxElement
 	 *            the text which should be parsed, only necessary for the root
 	 *            element
 	 */
-	public SyntaxElement(SyntaxElement parent, MultipleMarkerInputStream text) throws IOException
+	public SyntaxElement(SyntaxElement parent, MultipleMarkerInputStream text, String containingFile) throws IOException
 	{
 		_serverRoot = null;
 		_parent = parent;
@@ -58,6 +70,8 @@ abstract public class SyntaxElement
 			_actualChar = parent._actualChar;
 			_actualLine = parent._actualLine;
 		}
+		
+		_containingFile = containingFile;
 	}
 
 	protected char getActualChar()
@@ -68,6 +82,11 @@ abstract public class SyntaxElement
 	protected int getActualLine()
 	{
 		return _parent == null ? _actualLine : _parent.getActualLine();
+	}
+	
+	protected String getContainingFile()
+	{
+		return _containingFile;
 	}
 
 	protected void readNextChar() throws IOException, FileEndException

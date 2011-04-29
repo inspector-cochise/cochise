@@ -8,7 +8,7 @@ public class Value extends SyntaxElement
 	
 	public Value(SyntaxElement parent) throws IOException, FileEndException
 	{
-		super(parent);
+		super(parent, parent.getContainingFile());
 		parse();
 	}
 

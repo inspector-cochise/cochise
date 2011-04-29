@@ -18,14 +18,14 @@ public class StatementList extends SyntaxElement
 
 	public StatementList(SyntaxElement parent) throws IOException
 	{
-		super(parent);
+		super(parent, parent.getContainingFile());
 		_statements = new LinkedList<Statement>();
 		parse();
 	}
 
-	public StatementList(SyntaxElement parent, MultipleMarkerInputStream text) throws IOException
+	public StatementList(SyntaxElement parent, MultipleMarkerInputStream text, String containingFile) throws IOException
 	{
-		super(parent, text);
+		super(parent, text, containingFile);
 		_statements = new LinkedList<Statement>();
 		parse();
 	}

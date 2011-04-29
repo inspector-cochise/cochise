@@ -19,13 +19,13 @@ public class ConfigFile
 	
 	public ConfigFile(String file) throws IOException
 	{
-		this(new File(file));
+		this(new File(file), null);
 	}
 	
 	public ConfigFile(File file, String serverRoot) throws IOException
 	{
 		FileInputStream input = new FileInputStream(file);
-		_head = new Head(null, new MultipleMarkerInputStream(input), serverRoot);
+		_head = new Head(null, new MultipleMarkerInputStream(input), serverRoot, file.getCanonicalPath());
 	}
 
 	/**

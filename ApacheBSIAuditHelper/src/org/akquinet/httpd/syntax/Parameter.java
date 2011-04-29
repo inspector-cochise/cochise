@@ -8,7 +8,7 @@ public class Parameter extends SyntaxElement
 
 	public Parameter(SyntaxElement parent) throws IOException
 	{
-		super(parent);
+		super(parent, parent.getContainingFile());
 		parse();
 	}
 

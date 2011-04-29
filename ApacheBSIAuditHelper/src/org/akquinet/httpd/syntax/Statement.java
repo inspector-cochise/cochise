@@ -8,7 +8,7 @@ abstract public class Statement extends SyntaxElement
 {
 	public Statement(SyntaxElement parent) throws IOException
 	{
-		super(parent);
+		super(parent, parent.getContainingFile());
 		//nothing to do
 	}
 
