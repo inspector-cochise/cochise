@@ -43,6 +43,7 @@ public class Quest3 extends ModuleHelper implements YesNoQuestion
 				Directive modSec = directive;
 				_uc.printAnswer(true, _labels.getString("S1"));
 				_uc.printExample(modSec.getContainingFile() + ":" + modSec.getLinenumber() + ": " + modSec.getName() + " " + modSec.getValue());
+				_uc.printHidingParagraph(_labels.getString("S4"), _labels.getString("S5"));
 				return true;
 			}
 			
@@ -55,11 +56,14 @@ public class Quest3 extends ModuleHelper implements YesNoQuestion
 			if(str.matches("( |\t)*mod_security.c( |\t)*"))
 			{
 				_uc.printAnswer(true, _labels.getString("S2"));
+				_uc.printHidingParagraph(_labels.getString("S4"), _labels.getString("S5"));
 				return true;
 			}
 		}
 		
 		_uc.printAnswer(false, _labels.getString("S3"));
+		
+		_uc.printHidingParagraph(_labels.getString("S4"), _labels.getString("S5"));
 		return false;
 	}
 
