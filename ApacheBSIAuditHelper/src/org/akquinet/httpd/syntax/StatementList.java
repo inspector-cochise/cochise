@@ -152,7 +152,7 @@ public class StatementList extends SyntaxElement
 		return ret;
 	}
 
-	private static List<File> filesToInclude(String serverRoot, String fnmatchPath) throws ServerRootNotSetException
+	public static List<File> filesToInclude(String serverRoot, String fnmatchPath) throws ServerRootNotSetException
 	{
 		if(!fnmatchPath.startsWith("/") && serverRoot == null)
 		{
@@ -311,7 +311,7 @@ public class StatementList extends SyntaxElement
 		return ret;
 	}
 	
-	private static class ServerRootNotSetException extends Exception
+	public static class ServerRootNotSetException extends Exception
 	{
 		private static final long serialVersionUID = -8095933665345794676L;
 	}
