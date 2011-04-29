@@ -49,6 +49,7 @@ public class Quest6 implements YesNoQuestion
 			if(exit == 0)
 			{
 				_uc.printAnswer(true, _labels.getString("S1") );
+				printExtraInfo();
 				return true;
 			}
 			else
@@ -63,6 +64,7 @@ public class Quest6 implements YesNoQuestion
 				}
 				_uc.println(buf.toString());
 				
+				printExtraInfo();
 				return false;
 			}
 		}
@@ -74,6 +76,13 @@ public class Quest6 implements YesNoQuestion
 		{
 			throw new RuntimeException(e);
 		}
+	}
+
+	private void printExtraInfo()
+	{
+		_uc.beginHidingParagraph(_labels.getString("S3"));
+			_uc.printParagraph(_labels.getString("S4"));
+		_uc.endHidingParagraph();
 	}
 
 	@Override
