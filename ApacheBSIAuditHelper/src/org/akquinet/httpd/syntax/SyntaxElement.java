@@ -84,7 +84,7 @@ abstract public class SyntaxElement
 		return _parent == null ? _actualLine : _parent.getActualLine();
 	}
 	
-	protected String getContainingFile()
+	public String getContainingFile()
 	{
 		return _containingFile;
 	}
