@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Stack;
 
 public class HtmlReportLogger
@@ -13,6 +15,7 @@ public class HtmlReportLogger
 	private int _serialCounter;
 	private Stack<Integer> _indentSerialStack;
 	private Stack<Integer> _hidingSerialStack;
+	private ResourceBundle _labels;
 	
 	private final int HTML_ID = 0;
 	private final int BODY_ID = 1;
@@ -21,6 +24,7 @@ public class HtmlReportLogger
 	
 	public HtmlReportLogger()
 	{
+		_labels = ResourceBundle.getBundle("global", Locale.getDefault());
 		_importantTags = new HashMap<Integer, HtmlTagPair>();
 		_indentSerialStack = new Stack<Integer>();
 		_hidingSerialStack = new Stack<Integer>();
@@ -140,7 +144,7 @@ public class HtmlReportLogger
 		HtmlTagPair a = new HtmlTagPair("a", _serialCounter);
 		a.addAttribute("href",  "javascript:toggle('" + divID + "', '" + aID + "');"  );
 		a.addAttribute("id", aID);
-		a.addContent(new HtmlText("Show/Hide " + descriptionOfParagraph));
+		a.addContent(new HtmlText(_labels.getString("S9") + " " + descriptionOfParagraph));
 		
 		HtmlTagPair div = new HtmlTagPair("div", _serialCounter);
 		div.addAttribute("class", "hidden");
@@ -211,7 +215,7 @@ public class HtmlReportLogger
 	{
 		HtmlTagPair div = new HtmlTagPair("div");
 		div.addAttribute("class", answer ? "positive" : "negative");
-		div.addContent(new HtmlText("<p><b>" +  (answer ? "Yes" : "No")  + "</b></p>"));
+		div.addContent(new HtmlText("<p><b>" +  (answer ? _labels.getString("S10_yes") : _labels.getString("S10_no"))  + "</b></p>"));
 		div.addContent(new HtmlText("<p>" + cause + "</p>"));
 		
 		_openTags.peek().addContent(div);
