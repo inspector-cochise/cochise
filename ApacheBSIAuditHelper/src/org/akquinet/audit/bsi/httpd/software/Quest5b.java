@@ -62,7 +62,7 @@ public class Quest5b implements YesNoQuestion
 		_uc.printAnswer(isSetGlobalRoot & problems.isEmpty(), global + " " + overrides);
 		for (Directive directive : problems)
 		{
-			_uc.println(_labels.getString("S5") + directive.getLinenumber() + ": " + directive.getName() + " " + directive.getValue());
+			_uc.println(_labels.getString("S5") + directive.getContainingFile() + ":" + directive.getLinenumber() + ": " + directive.getName() + " " + directive.getValue());
 		}
 
 		

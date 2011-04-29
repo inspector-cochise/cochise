@@ -38,7 +38,7 @@ public class Quest5a implements YesNoQuestion
 			_uc.printAnswer(false, _labels.getString("S1_bad") );
 			for (Directive directive : incList)
 			{
-				_uc.println(_labels.getString("S2") + directive.getLinenumber() + ": " + directive.getName() + " " + directive.getValue());
+				_uc.println(_labels.getString("S2") + directive.getContainingFile() + ":" + directive.getLinenumber() + ": " + directive.getName() + " " + directive.getValue());
 			}
 			return false;
 		}

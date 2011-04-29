@@ -55,7 +55,7 @@ public class Quest4 extends ModuleHelper implements YesNoQuestion
 			List<Directive> loadModules = getLoadModuleList();
 			for (Directive dir : loadModules)
 			{
-				buf = buf.append(dir.getLinenumber() + ": " + dir.getName() + " " + dir.getValue() + "\n");
+				buf = buf.append(dir.getContainingFile() + ":" + dir.getLinenumber() + ": " + dir.getName() + " " + dir.getValue() + "\n");
 			}
 			_uc.printExample(buf.toString());
 		}

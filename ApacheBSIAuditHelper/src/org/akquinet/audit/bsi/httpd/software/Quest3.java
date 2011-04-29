@@ -42,7 +42,7 @@ public class Quest3 extends ModuleHelper implements YesNoQuestion
 			{
 				Directive modSec = directive;
 				_uc.printAnswer(true, _labels.getString("S1"));
-				_uc.printExample(modSec.getLinenumber() + ": " + modSec.getName() + " " + modSec.getValue());
+				_uc.printExample(modSec.getContainingFile() + ":" + modSec.getLinenumber() + ": " + modSec.getName() + " " + modSec.getValue());
 				return true;
 			}
 			

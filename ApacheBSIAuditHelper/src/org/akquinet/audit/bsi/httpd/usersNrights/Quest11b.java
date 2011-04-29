@@ -58,7 +58,7 @@ public class Quest11b implements YesNoQuestion
 				List<Directive> allowList = dir.getDirectiveIgnoreCase("allow");
 				for (Directive directive : allowList)
 				{
-					_uc.println(directive.getLinenumber() + ": " + directive.getName() + " " + directive.getValue());
+					_uc.println(directive.getContainingFile() + ":" + directive.getLinenumber() + ": " + directive.getName() + " " + directive.getValue());
 				}
 				return false;
 			}
@@ -92,7 +92,7 @@ public class Quest11b implements YesNoQuestion
 			}
 			else
 			{
-				_uc.printAnswer(false, MessageFormat.format(_labels.getString("S3"), dir.getBeginLineNumber(), dir.getEndLineNumber()));
+				_uc.printAnswer(false, MessageFormat.format(_labels.getString("S3"), dir.getBeginLineNumber(), dir.getEndLineNumber(), dir.getContainingFile()));
 				//_uc.printAnswer(false, "I found multiple and/or incorrectly sorted \"Order\", \"Deny\" or \"Allow\" directives betwenn lines "
 				//		+ dir.getBeginLineNumber() + " and " + dir.getEndLineNumber() + ". Please make them unique, sort them and run me again.");
 				return false;
@@ -113,7 +113,7 @@ public class Quest11b implements YesNoQuestion
 			   dir.getSurroundingContexts().get(1) != null
 			   )
 			{
-				_uc.printAnswer(false, MessageFormat.format(_labels.getString("S4"), dir.getLinenumber()) );
+				_uc.printAnswer(false, MessageFormat.format(_labels.getString("S4"), dir.getLinenumber(), dir.getContainingFile()) );
 				return false;
 			}
 		}
@@ -136,7 +136,7 @@ public class Quest11b implements YesNoQuestion
 		else
 		{
 			_uc.printAnswer(false, _labels.getString("S5"));
-			_uc.println(deny.getLinenumber() + ": " + deny.getName() + " " + deny.getValue());
+			_uc.println(deny.getContainingFile() + ":" + deny.getLinenumber() + ": " + deny.getName() + " " + deny.getValue());
 			return false;
 		}
 	}
@@ -157,7 +157,7 @@ public class Quest11b implements YesNoQuestion
 		else
 		{
 			_uc.printAnswer(false, _labels.getString("S6"));
-			_uc.println(order.getLinenumber() + ": " + order.getName() + " " + order.getValue());
+			_uc.println(order.getContainingFile() + ":" + order.getLinenumber() + ": " + order.getName() + " " + order.getValue());
 			return false;
 		}
 	}

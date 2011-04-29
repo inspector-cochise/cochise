@@ -62,7 +62,7 @@ public class Quest7 implements YesNoQuestion
 			_uc.println( _labels.getString("L6") );
 			for (Directive directive : problems)
 			{
-				_uc.printExample( _labels.getString("S1")  + directive.getLinenumber() + ": " + directive.getName() + " " + directive.getValue());
+				_uc.printExample( _labels.getString("S1")  + directive.getContainingFile() + ":" + directive.getLinenumber() + ": " + directive.getName() + " " + directive.getValue());
 			}
 			allOk = _uc.askYesNoQuestion( _labels.getString("Q1") );
 		}
