@@ -121,7 +121,7 @@ public class Quest7Test
 		int i = 0;
 		for(String line : printed.split("(\r\n)|\n"))
 		{
-			if(line.matches("[ \t]*line.*:.*"))
+			if(line.matches("[ \t]*.*:.*:.*"))
 			{
 				feedback[i++] = line;
 			}
@@ -129,10 +129,10 @@ public class Quest7Test
 		
 		assertEquals("all explicitly enabled options should be displayed", 4, feedback.length);
 		
-		assertTrue("option +bar should be displayed correctly", feedback[0].matches("[ \t]*line.*:[ \t]*Options[ \t]*\\+bar.*"));
-		assertTrue("option +Indexes +Include should be displayed correctly", feedback[1].matches("[ \t]*line.*:[ \t]*Options[ \t]*\\+Indexes \\+Include.*"));
-		assertTrue("option +iwas should be displayed correctly", feedback[2].matches("[ \t]*line.*:[ \t]*Options[ \t]*\\+iwas.*"));
-		assertTrue("option +foo should be displayed correctly", feedback[3].matches("[ \t]*line.*:[ \t]*Options[ \t]*\\+foo.*"));
+		assertTrue("option +bar should be displayed correctly", feedback[0].matches("[ \t]*.*:.*:[ \t]*Options[ \t]*\\+bar.*"));
+		assertTrue("option +Indexes +Include should be displayed correctly", feedback[1].matches("[ \t]*.*:.*:[ \t]*Options[ \t]*\\+Indexes \\+Include.*"));
+		assertTrue("option +iwas should be displayed correctly", feedback[2].matches("[ \t]*.*:.*:[ \t]*Options[ \t]*\\+iwas.*"));
+		assertTrue("option +foo should be displayed correctly", feedback[3].matches("[ \t]*.*:.*:[ \t]*Options[ \t]*\\+foo.*"));
 		
 		System.setIn(stdin);
 	}

@@ -52,7 +52,6 @@ public class Quest8 implements YesNoQuestion
 			for(Directive incDir : _conf.getAllDirectivesIgnoreCase("Include"))
 			{
 				List<File> files = StatementList.filesToInclude(_conf.getHeadExpression().getServerRoot(), incDir.getValue().trim());
-				files.add(_configFile);
 				for(File file : files)
 				{
 					ShellAnsweredQuestion quest = new ShellAnsweredQuestion(_commandPath + _command, file.getCanonicalPath());
@@ -61,6 +60,12 @@ public class Quest8 implements YesNoQuestion
 						problems.add(file);
 					}
 				}
+			}
+			
+			ShellAnsweredQuestion quest = new ShellAnsweredQuestion(_commandPath + _command, _configFile.getCanonicalPath());
+			if(!quest.answer())
+			{
+				problems.add(_configFile);
 			}
 			
 			boolean ret = problems.isEmpty();
