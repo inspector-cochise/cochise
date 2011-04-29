@@ -127,8 +127,18 @@ public class HttpdAudit
 				//tmp = uc.askStringQuestion(tmp + " doesn't exist. So what is you apache main configuration file? ");
 				configFile = new File(tmp.trim());
 			}
-			
-			ConfigFile conf = new ConfigFile(configFile);
+			ConfigFile conf = null;
+			try
+			{
+				conf = new ConfigFile(configFile);
+			}
+			catch(RuntimeException e)
+			{
+				uc.printParagraph(labels.getString("E4HttpdAudit"));
+				uc.printExample(e.getMessage());
+				uc.finishCommunication();
+				System.exit(1);
+			}
 			
 			uc.println("");
 			
@@ -174,7 +184,11 @@ public class HttpdAudit
 			
 			uc.finishCommunication();
 		}
-		catch (IOException e) { e.printStackTrace(); }
+		catch (IOException e)
+		{
+			UserCommunicator.getDefault().finishCommunication();
+			e.printStackTrace();
+		}
 	}
 
 	private static OperatingSystem getOperatingSystem()
