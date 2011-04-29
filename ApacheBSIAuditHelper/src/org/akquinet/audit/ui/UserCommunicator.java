@@ -112,7 +112,14 @@ public class UserCommunicator
 	{
 		if(!_hide)
 		{
-			_console.println(getLevel(), "\t" + example.replaceAll("\n", "\n\t"));
+			if(getLevel() == FormattedConsole.OutputLevel.Q2)
+			{
+				_console.println(getLevel(), "\t" + example.replaceAll("\n", "\n\t\t"));
+			}
+			else
+			{
+				_console.println(getLevel(), "\t" + example.replaceAll("\n", "\n\t"));
+			}
 		}
 
 		if(_htmlReport != null)
