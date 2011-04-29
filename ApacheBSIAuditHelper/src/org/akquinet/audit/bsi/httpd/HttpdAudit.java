@@ -172,7 +172,7 @@ public class HttpdAudit
 			overallAnswer &= (new Quest7(conf)).answer();
 			
 			uc.printHeading2( labels.getString("H5") );
-			overallAnswer &= (new Quest8(configFile)).answer();
+			overallAnswer &= (new Quest8(configFile, conf)).answer();
 			overallAnswer &= (new Quest9(conf, apacheExecutable.getName())).answer();
 			overallAnswer &= (new Quest10(conf)).answer();
 			overallAnswer &= (new Quest11(conf)).answer();
