@@ -49,6 +49,8 @@ public class Quest9 implements YesNoQuestion
 		_uc.printParagraph( _labels.getString("Q0") );
 
 		_uc.println( _labels.getString("L1") );
+		
+		boolean ret = false;
 		if(_serverRoot != null)
 		{
 			String user = getApacheStartingUser();
@@ -65,19 +67,27 @@ public class Quest9 implements YesNoQuestion
 			_q9b = new Quest9b(_serverRoot);
 			
 			_uc.beginIndent();
-				boolean ret = _q9a.answer();
+				ret = _q9a.answer();
 				ret &= _q9b.answer();
 			_uc.endIndent();
 			_uc.println( MessageFormat.format(_labels.getString("S1"), _id));
 			_uc.printAnswer(ret, ret ?  _labels.getString("S2")  :  _labels.getString("S3") );
-			return ret;
+			
 		}
 		else
 		{
 			_uc.println( MessageFormat.format(_labels.getString("S1"), _id));
 			_uc.printAnswer(false,  _labels.getString("S4") );
-			return false;
+			ret = false;
 		}
+		
+		_uc.beginHidingParagraph( _labels.getString("S5") );
+			_uc.println( _labels.getString("S6") );
+			_uc.printExample("ServerRoot /path/to/some/directory/");
+			_uc.printParagraph( _labels.getString("S7") );
+		_uc.endHidingParagraph();
+		
+		return ret;
 	}
 
 	private String getApacheStartingUser()
