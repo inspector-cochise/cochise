@@ -84,7 +84,7 @@ public class Quest12b implements YesNoQuestion
 			String[] argArr = new String[shellOut.length - 1];
 			for(int i = 1; i < shellOut.length; ++i)
 			{
-				argArr[i-1] = shellOut[i];
+				argArr[i-1] = shellOut[i].replaceAll("\n", "");
 			}
 			String tmp = MessageFormat.format(_labels.getString(shellOut[0]), (Object[])argArr);
 			_uc.printAnswer(ret, tmp );
