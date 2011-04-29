@@ -157,11 +157,18 @@ public class HttpdAudit
 			overallAnswer &= (new Quest1(highSec)).answer();
 			
 			uc.printHeading2( labels.getString("H4") );
+			boolean goodSyntax = (new Quest6(apacheExecutable)).answer();
+			overallAnswer &= goodSyntax;
+			if(!goodSyntax)
+			{
+				uc.printParagraph( labels.getString("E5HttpdAudit") );
+				uc.finishCommunication();
+				System.exit(0);
+			}
 			overallAnswer &= (new Quest2(apacheExecutable)).answer();
 			overallAnswer &= (new Quest3(conf, apacheExecutable)).answer();
 			overallAnswer &= (new Quest4(conf, apacheExecutable)).answer();
 			overallAnswer &= (new Quest5(conf)).answer();
-			overallAnswer &= (new Quest6(apacheExecutable)).answer();
 			overallAnswer &= (new Quest7(conf)).answer();
 			
 			uc.printHeading2( labels.getString("H5") );
