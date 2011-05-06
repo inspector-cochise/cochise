@@ -34,6 +34,7 @@ public class Quest5 implements YesNoQuestion
 	public boolean answer()
 	{
 		_uc.printHeading3(_id);
+		_uc.printHidingParagraph(_labels.getString("S0"), _labels.getString("P0"));
 		_uc.printParagraph( _labels.getString("Q0") );
 		
 		_uc.println( _labels.getString("L1") );
@@ -53,8 +54,7 @@ public class Quest5 implements YesNoQuestion
 	@Override
 	public boolean isCritical()
 	{
-		//TODO this may gets false if the parsers evaluates Include-directives
-		return true;
+		return false;
 	}
 
 	@Override
