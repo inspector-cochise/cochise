@@ -17,7 +17,7 @@ import org.akquinet.httpd.syntax.StatementList;
 
 public class Quest8 implements YesNoQuestion
 {
-	private static final String PERMISSION_PATTERN = "......---";
+	private static final String PERMISSION_PATTERN = ".......---";
 	private static final String _id = "Quest8";
 	private static final UserCommunicator _uc = UserCommunicator.getDefault();
 	private String _command;
