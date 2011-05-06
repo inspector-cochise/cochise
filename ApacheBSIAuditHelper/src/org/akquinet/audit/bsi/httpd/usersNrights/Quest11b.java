@@ -31,7 +31,7 @@ public class Quest11b implements YesNoQuestion
 	{
 		_uc.printHeading3(_id);
 		_uc.printParagraph( _labels.getString("Q0") );
-		_uc.printExample( _labels.getString("S0") );
+		_uc.printExample( "<Directory />\n\tOrder Deny,Allow\n\tDeny from all\n</Directory>" );
 
 		//first of all let's ensure, there are no "hidden" order/allow/deny directives like in
 		//neg_contained3.conf (see JUnit tests)
@@ -41,6 +41,7 @@ public class Quest11b implements YesNoQuestion
 				boolean r = checkForConditionallyActives(s);
 				if(!r)
 				{
+					printHidingParagraph();
 					return r;
 				}
 			}
@@ -60,7 +61,8 @@ public class Quest11b implements YesNoQuestion
 				{
 					_uc.println(directive.getContainingFile() + ":" + directive.getLinenumber() + ": " + directive.getName() + " " + directive.getValue());
 				}
-				return false;
+				ret = false;
+				break;
 			}
 
 			if (dir.getSurroundingContexts().get(0) != null)
@@ -87,7 +89,8 @@ public class Quest11b implements YesNoQuestion
 				}
 				else
 				{
-					return false;
+					ret = false;
+					break;
 				}
 			}
 			else
@@ -95,11 +98,29 @@ public class Quest11b implements YesNoQuestion
 				_uc.printAnswer(false, MessageFormat.format(_labels.getString("S3"), dir.getBeginLineNumber(), dir.getEndLineNumber(), dir.getContainingFile()));
 				//_uc.printAnswer(false, "I found multiple and/or incorrectly sorted \"Order\", \"Deny\" or \"Allow\" directives betwenn lines "
 				//		+ dir.getBeginLineNumber() + " and " + dir.getEndLineNumber() + ". Please make them unique, sort them and run me again.");
-				return false;
+				ret = false;
+				break;
 			}
 		}
 
+		printHidingParagraph();
 		return ret;
+	}
+
+	private void printHidingParagraph()
+	{
+		_uc.beginHidingParagraph(_labels.getString("S7"));
+			_uc.printParagraph(_labels.getString("P1"));
+			_uc.printExample("<VirtualHost *:80>\n" +
+								"\t<some_other_context>\n" +
+									"\t\t<Directory />\n" +
+										"\t\t\tOrder Deny,Allow\n" +
+										"\t\t\tDeny from all\n" +
+									"\t\t</Directory>\n" +
+								"\t</some_other_context>\n" +
+							  "</VirtualHost>");
+			_uc.printParagraph(_labels.getString("P2"));
+		_uc.endHidingParagraph();
 	}
 
 	private boolean checkForConditionallyActives(String directiveType)

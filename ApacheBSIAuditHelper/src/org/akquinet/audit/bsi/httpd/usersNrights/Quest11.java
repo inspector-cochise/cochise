@@ -34,6 +34,8 @@ public class Quest11 implements YesNoQuestion
 	{
 		_uc.printHeading3(_id);
 		_uc.printParagraph( _labels.getString("Q0") );
+
+		_uc.printHidingParagraph(_labels.getString("S0"), _labels.getString("P0"));
 		
 		_uc.println( _labels.getString("L1") );
 		_uc.beginIndent();

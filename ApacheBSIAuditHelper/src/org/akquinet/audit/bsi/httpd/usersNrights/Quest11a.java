@@ -27,6 +27,8 @@ public class Quest11a implements YesNoQuestion
 		_uc.printAnswer(ret, ret ? 
 				 		  _labels.getString("S1_good") 
 						: _labels.getString("S1_bad") );
+		
+		_uc.printHidingParagraph(_labels.getString("S2"), _labels.getString("P1"));
 		return ret;
 	}
 
