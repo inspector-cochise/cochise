@@ -151,9 +151,12 @@ public class HtmlReportLogger
 		div.addAttribute("class", "hidden");
 		div.addAttribute("id", divID);
 		
+		HtmlTagPair p = new HtmlTagPair("p");
+		p.addContent(a);
+		p.addContent(div);
+		
 		_hidingSerialStack.push(_serialCounter++);
-		_openTags.peek().addContent(a);
-		_openTags.peek().addContent(div);
+		_openTags.peek().addContent(p);
 		_openTags.push(div);
 	}
 	
