@@ -131,7 +131,8 @@ public class HtmlReportLogger
 	{
 		HtmlTagPair div = new HtmlTagPair("pre");
 		div.addAttribute("class", "example");
-		div.addContent(new HtmlText(example));
+		String cleansedExample = example.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+		div.addContent(new HtmlText(cleansedExample));
 		
 		_openTags.peek().addContent(div);
 	}
