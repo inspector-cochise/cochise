@@ -282,4 +282,9 @@ public class UserCommunicator
 			throw new Exception("Default value already set.");
 		}
 	}
+	
+	public void setIgnore_WaitForUserToContinue(boolean b)
+	{
+		_console.setIgnore_WaitForUserToContinue(b);
+	}
 }
