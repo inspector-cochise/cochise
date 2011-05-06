@@ -17,7 +17,7 @@ import org.akquinet.httpd.syntax.StatementList;
 
 public class Quest8 implements YesNoQuestion
 {
-	private static final String PERMISSION_PATTERN = ".......---";
+	private static final String PERMISSION_PATTERN = "-......---";
 	private static final String _id = "Quest8";
 	private static final UserCommunicator _uc = UserCommunicator.getDefault();
 	private String _command;
@@ -83,6 +83,12 @@ public class Quest8 implements YesNoQuestion
 				
 				_uc.printExample(buf.toString());
 			}
+			
+			_uc.beginHidingParagraph( _labels.getString("S3") );
+				_uc.printParagraph( _labels.getString("P1") );
+				_uc.printExample("-rw-rw---- 1 root root 23650 2011-04-29 15:38 httpd.conf");
+			_uc.endHidingParagraph();
+			
 			return ret;
 		}
 		catch (StatementList.ServerRootNotSetException e)
@@ -92,6 +98,7 @@ public class Quest8 implements YesNoQuestion
 		}
 		catch (IOException e)
 		{
+			UserCommunicator.getDefault().reportError(e.getMessage());
 			throw new RuntimeException(e);
 		}
 	}
