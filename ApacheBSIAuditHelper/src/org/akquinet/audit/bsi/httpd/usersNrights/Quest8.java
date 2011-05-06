@@ -17,6 +17,7 @@ import org.akquinet.httpd.syntax.StatementList;
 
 public class Quest8 implements YesNoQuestion
 {
+	private static final String PERMISSION_PATTERN = "......---";
 	private static final String _id = "Quest8";
 	private static final UserCommunicator _uc = UserCommunicator.getDefault();
 	private String _command;
@@ -54,7 +55,7 @@ public class Quest8 implements YesNoQuestion
 				List<File> files = StatementList.filesToInclude(_conf.getHeadExpression().getServerRoot(), incDir.getValue().trim());
 				for(File file : files)
 				{
-					ShellAnsweredQuestion quest = new ShellAnsweredQuestion(_commandPath + _command, file.getCanonicalPath());
+					ShellAnsweredQuestion quest = checkFile(file);
 					if(!quest.answer())
 					{
 						problems.add(file);
@@ -62,7 +63,7 @@ public class Quest8 implements YesNoQuestion
 				}
 			}
 			
-			ShellAnsweredQuestion quest = new ShellAnsweredQuestion(_commandPath + _command, _configFile.getCanonicalPath());
+			ShellAnsweredQuestion quest = checkFile(_configFile);
 			if(!quest.answer())
 			{
 				problems.add(_configFile);
@@ -93,6 +94,11 @@ public class Quest8 implements YesNoQuestion
 		{
 			throw new RuntimeException(e);
 		}
+	}
+
+	private ShellAnsweredQuestion checkFile(File file) throws IOException
+	{
+		return new ShellAnsweredQuestion(_commandPath + _command, file.getCanonicalPath(), PERMISSION_PATTERN);
 	}
 
 	@Override
