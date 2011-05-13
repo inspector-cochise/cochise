@@ -19,6 +19,7 @@ public class Quest10 extends ModuleHelper implements YesNoQuestion
 {
 	private static final String _id = "Quest10";
 	private static final UserCommunicator _uc = UserCommunicator.getDefault();
+	private static final String PERMISSION_PATTERN = ".....-..-.";
 	private String _commandPath;
 	private String _command;
 	private ResourceBundle _labels;
@@ -44,29 +45,10 @@ public class Quest10 extends ModuleHelper implements YesNoQuestion
 		
 		_uc.println( _labels.getString("L1") );
 		
-		boolean ret = true;
-		List<File> moduleFiles = getModuleFiles();
-		Set<String> probs = new HashSet<String>();
-		for (File file : moduleFiles)
-		{
-			ShellAnsweredQuestion quest = new ShellAnsweredQuestion(_commandPath + _command, file.getAbsolutePath(), "........-.");
-			boolean ans = quest.answer();
-			ret &= ans;
-			if(!ans)
-			{
-				probs.add(file.getAbsolutePath());
-			}
-			//also the enclosing directory has to be safe (for the case that file is a symbolic link, which we assume)
-			quest = new ShellAnsweredQuestion(_commandPath + _command, file.getParent(), "........-.");
-			ans = quest.answer();
-			ret &= ans;
-			if(!ans)
-			{
-				probs.add(file.getParent());
-			}
-		}
+		Set<String> probs = lookForProblems(PERMISSION_PATTERN);
+		boolean ret = probs.isEmpty();;
 
-		if(!probs.isEmpty())
+		if(!ret)
 		{
 			_uc.println( _labels.getString("L2") );
 			for (String str : probs)
@@ -104,6 +86,28 @@ public class Quest10 extends ModuleHelper implements YesNoQuestion
 			ret.add(new File(dir.getValue().trim()));
 		}
 		return ret;
+	}
+	
+	private Set<String> lookForProblems(String permissionPattern)
+	{
+		List<File> moduleFiles = getModuleFiles();
+		Set<String> probs = new HashSet<String>();
+		for (File file : moduleFiles)
+		{
+			ShellAnsweredQuestion quest = new ShellAnsweredQuestion(_commandPath + _command, file.getAbsolutePath(), permissionPattern);
+			if(!quest.answer())
+			{
+				probs.add(file.getAbsolutePath());
+			}
+			//also the enclosing directory has to be safe (for the case that file is a symbolic link, which we assume)
+			quest = new ShellAnsweredQuestion(_commandPath + _command, file.getParent(), permissionPattern);
+			if(!quest.answer())
+			{
+				probs.add(file.getParent());
+			}
+		}
+		
+		return probs;
 	}
 
 	@Override
