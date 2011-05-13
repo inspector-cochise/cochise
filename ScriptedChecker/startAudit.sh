@@ -9,4 +9,4 @@ fi
 cols=`tput cols`
 lines=`tput lines`
 vmargs=`echo $vmargs -DCOLUMNS=$cols -DLINES=$lines`
-java $vmargs -jar audit.jar /etc/apache2/apache2.conf /usr/sbin/apache2 "$@"
+java $vmargs -jar audit.jar "$@"
