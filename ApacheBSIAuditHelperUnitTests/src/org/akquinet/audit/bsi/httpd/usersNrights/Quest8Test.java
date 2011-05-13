@@ -28,28 +28,28 @@ public class Quest8Test
 	@Test
 	public final void testNegative() throws IOException
 	{
-		Quest8 SUT = new Quest8(_someFile, _conf, "./testFiles/", _failExec);
+		Quest8 SUT = new Quest8(_someFile, _conf, "./testFiles/", _failExec, true);
 		assertFalse(SUT.answer());
 	}
 	
 	@Test
 	public final void testPositive() throws IOException
 	{
-		Quest8 SUT = new Quest8(_someFile, _conf, "./testFiles/", _emptyExec);
+		Quest8 SUT = new Quest8(_someFile, _conf, "./testFiles/", _emptyExec, true);
 		assertTrue(SUT.answer());
 	}
 	
 	@Test
 	public final void testGetID() throws IOException
 	{
-		Quest8 SUT = new Quest8(_someFile, _conf);
+		Quest8 SUT = new Quest8(_someFile, _conf, true);
 		assertTrue(SUT.getID().equals("Quest8"));
 	}
 	
 	@Test
 	public final void testIsCritical() throws IOException
 	{
-		Quest8 SUT = new Quest8(_someFile, _conf);
+		Quest8 SUT = new Quest8(_someFile, _conf, true);
 		assertFalse(SUT.isCritical());
 	}
 }

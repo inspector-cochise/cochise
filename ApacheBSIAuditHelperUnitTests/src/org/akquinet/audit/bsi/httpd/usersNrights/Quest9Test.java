@@ -41,7 +41,7 @@ public class Quest9Test
 				try
 				{
 					InputStream stdInStream = System.in;
-					Quest9 SUT = new Quest9(new ConfigFile(malformedFile), executable.getAbsoluteFile().getParent() + File.separator, executable.getName(), _userNGroupsCommand, _apacheExecutable);
+					Quest9 SUT = new Quest9(new ConfigFile(malformedFile), executable.getAbsoluteFile().getParent() + File.separator, executable.getName(), _userNGroupsCommand, _apacheExecutable, true);
 					System.setIn(new ByteArrayInputStream(stdIn.getBytes()));
 					
 					assertEquals(SUT.answer(), assertVal);
@@ -105,14 +105,14 @@ public class Quest9Test
 	@Test
 	public final void testGetID() throws IOException
 	{
-		Quest9 SUT = new Quest9(new ConfigFile(_someConfig), _apacheExecutable);
+		Quest9 SUT = new Quest9(new ConfigFile(_someConfig), _apacheExecutable, true);
 		assertTrue(SUT.getID().equals("Quest9"));
 	}
 
 	@Test
 	public final void testIsCritical() throws IOException
 	{
-		Quest9 SUT = new Quest9(new ConfigFile(_someConfig), _apacheExecutable);
+		Quest9 SUT = new Quest9(new ConfigFile(_someConfig), _apacheExecutable, true);
 		assertFalse(SUT.isCritical());
 	}
 }

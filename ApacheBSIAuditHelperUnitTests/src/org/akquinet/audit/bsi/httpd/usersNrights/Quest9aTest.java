@@ -19,14 +19,14 @@ public class Quest9aTest
 	@Test
 	public final void testNegative()
 	{
-		Quest9a SUT = new Quest9a("somePath", "someUser", _commandPath, _failExecutable);
+		Quest9a SUT = new Quest9a("somePath", "someUser", _commandPath, _failExecutable, true);
 		assertFalse(SUT.answer());
 	}
 	
 	@Test
 	public final void testPositive()
 	{
-		Quest9a SUT = new Quest9a("somePath", "someUser", _commandPath, _emptyExecutable);
+		Quest9a SUT = new Quest9a("somePath", "someUser", _commandPath, _emptyExecutable, true);
 		assertTrue(SUT.answer());
 	}
 	
@@ -37,7 +37,7 @@ public class Quest9aTest
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		System.setOut(new PrintStream(out));
 		
-		Quest9a SUT = new Quest9a("somePath", "someUser", _commandPath, _listExecutable);
+		Quest9a SUT = new Quest9a("somePath", "someUser", _commandPath, _listExecutable, true);
 		SUT.answer();
 		
 		String printed = out.toString();
@@ -51,14 +51,14 @@ public class Quest9aTest
 	@Test
 	public final void testGetID()
 	{
-		Quest9a SUT = new Quest9a("somePath", "someUser");
+		Quest9a SUT = new Quest9a("somePath", "someUser", true);
 		assertTrue(SUT.getID().equals("Quest9a"));
 	}
 
 	@Test
 	public final void testIsCritical()
 	{
-		Quest9a SUT = new Quest9a("somePath", "someUser");
+		Quest9a SUT = new Quest9a("somePath", "someUser", true);
 		assertFalse(SUT.isCritical());
 	}
 }
