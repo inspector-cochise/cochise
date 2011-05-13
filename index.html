@@ -1,0 +1,41 @@
+<html>
+<head>
+	<title>Inspector Cochise</title>
+</head>
+
+<body>
+	<h1>Inspector Cochise</h1>
+	<h2>What is?</h2>
+	<p>
+		Inspecor Cochise or just Cochise is a small tool which is intended to assist during the audit for the apache web-server as specified by the BSI (Bundesamt f&uuml;r Infomationssicherheit) in <a href="https://www.bsi.bund.de/cae/servlet/contentblob/478398/publicationFile/30917/isi_web_server_checkliste_apache_pdf.pdf">"Sicheres Bereitstellen von Web-Angeboten mit Apache"</a>.
+		This tool focuses on unix-like platforms.
+	</p>
+
+	<h2>Goals</h2>
+	<p>
+		Many questions of the audit are very technical like if there is directive XYZ stated in some special context but not overridden by directive zyx in any other context. It is easy to check this with software but on larger configurations it is exhausting and error-prone to do this by hand.
+		On the other hand one should be remembered of things to look for which are not directly seen in the question. One could summarise as follows:
+		<ul>
+			<li>walking through the audit together with the auditor</li>
+			<li>assisting on complex tasks</li>
+			<li>doing the (simple but exhausting) technical work</li>
+		</ul>
+		It should be clear, that not too much work should be automized and a positive signal should only be given if there is really no chance of a false positive.
+	</p>
+
+	<h2>Prerequisites</h2>
+	<ul>
+		<li>an at least java 1.6 compatible jre</li>
+		<li>standard POSIX tools like sh, awk, false, grep, find, ...</li>
+	</ul>
+	<h2>Download and Repository</h2>
+	<p>
+		You can find a (very alpha) version <a href="https://github.com/downloads/inspector-cochise/cochise/cochise.tar.gz">here</a>. The source code among some other things like an issue-tracker can be found on <a href="https://github.com/inspector-cochise/cochise">github</a>.
+	</p>
+	<h2>License</h2>
+	<p>
+		The software is distributed under the terms of the GPLv3.
+	</p>
+</body>
+
+</html>
