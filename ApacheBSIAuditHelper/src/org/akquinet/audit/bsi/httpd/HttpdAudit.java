@@ -86,6 +86,14 @@ public class HttpdAudit
 			}
 			
 			UserCommunicator uc = UserCommunicator.getDefault();
+
+			for (String string : args)
+			{
+				if(string.equals("--fast"))
+				{
+					uc.setIgnore_WaitForUserToContinue(true);
+				}
+			}
 			
 			uc.printHeading1( labels.getString("H1") );
 			
@@ -148,6 +156,9 @@ public class HttpdAudit
 			
 			uc.println("");
 			uc.printParagraph( labels.getString("P4") );
+			
+			uc.waitForUserToContinue();
+			
 			uc.printHeading1( labels.getString("H2") );
 			
 			boolean overallAnswer = true;
@@ -155,9 +166,11 @@ public class HttpdAudit
 
 			uc.printHeading2( labels.getString("H3") );
 			overallAnswer &= (new Quest1(highSec)).answer();
+			uc.waitForUserToContinue();
 			
 			uc.printHeading2( labels.getString("H4") );
 			boolean goodSyntax = (new Quest6(apacheExecutable)).answer();
+			uc.waitForUserToContinue();
 			overallAnswer &= goodSyntax;
 			if(!goodSyntax)
 			{
@@ -166,17 +179,27 @@ public class HttpdAudit
 				System.exit(0);
 			}
 			overallAnswer &= (new Quest2(apacheExecutable)).answer();
+			uc.waitForUserToContinue();
 			overallAnswer &= (new Quest3(conf, apacheExecutable)).answer();
+			uc.waitForUserToContinue();
 			overallAnswer &= (new Quest4(conf, apacheExecutable)).answer();
+			uc.waitForUserToContinue();
 			overallAnswer &= (new Quest5(conf)).answer();
+			uc.waitForUserToContinue();
 			overallAnswer &= (new Quest7(conf)).answer();
+			uc.waitForUserToContinue();
 			
 			uc.printHeading2( labels.getString("H5") );
-			overallAnswer &= (new Quest8(configFile, conf)).answer();
-			overallAnswer &= (new Quest9(conf, apacheExecutable.getName())).answer();
+			overallAnswer &= (new Quest8(configFile, conf, highSec)).answer();
+			uc.waitForUserToContinue();
+			overallAnswer &= (new Quest9(conf, apacheExecutable.getName(), highSec)).answer();
+			uc.waitForUserToContinue();
 			overallAnswer &= (new Quest10(conf)).answer();
+			uc.waitForUserToContinue();
 			overallAnswer &= (new Quest11(conf)).answer();
+			uc.waitForUserToContinue();
 			overallAnswer &= (new Quest12(conf, apacheExecutable.getName())).answer();
+			uc.waitForUserToContinue();
 			
 			if(overallAnswer)
 			{
