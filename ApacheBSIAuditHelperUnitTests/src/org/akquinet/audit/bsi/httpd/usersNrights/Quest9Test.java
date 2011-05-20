@@ -20,7 +20,7 @@ public class Quest9Test
 	private static final File _noHtdocsConf = new File("./testFiles/Quest9/noHtdocs.conf");
 	private static final File _htdocsConf = new File("./testFiles/Quest9/htdocs.conf");
 	private static final File _malformedConf1 = new File("./testFiles/Quest9/malf1.conf");
-	private static final File _malformedConf2 = new File("./testFiles/Quest9/malf1.conf");
+	private static final File _malformedConf2 = new File("./testFiles/Quest9/malf2.conf");
 	
 	private static final File _someConfig = _noHtdocsConf;
 	
@@ -31,7 +31,7 @@ public class Quest9Test
 	private static final String _apacheExecutable = "apache2";
 	
 
-	public final void testDriver(final String stdIn, final File malformedFile, final File executable, final boolean assertVal) throws Throwable
+	public final void testDriver(final String stdIn, final File malformedFile, final File executable, final boolean assertVal, final boolean serverRootNotSet) throws Throwable
 	{
 		RethrowingThread th = new RethrowingThread()
 		{
@@ -44,7 +44,18 @@ public class Quest9Test
 					Quest9 SUT = new Quest9(new ConfigFile(malformedFile), executable.getAbsoluteFile().getParent() + File.separator, executable.getName(), _userNGroupsCommand, _apacheExecutable, true);
 					System.setIn(new ByteArrayInputStream(stdIn.getBytes()));
 					
-					assertEquals(SUT.answer(), assertVal);
+					try
+					{
+						assertEquals(SUT.answer(), assertVal);
+					}
+					catch (RuntimeException e)
+					{
+						if (!serverRootNotSet && e.getMessage() != null && e.getMessage().endsWith(Quest9.SERVER_ROOT_NOT_SET))
+						{
+							throw e;
+						}
+					}
+					
 					System.setIn(stdInStream);
 				}
 				catch (IOException e)
@@ -69,37 +80,37 @@ public class Quest9Test
 	@Test
 	public final void testNegativeMalformed1() throws Throwable
 	{
-		testDriver("", _malformedConf1, _emptyExec, false);
+		testDriver("", _malformedConf1, _emptyExec, false, true);
 	}
 	
 	@Test
 	public final void testNegativeMalformed2() throws Throwable
 	{
-		testDriver("", _malformedConf2, _emptyExec, false);
+		testDriver("", _malformedConf2, _emptyExec, false, true);
 	}
 	
 	@Test
 	public final void test_a0b0() throws Throwable
 	{
-		testDriver("exampleuser\nNo\nNo\n", _htdocsConf, _failExec, false);
+		testDriver("exampleuser\nNo\nNo\n", _htdocsConf, _failExec, false, false);
 	}
 	
 	@Test
 	public final void test_a0b1() throws Throwable
 	{
-		testDriver("exampleuser\n", _noHtdocsConf, _failExec, false);
+		testDriver("exampleuser\n", _noHtdocsConf, _failExec, false, false);
 	}
 	
 	@Test
 	public final void test_a1b0() throws Throwable
 	{
-		testDriver("exampleuser\nNo\nNo\n", _htdocsConf, _emptyExec, false);
+		testDriver("exampleuser\nNo\nNo\n", _htdocsConf, _emptyExec, false, false);
 	}
 	
 	@Test
 	public final void test_a1b1() throws Throwable
 	{
-		testDriver("exampleuser\n", _noHtdocsConf, _emptyExec, true);
+		testDriver("exampleuser\n", _noHtdocsConf, _emptyExec, true, false);
 	}
 	
 	@Test

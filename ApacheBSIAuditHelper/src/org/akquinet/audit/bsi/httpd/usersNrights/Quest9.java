@@ -14,6 +14,7 @@ import org.akquinet.httpd.syntax.Directive;
 
 public class Quest9 implements YesNoQuestion
 {
+	static final String SERVER_ROOT_NOT_SET = "ServerRoot not or ambiguously set!";
 	private static final String _id = "Quest9";
 	private static final UserCommunicator _uc = UserCommunicator.getDefault();
 	private ConfigFile _conf;
@@ -51,7 +52,16 @@ public class Quest9 implements YesNoQuestion
 		_uc.printParagraph( _labels.getString("Q0") );
 
 		_uc.println( _labels.getString("L1") );
-		_uc.printExample(_serverRoot);
+		
+		try
+		{
+			_uc.printExample(_serverRoot);
+		}
+		catch(NullPointerException e)
+		{
+			throw new RuntimeException(SERVER_ROOT_NOT_SET, e);
+		}
+		
 		boolean ret = false;
 		if(_serverRoot != null)
 		{
