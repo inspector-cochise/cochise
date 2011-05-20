@@ -37,7 +37,7 @@ public class Quest12 implements YesNoQuestion
 		_uc.printParagraph( _labels.getString("Q0") );
 		
 		_uc.println( _labels.getString("L1") );
-		_uc.printParagraph( _labels.getString("P1") );
+		_uc.printHidingParagraph( _labels.getString("S0"), _labels.getString("P1") );
 		
 		_uc.beginIndent();
 			boolean ret = _q12b.answer();
