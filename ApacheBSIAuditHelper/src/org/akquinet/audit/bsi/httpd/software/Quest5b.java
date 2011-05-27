@@ -72,7 +72,7 @@ public class Quest5b implements YesNoQuestion
 	@Override
 	public boolean isCritical()
 	{
-		return true;
+		return false;
 	}
 
 	@Override

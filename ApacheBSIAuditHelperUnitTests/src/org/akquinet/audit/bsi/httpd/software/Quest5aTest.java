@@ -48,6 +48,6 @@ public class Quest5aTest
 	public final void testIsCritical() throws IOException
 	{
 		Quest5a SUT = new Quest5a(new ConfigFile(_someConfig));
-		assertTrue(SUT.isCritical());
+		assertFalse(SUT.isCritical());
 	}
 }
