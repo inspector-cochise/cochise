@@ -243,6 +243,11 @@ abstract public class SyntaxElement
 	
 	protected void setServerRoot(String serverRoot)
 	{
+		if(serverRoot != null && serverRoot.startsWith("\"") && serverRoot.endsWith("\""))
+		{
+			serverRoot = serverRoot.substring(1, serverRoot.length()-1);
+		}
+		
 		_serverRoot = serverRoot;
 		if(_parent != null)
 		{

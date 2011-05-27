@@ -125,7 +125,13 @@ public class StatementList extends SyntaxElement
 		}
 		else if(dir.getName().equalsIgnoreCase("ServerRoot"))
 		{
-			setServerRoot(dir.getValue().trim());
+			String serverRoot = dir.getValue().trim();
+			if(serverRoot != null && serverRoot.startsWith("\"") && serverRoot.endsWith("\""))
+			{
+				serverRoot = serverRoot.substring(1, serverRoot.length()-1);
+			}
+			
+			setServerRoot(serverRoot);
 		}
 	}
 
