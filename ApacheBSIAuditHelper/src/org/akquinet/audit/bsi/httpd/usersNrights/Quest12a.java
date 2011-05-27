@@ -40,7 +40,7 @@ public class Quest12a implements YesNoQuestion
 		_uc.printHeading3(_id);
 		_uc.printParagraph( _labels.getString("Q0") );
 		
-		_uc.printParagraph("One can customize the startup process of the apache deamon to start it as a special user with low rights. I will now check whether you have done so...");
+		_uc.printParagraph( _labels.getString("P1") );
 		
 		String user = null;
 		String group = null;
@@ -65,8 +65,8 @@ public class Quest12a implements YesNoQuestion
 			return false;
 		}
 
-		_uc.println("Seems like your apache deamon has been started by the user " + user + "of group " + group + " .");
-		_uc.println("Evaluating the permissions of tha combination...");
+		_uc.println( MessageFormat.format(_labels.getString("L1"), user, group) );
+		_uc.println( _labels.getString("L2") );
 		ShellAnsweredQuestion quest = new ShellAnsweredQuestion(_commandPath + _command, user, group);
 		boolean ret = quest.answer();
 		
@@ -86,7 +86,7 @@ public class Quest12a implements YesNoQuestion
 			throw new RuntimeException(e);
 		}
 		
-		String[] shellOut = buf.toString().split("[ |\t]");
+		String[] shellOut = buf.toString().split("[ |\t|\n|\r\n]");
 		if(shellOut.length == 1 && ! buf.toString().equals(""))
 		{
 			_uc.printAnswer(ret, _labels.getString(shellOut[0]) );
