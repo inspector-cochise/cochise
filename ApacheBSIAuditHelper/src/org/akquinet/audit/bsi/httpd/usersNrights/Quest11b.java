@@ -49,6 +49,11 @@ public class Quest11b implements YesNoQuestion
 		
 		List<Statement> statList = _conf.getHeadExpression().getStatements()._statements;
 		List<Context> dirList = createDirectoryRoot_List(statList);
+		
+		if(dirList.isEmpty())
+		{
+			_uc.printAnswer(false, _labels.getString("S8"));
+		}
 
 		boolean ret = false;
 		for (Context dir : dirList)
@@ -147,7 +152,7 @@ public class Quest11b implements YesNoQuestion
 			! deny.getSurroundingContexts().get(0).getValue().trim().equals("/")
 		   )
 		{
-			return false;
+			return false;	//This shouldn't happen
 		}
 		
 		if (deny.getValue().matches("( |\t)*from all( |\t)*"))
@@ -168,7 +173,7 @@ public class Quest11b implements YesNoQuestion
 			! order.getSurroundingContexts().get(0).getValue().trim().equals("/")
 		   )
 		{
-			return false;
+			return false;	//This shouldn't happen
 		}
 		
 		if (order.getValue().matches("( |\t)*[Dd]eny,[Aa]llow( |\t)*"))
