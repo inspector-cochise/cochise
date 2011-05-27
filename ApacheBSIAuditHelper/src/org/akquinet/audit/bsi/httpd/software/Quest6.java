@@ -62,7 +62,7 @@ public class Quest6 implements YesNoQuestion
 					buf.append((char)b);
 					b = _stdErr.read();
 				}
-				_uc.println(buf.toString());
+				_uc.printExample(buf.toString());
 				
 				printExtraInfo();
 				return false;
