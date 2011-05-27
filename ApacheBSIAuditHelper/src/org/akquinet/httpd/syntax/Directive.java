@@ -10,27 +10,20 @@ public class Directive extends Statement
 	private String _value;
 	private int _linenumber;
 
-	public Directive(SyntaxElement parent) throws IOException
+	public Directive(SyntaxElement parent) throws IOException, FileEndException
 	{
 		super(parent);
 		parse();
 	}
 
 	@Override
-	protected void parse() throws IOException
+	protected void parse() throws IOException, FileEndException
 	{
-		try
-		{
-			_linenumber = getActualLine();
-			eatBlanks();
-			_name = (new Name(this)).getStringContent();
-			eatBlanks();
-			_value = (new Value(this)).getStringContent();
-		}
-		catch (FileEndException e)
-		{
-			throw new RuntimeException(UNEXPECTED_EOF_ERROR_STRING);
-		}
+		_linenumber = getActualLine();
+		eatBlanks();
+		_name = (new Name(this)).getStringContent();
+		eatBlanks();
+		_value = (new Value(this)).getStringContent();
 
 		try
 		{
