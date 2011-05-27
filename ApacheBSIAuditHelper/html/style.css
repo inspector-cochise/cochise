@@ -21,11 +21,9 @@
 }
 
 .positive {
-	background-image: url('yes.png');
-	background-repeat: repeat-y;
+	background-color: #A9F5A9;
 }
 
 .negative {
-	background-image: url('no.png');
-	background-repeat: repeat-y;
+	background-color: #F78181;
 }
