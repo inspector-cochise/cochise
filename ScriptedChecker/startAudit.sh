@@ -1,4 +1,12 @@
 #!/bin/sh
+java > /dev/null 2>&1
+if [ $? != 0 ]
+then
+	echo "Seems like there is no jre (i.e. java command) in your path. Please put a java command (at least version 1.6) in your path."
+	exit 1
+fi
+
+
 if [ "$1" = "debug" ]
 then
 	$1=""
