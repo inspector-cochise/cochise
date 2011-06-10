@@ -49,13 +49,14 @@ public class StdInRecorderNPlayer extends InputStream
 			else
 			{
 				stop();
+				return _realIn.read();
 			}
 		case STOP:
 		case STOP_GOT_DATA:
+		default:
 			return _realIn.read();
 		}
 
-		return 0;
 	}
 	
 	public void play(String tape)
