@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project default="all" name="Create Runnable Jar for Project ApacheBSIAuditHelper">
     <!-- ANT 1.7 is required -->
+	<target name="all" depends="build,test"/>
 	
 	<property name="overallProject.dir" value="/home/immanuel/workspace-git/cochise"/>
 	<property name="mainProject.dir" value="${overallProject.dir}/ApacheBSIAuditHelper"/>
@@ -80,5 +81,4 @@
 		
 	</target>
 	
-	<target name="all" depends="build,test"/>
 </project>
