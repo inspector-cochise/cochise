@@ -13,10 +13,12 @@ import org.junit.Test;
 
 public class Quest4Test
 {
-	private static final File _emptyExec = new File("./testFiles/emptyScript.bat");
-	private static final File _someExec = new File("./testFiles/Quest4/someModules.bat");
+	private static final String _userDir = System.getProperty("user.dir");
+	
+	private static final File _emptyExec = new File(_userDir + "/testFiles/emptyScript.bat");
+	private static final File _someExec = new File(_userDir + "/testFiles/Quest4/someModules.bat");
 
-	private static final File _trivial = new File("./testFiles/Quest4/triv.conf");
+	private static final File _trivial = new File(_userDir + "/testFiles/Quest4/triv.conf");
 	private static final File _someConfig = _trivial;
 
 	@Test

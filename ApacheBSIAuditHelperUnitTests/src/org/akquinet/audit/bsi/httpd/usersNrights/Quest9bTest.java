@@ -14,8 +14,10 @@ import org.junit.Test;
 
 public class Quest9bTest
 {
-	private static final String _srvRootNoHtdocs = "./testFiles/Quest9b/srvRootNoHtdocs";
-	private static final String _srvRootHtdocs = "./testFiles/Quest9b/srvRootHtdocs";
+	private static final String _userDir = System.getProperty("user.dir");
+	
+	private static final String _srvRootNoHtdocs = _userDir + "/testFiles/Quest9b/srvRootNoHtdocs";
+	private static final String _srvRootHtdocs = _userDir + "/testFiles/Quest9b/srvRootHtdocs";
 	
 	private static final String _someDir = _srvRootNoHtdocs;
 	

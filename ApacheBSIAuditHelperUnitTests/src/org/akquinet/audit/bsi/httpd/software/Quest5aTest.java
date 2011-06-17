@@ -11,9 +11,11 @@ import org.junit.Test;
 
 public class Quest5aTest
 {
-	private static final File _negativeTrivial = new File("./testFiles/Quest5a/neg_triv.conf");
-	private static final File _negativeConditional = new File("./testFiles/Quest5a/neg_cond.conf");
-	private static final File _positiveTrivial = new File("./testFiles/Quest5a/pos_triv.conf");
+	private static final String _userDir = System.getProperty("user.dir");
+	
+	private static final File _negativeTrivial = new File(_userDir + "/testFiles/Quest5a/neg_triv.conf");
+	private static final File _negativeConditional = new File(_userDir + "/testFiles/Quest5a/neg_cond.conf");
+	private static final File _positiveTrivial = new File(_userDir + "/testFiles/Quest5a/pos_triv.conf");
 	private static final File _someConfig = _negativeTrivial;
 
 	@Test

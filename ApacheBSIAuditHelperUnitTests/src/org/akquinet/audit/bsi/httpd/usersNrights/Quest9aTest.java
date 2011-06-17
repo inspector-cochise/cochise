@@ -10,7 +10,9 @@ import org.junit.Test;
 
 public class Quest9aTest
 {
-	public static final String _commandPath = "./testFiles/";
+	private static final String _userDir = System.getProperty("user.dir");
+	
+	public static final String _commandPath = _userDir + "/testFiles/";
 	
 	public static final String _emptyExecutable = "emptyScript.bat";
 	public static final String _failExecutable = "failScript.bat";

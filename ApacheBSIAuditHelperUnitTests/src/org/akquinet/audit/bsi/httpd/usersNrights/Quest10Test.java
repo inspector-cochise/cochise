@@ -11,10 +11,12 @@ import org.junit.Test;
 
 public class Quest10Test
 {
-	private static final File _someConfig = new File("./testFiles/Quest10/someConfig.conf");
-	private static final File _emptyConfig = new File("./testFiles/Quest10/emptyConfig.conf");
+	private static final String _userDir = System.getProperty("user.dir");
 	
-	private static final String _commandPath = "./testFiles/";
+	private static final File _someConfig = new File(_userDir + "/testFiles/Quest10/someConfig.conf");
+	private static final File _emptyConfig = new File(_userDir + "/testFiles/Quest10/emptyConfig.conf");
+	
+	private static final String _commandPath = _userDir + "/testFiles/";
 	
 	private static final String _emptyScript =  "emptyScript.bat";
 	private static final String _failScript =  "failScript.bat";

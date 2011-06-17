@@ -10,8 +10,10 @@ import org.junit.Test;
 
 public class Quest6Test
 {
-	private static final File _emptyExec = new File("./testFiles/emptyScript.bat");
-	private static final File _failExec = new File("./testFiles/failScript.bat");
+	private static final String _userDir = System.getProperty("user.dir");
+	
+	private static final File _emptyExec = new File(_userDir + "/testFiles/emptyScript.bat");
+	private static final File _failExec = new File(_userDir + "/testFiles/failScript.bat");
 	
 	@Test
 	public final void testNegative() throws IOException

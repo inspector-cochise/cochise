@@ -7,7 +7,8 @@ import org.junit.Test;
 
 public class Quest1Test
 {
-	private static final String _commandPath = "./testFiles/";
+	private static final String _userDir = System.getProperty("user.dir");
+	private static final String _commandPath = _userDir + "/testFiles/";
 	private static final String _posExecutable = "emptyScript.bat";
 	private static final String _negExecutable = "failScript.bat";
 	

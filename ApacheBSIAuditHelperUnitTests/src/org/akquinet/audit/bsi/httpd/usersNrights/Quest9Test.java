@@ -16,16 +16,18 @@ import org.junit.Test;
 
 public class Quest9Test
 {
+	private static final String _userDir = System.getProperty("user.dir");
+	
 	//a0 b1 means Quest9a = false and Quest9b = true...
-	private static final File _noHtdocsConf = new File("./testFiles/Quest9/noHtdocs.conf");
-	private static final File _htdocsConf = new File("./testFiles/Quest9/htdocs.conf");
-	private static final File _malformedConf1 = new File("./testFiles/Quest9/malf1.conf");
-	private static final File _malformedConf2 = new File("./testFiles/Quest9/malf2.conf");
+	private static final File _noHtdocsConf = new File(_userDir + "/testFiles/Quest9/noHtdocs.conf");
+	private static final File _htdocsConf = new File(_userDir + "/testFiles/Quest9/htdocs.conf");
+	private static final File _malformedConf1 = new File(_userDir + "/testFiles/Quest9/malf1.conf");
+	private static final File _malformedConf2 = new File(_userDir + "/testFiles/Quest9/malf2.conf");
 	
 	private static final File _someConfig = _noHtdocsConf;
 	
-	private static final File _emptyExec = new File("./testFiles/Quest9/emptyScript.bat");
-	private static final File _failExec = new File("./testFiles/Quest9/failScript.bat");
+	private static final File _emptyExec = new File(_userDir + "/testFiles/Quest9/emptyScript.bat");
+	private static final File _failExec = new File(_userDir + "/testFiles/Quest9/failScript.bat");
 	private static final String _userNGroupsCommand = "userNgroup.bat";
 	
 	private static final String _apacheExecutable = "apache2";

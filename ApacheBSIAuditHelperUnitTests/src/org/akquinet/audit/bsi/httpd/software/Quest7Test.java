@@ -18,13 +18,15 @@ import org.junit.Test;
 
 public class Quest7Test
 {
-	private static final File _negativeTrivial = new File("./testFiles/Quest7/neg_triv.conf");
-	private static final File _negativeConditional = new File("./testFiles/Quest7/neg_cond.conf");
+	private static final String _userDir = System.getProperty("user.dir");
 	
-	private static final File _correctListing = new File("./testFiles/Quest7/correct_listing.conf");
+	private static final File _negativeTrivial = new File(_userDir + "/testFiles/Quest7/neg_triv.conf");
+	private static final File _negativeConditional = new File(_userDir + "/testFiles/Quest7/neg_cond.conf");
 	
-	private static final File _positiveTrivial = new File("./testFiles/Quest7/pos_triv.conf");
-	private static final File _positiveOthers = new File("./testFiles/Quest7/pos_others.conf");
+	private static final File _correctListing = new File(_userDir + "/testFiles/Quest7/correct_listing.conf");
+	
+	private static final File _positiveTrivial = new File(_userDir + "/testFiles/Quest7/pos_triv.conf");
+	private static final File _positiveOthers = new File(_userDir + "/testFiles/Quest7/pos_others.conf");
 	
 	private static final File _someConfig = _negativeTrivial;
 

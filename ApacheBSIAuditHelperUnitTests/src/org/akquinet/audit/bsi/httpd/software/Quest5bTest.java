@@ -11,12 +11,14 @@ import org.junit.Test;
 
 public class Quest5bTest
 {
-	private static final File _negativeTrivial = new File("./testFiles/Quest5b/neg_triv.conf");
-	private static final File _negativeConditional = new File("./testFiles/Quest5b/neg_cond.conf");
-	private static final File _negativeMalformed = new File("./testFiles/Quest5b/neg_malf.conf");
+	private static final String _userDir = System.getProperty("user.dir");
 	
-	private static final File _positiveTrivial1 = new File("./testFiles/Quest5b/pos_triv1.conf");
-	private static final File _positiveTrivial2 = new File("./testFiles/Quest5b/pos_triv2.conf");
+	private static final File _negativeTrivial = new File(_userDir + "/testFiles/Quest5b/neg_triv.conf");
+	private static final File _negativeConditional = new File(_userDir + "/testFiles/Quest5b/neg_cond.conf");
+	private static final File _negativeMalformed = new File(_userDir + "/testFiles/Quest5b/neg_malf.conf");
+	
+	private static final File _positiveTrivial1 = new File(_userDir + "/testFiles/Quest5b/pos_triv1.conf");
+	private static final File _positiveTrivial2 = new File(_userDir + "/testFiles/Quest5b/pos_triv2.conf");
 	
 	private static final File _someConfig = _negativeTrivial;
 

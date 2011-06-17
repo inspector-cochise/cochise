@@ -14,13 +14,15 @@ import org.junit.Test;
 
 public class Quest12Test
 {
+	private static final String _userDir = System.getProperty("user.dir");
+	
 	//a0 b1 means Quest12a = false and Quest12b = true...
-	private static final File _a0 = new File("./testFiles/Quest12/a0.conf");
-	private static final File _a1 = new File("./testFiles/Quest12/a1.conf");
+	private static final File _a0 = new File(_userDir + "/testFiles/Quest12/a0.conf");
+	private static final File _a1 = new File(_userDir + "/testFiles/Quest12/a1.conf");
 	
 	private static final File _someConfig = _a0;
 	
-	private static final String _scriptPath = "./testFiles/Quest12/";
+	private static final String _scriptPath = _userDir + "/testFiles/Quest12/";
 	private static final String _emptyScript = "emptyScript.bat";
 	private static final String _failScript = "failScript.bat";
 	

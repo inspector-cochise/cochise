@@ -11,11 +11,13 @@ import org.junit.Test;
 
 public class Quest5Test
 {
+	private static final String _userDir = System.getProperty("user.dir");
+	
 	//a0 b1 means Quest5a = false and Quest5b = true...
-	private static final File _a0_b0 = new File("./testFiles/Quest5/a0_b0.conf");
-	private static final File _a0_b1 = new File("./testFiles/Quest5/a0_b1.conf");
-	private static final File _a1_b0 = new File("./testFiles/Quest5/a1_b0.conf");
-	private static final File _a1_b1 = new File("./testFiles/Quest5/a1_b1.conf");
+	private static final File _a0_b0 = new File(_userDir + "/testFiles/Quest5/a0_b0.conf");
+	private static final File _a0_b1 = new File(_userDir + "/testFiles/Quest5/a0_b1.conf");
+	private static final File _a1_b0 = new File(_userDir + "/testFiles/Quest5/a1_b0.conf");
+	private static final File _a1_b1 = new File(_userDir + "/testFiles/Quest5/a1_b1.conf");
 	
 	private static final File _someConfig = _a0_b0;
 
