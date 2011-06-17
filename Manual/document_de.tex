@@ -1,0 +1,101 @@
+
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[osf]{mathpazo}
+\linespread{1.05}
+
+\usepackage[a4paper,left=30mm,right=30mm,top=35mm,,bottom=35mm]{geometry}
+\usepackage[colorlinks=false]{hyperref}
+\usepackage{url}
+
+\title{Inspector-Cochise\footnote{Siehe \url{www.inspector-cochise.de}} \ Benutzerhandbuch}
+\author{von akquinet\footnote{Siehe \url{www.akquinet.de}, Kontakt: \texttt{Immanuel.Sims$\texttt{@}$akquinet.de}}}
+
+\newenvironment{code}{\begin{quote}\tt}{\end{quote}}
+
+\begin{document}
+
+\maketitle
+
+%\tableofcontents
+
+\section{Über Inspector-Cochise}
+\emph{Inspector-Cochise} oder einfach nur \emph{Cochise} ist ein Tool, welches dabei helfen soll das BSI\footnote{\emph{Bundesamt für
+Sicherheit in der Informationstechnik}}-Audit für den Apache Web-Server\footnote{
+\url{https://www.bsi.bund.de/cae/servlet/contentblob/478398/publicationFile/30917/isi_web_server_checkliste_apache_pdf.pdf}}
+durchzuführen. Dabei werden lästige und fehleranfällige Aufgaben, wie das Überprüfen von Dateirechten, sowie die Gültigkeit bestimmter
+Konfigurationsmerkmale automatisiert durchgeführt. Bei komplexeren Aufgaben werden Hilfen zur Seite gestellt um diese so komfortabel
+wie möglich auszuführen.
+\par
+Cochise ist nach einem Häuptling der Chokonen-Apachen benannt um den Bezug zum \emph{Apache} Web-Server herzustellen. 
+
+\section{Systemvorraussetzungen}
+Um Cochise erfolgreich auszuführen wird relativ wenig benötigt:
+\begin{itemize}
+  \item grundlegende POSIX Tools (wie \texttt{sh}, \texttt{grep}, \texttt{awk}, \texttt{find}, \ldots)
+  \item Java (1.6 oder höher)
+  \item \texttt{root}-Rechte
+  \item \emph{optional:} ein Terminal mit viel Cache (zum Hochscrollen) 
+\end{itemize}
+Falls kein entsprechendes Java installiert ist kann wie im Folgenden beschrieben eine temporäre Java Installation eingerichtet werden, welche
+keine Einfluss auf das restliche System hat und einfach wieder gelöscht werden kann.
+
+\subsection*{Temporäre Java Installation}
+Auf der offiziellen Java-Download Seite\footnote{\url{http://www.java.com/de/download/manual.jsp?locale=de}} kann man eine selbstextrahierende
+Datei (mit der Endung \texttt{.bin}!) herunterladen. Diese kann man in ein beliebiges Verzeichnis entpacken.
+\begin{code}
+	cd ihr/verzeichnis/\\
+	sh nameDerHeruntergeladenenDatei.bin
+\end{code}
+Dadurch wir in \texttt{ihr/verzeichnis} ein Verzeichnis mit einem Name in etwa wie \texttt{jre1.6.0\_26} erstellt. Darin befindet sich die
+temporäre Java-Installation. Nun müssen Sie nur noch Ihre \texttt{PATH}-Variable entsprechend anpassen (und u.~U. vorher sichern) und dann
+ist Ihr System bzgl. Java bereit Cochise auszuführen.
+\begin{code}
+	echo \$PATH > PATH\_bu\\
+	PATH=ihr/verzeichnis/jre1.6.0\_26/bin:\$PATH
+\end{code}
+In der gerade eben benutzten Shell werden nun die Java-Kommandos der temporären Installation genutzt. Wenn Sie wie in obigem Code die
+\texttt{PATH}-Variable gesichert haben, können Sie diese wie folgt wieder zurücksetzen:
+\begin{code}
+	PATH=`cat PATH\_bu`
+\end{code}
+(die \texttt{`} sind Backticks)
+
+\section{Installation, Aufruf und Bedienung}
+Cochise wird als \texttt{.tar.gz}-Archiv ausgeliefert. Entpacken Sie dieses Archiv in ein Verzeichnis Ihrer Wahl.
+\begin{code}
+	cd ihr/verzeichnis/\\
+	gzip -dc cochise.tar.gz | tar -xv
+\end{code}
+\par
+Cochise wird nun einfach über ein Skript gestartet, wozu Sie allerding \texttt{root}-Rechte benötigen. Cochise führt keine Änderungen
+an Ihrer Konfiguration durch, sondern macht lediglich Vorschläge. Die \texttt{root}-Rechte werden zum lesen einiger Daten benötigt.
+\begin{code}
+	./startAudit.sh
+\end{code}
+Cochise meldet sich daraufhin mit einer Willkommensbotschaft (die Sie zumindest einmal lesen sollten) und beginnt den relevanten Teil Ihrer
+Systemkonfiguration und Anforderungen an den Einsatz des Apache Web-Server abzufragen.
+\par
+Bei den meisten Fragen ist in eckigen Klammern ein Standardwert vorgegeben, wenn Sie einfach \textsf{\small$\langle$Enter$\rangle$} drücken,
+wird dieser Wert akzeptiert. Falls dieser Wert nicht passt, können Sie natürlich immer einen anderen Eingeben.
+\begin{code}
+	Wie ist Ihr Name? \lbrack Cochise\rbrack \emph{ \textsf{\small$\langle$Enter$\rangle$}}\\
+	Hallo Cochise.\\
+	Woher kommen Sie? \lbrack Indien\rbrack \emph{ Nordamerika \textsf{\small$\langle$Enter$\rangle$}}\\
+	Oh, Nordamerika, dort soll es schön sein.
+\end{code}
+\par
+Leider ist im Dokument des BSI-Audits keine Nummerierung der Fragen angegeben. Cochise verwendet zur besseren Übersicht eine Nummerierung,
+die sich ergibt indem man von 1 beginnend die Hauptfragen durchnummeriert. Unterfragen werden von \textsf{a} beginnend durchnummeriert,
+erhalten also eine Nummer wie z.~B. \textsf{5a} oder \textsf{9b}.
+
+\section{Nützliche Features}
+
+In der allerersten Zeile der Ausgabe teil Cochise Ihnen den Namen einer \texttt{.html}-Datei mit, in der das Ergebnis des Audits besser
+lesbar als auf der Konsole abgespeichert wird. Dazu muss Cochise allerdings ganz bis zum Ende Ausgeführt werden. Dort finden Sie auch einige
+Erklärungen und Beispiele, die Auf der Konsole zu viel Platz einnehmen würden.
+
+\end{document}
