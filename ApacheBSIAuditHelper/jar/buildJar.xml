@@ -1,39 +1,80 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project default="all" name="Create Runnable Jar for Project ApacheBSIAuditHelper">
     <!-- ANT 1.7 is required -->
+	
+	<property name="overallProject.dir" value="/home/immanuel/workspace-git/cochise"/>
+	<property name="mainProject.dir" value="${overallProject.dir}/ApacheBSIAuditHelper"/>
+	<property name="testProject.dir" value="${overallProject.dir}/ApacheBSIAuditHelperUnitTests"/>
+	<property name="scriptProject.dir" value="${overallProject.dir}/ScriptedChecker"/>
+	
+	<property name="deploy.dir" value="${mainProject.dir}/deploy"/>
+	<property name="build.dir" value="${mainProject.dir}/jar"/>
+	
+
+	
     <target name="create_run_jar">
-        <jar destfile="./audit.jar" filesetmanifest="mergewithoutmain">
+        <jar destfile="${build.dir}/audit.jar" filesetmanifest="mergewithoutmain">
             <manifest>
                 <attribute name="Main-Class" value="org.akquinet.audit.bsi.httpd.HttpdAudit"/>
                 <attribute name="Class-Path" value="."/>
             </manifest>
-            <fileset dir="../bin"/>
-			<fileset dir="../properties"/>
-        	<fileset file="../../LICENSE"/>
+            <fileset dir="${mainProject.dir}/bin"/>
+			<fileset dir="${mainProject.dir}/properties"/>
+        	<fileset file="${overallProject.dir}/LICENSE"/>
+			<fileset file="${overallProject.dir}/README"/>
         </jar>
     </target>
 	
 	<target name="test">
+		
+		<echo message="ServerRoot ${testProject.dir}/testFiles/Quest9/srvRootHtdocs ${line.separator}" file="${testProject.dir}/testFiles/Quest9/htdocs.conf"/>
+	
+		<junit fork="yes"
+				haltonerror="yes"
+				haltonfailure="yes"
+				printsummary="true"
+				showoutput="true"
+		>
+			<sysproperty key="user.dir" value="${testProject.dir}"/>
+			<sysproperty key="basedir" value="${testProject.dir}"/>
+			
+			<classpath>
+				<pathelement location="${mainProject.dir}/properties"/>
+				<pathelement location="${testProject.dir}/bin"/>
+				<pathelement location="${mainProject.dir}/bin"/>
+				<pathelement location="${build.dir}/junit.jar"/>
+			</classpath>
+	
+			<formatter type="xml" />
+			
+			<batchtest todir="${deploy.dir}/testreports">
+				<fileset dir="${testProject.dir}/bin" includes="**/*Test.class"/>
+			</batchtest>
+		</junit>
 	</target>
 	
 	<target name="clean">
 		<delete>
-			<fileset dir="../deploy" excludes="."/>
+			<fileset dir="${deploy.dir}" excludes="${build.dir}"/>
 		</delete>
 	</target>
 	
 	<target name="build" depends="create_run_jar,clean">
-		<tar destfile="../deploy/cochise.tar.gz" compression="gzip">
-			<tarfileset dir="../../ScriptedChecker" mode="755">
+		<tar destfile="${deploy.dir}/cochise.tar.gz" compression="gzip">
+			<tarfileset dir="${scriptProject.dir}" mode="755">
 				<include name="*.sh"/>
 			</tarfileset>
-			<tarfileset dir="../../ScriptedChecker" mode="644">
+			<tarfileset dir="${scriptProject.dir}" mode="644">
 			    <include name="*.awk"/>
 			</tarfileset>
-			<tarfileset file="../jar/audit.jar"/>
+			<tarfileset file="${build.dir}/audit.jar"/>
 			
-			<tarfileset dir="../html" mode="644" prefix="html">
+			<tarfileset dir="${mainProject.dir}/html" mode="644" prefix="html">
 			    <include name="**/*"/>
+			</tarfileset>
+			<tarfileset dir="${overallProject.dir}" mode="644">
+			    <include name="LICENSE"/>
+				<include name="README"/>
 			</tarfileset>
 		</tar>
 		
