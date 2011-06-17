@@ -36,9 +36,24 @@ public class HttpdAudit
 	 */
 	public static void main(String[] args)
 	{
+		Locale locale = Locale.getDefault();
+		for (String arg : args)
+		{
+			if(arg.equals("en"))
+			{
+				locale = Locale.ENGLISH;
+				break;
+			}
+			else if(arg.equals("de"))
+			{
+				locale = Locale.GERMAN;
+				break;
+			}
+		}
+		
 		try
 		{
-			ResourceBundle labels = ResourceBundle.getBundle("global", Locale.getDefault());
+			ResourceBundle labels = ResourceBundle.getBundle("global", locale);
 			
 			if(!"root".equals(System.getenv("USER")))
 			{
