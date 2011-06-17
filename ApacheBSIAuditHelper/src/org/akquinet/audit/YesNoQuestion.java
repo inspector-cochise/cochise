@@ -9,4 +9,7 @@ public interface YesNoQuestion
 	abstract public boolean answer();
 	abstract public boolean isCritical();
 	abstract public String getID();
+	abstract public int getNumber();
+	abstract public int getBlockNumber();
+	abstract public String[] getRequirements();
 }

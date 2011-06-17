@@ -141,4 +141,22 @@ public class Quest8 implements YesNoQuestion
 		return _id;
 	}
 
+	@Override
+	public int getBlockNumber()
+	{
+		return 3;
+	}
+
+	@Override
+	public int getNumber()
+	{
+		return 8;
+	}
+
+	@Override
+	public String[] getRequirements()
+	{
+		return new String[0];
+	}
+
 }

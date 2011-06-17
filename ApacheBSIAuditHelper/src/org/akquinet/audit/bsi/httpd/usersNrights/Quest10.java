@@ -122,4 +122,22 @@ public class Quest10 extends ModuleHelper implements YesNoQuestion
 		return _id;
 	}
 
+	@Override
+	public int getBlockNumber()
+	{
+		return 3;
+	}
+
+	@Override
+	public int getNumber()
+	{
+		return 10;
+	}
+
+	@Override
+	public String[] getRequirements()
+	{
+		return new String[0];
+	}
+
 }

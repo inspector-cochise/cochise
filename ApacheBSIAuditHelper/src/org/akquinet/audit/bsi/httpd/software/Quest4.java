@@ -78,4 +78,22 @@ public class Quest4 extends ModuleHelper implements YesNoQuestion
 	{
 		return _id;
 	}
+
+	@Override
+	public int getBlockNumber()
+	{
+		return 2;
+	}
+
+	@Override
+	public int getNumber()
+	{
+		return 4;
+	}
+
+	@Override
+	public String[] getRequirements()
+	{
+		return new String[0];
+	}
 }

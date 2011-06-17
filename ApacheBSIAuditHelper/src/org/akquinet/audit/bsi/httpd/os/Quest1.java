@@ -72,4 +72,22 @@ public class Quest1 implements YesNoQuestion
 		return _id;
 	}
 
+	@Override
+	public int getBlockNumber()
+	{
+		return 1;
+	}
+
+	@Override
+	public int getNumber()
+	{
+		return 1;
+	}
+
+	@Override
+	public String[] getRequirements()
+	{
+		return new String[0];
+	}
+
 }

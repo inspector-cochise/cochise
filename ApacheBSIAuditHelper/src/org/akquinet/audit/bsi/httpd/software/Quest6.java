@@ -96,4 +96,22 @@ public class Quest6 implements YesNoQuestion
 	{
 		return _id;
 	}
+
+	@Override
+	public int getBlockNumber()
+	{
+		return 2;
+	}
+
+	@Override
+	public int getNumber()
+	{
+		return 6;
+	}
+
+	@Override
+	public String[] getRequirements()
+	{
+		return new String[0];
+	}
 }
