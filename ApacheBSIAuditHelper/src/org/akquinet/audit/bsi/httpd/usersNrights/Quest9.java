@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.List;
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 import org.akquinet.audit.YesNoQuestion;
@@ -51,6 +50,15 @@ public class Quest9 implements YesNoQuestion
 		_uc.printHeading3(_id);
 		_uc.printParagraph( _labels.getString("Q0") );
 
+		try
+		{
+			_conf.reparse();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		
 		_uc.println( _labels.getString("L1") );
 		
 		try

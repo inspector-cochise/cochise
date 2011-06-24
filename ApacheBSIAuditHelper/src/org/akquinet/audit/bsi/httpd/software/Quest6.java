@@ -3,7 +3,6 @@ package org.akquinet.audit.bsi.httpd.software;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 import org.akquinet.audit.YesNoQuestion;

@@ -1,6 +1,5 @@
 package org.akquinet.audit.bsi.httpd.usersNrights;
 
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 import org.akquinet.audit.YesNoQuestion;

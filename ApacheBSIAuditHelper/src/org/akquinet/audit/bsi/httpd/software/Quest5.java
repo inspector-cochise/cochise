@@ -1,7 +1,7 @@
 package org.akquinet.audit.bsi.httpd.software;
 
+import java.io.IOException;
 import java.text.MessageFormat;
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 import org.akquinet.audit.YesNoQuestion;
@@ -36,6 +36,15 @@ public class Quest5 implements YesNoQuestion
 		_uc.printHeading3(_id);
 		_uc.printHidingParagraph(_labels.getString("S0"), _labels.getString("P0"));
 		_uc.printParagraph( _labels.getString("Q0") );
+		
+		try
+		{
+			_conf.reparse();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 		
 		_uc.println( _labels.getString("L1") );
 		_uc.beginIndent();

@@ -1,7 +1,7 @@
 package org.akquinet.audit.bsi.httpd.software;
 
+import java.io.IOException;
 import java.util.List;
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 import org.akquinet.audit.YesNoQuestion;
@@ -30,6 +30,15 @@ public class Quest5a implements YesNoQuestion
 	{
 		_uc.printHeading3(_id);
 		_uc.printParagraph( _labels.getString("Q0") );
+		
+		try
+		{
+			_conf.reparse();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 		
 		List<Directive> incList = _conf.getAllDirectivesIgnoreCase("Include");
 		

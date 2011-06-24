@@ -1,9 +1,9 @@
 package org.akquinet.audit.bsi.httpd.software;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -30,6 +30,15 @@ public class Quest7 implements YesNoQuestion
 	{
 		_uc.printHeading3(_id);
 		_uc.printParagraph( _labels.getString("Q0") );
+		
+		try
+		{
+			_conf.reparse();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 		
 		_uc.println( _labels.getString("L1") );
 		_uc.println( _labels.getString("L2") );

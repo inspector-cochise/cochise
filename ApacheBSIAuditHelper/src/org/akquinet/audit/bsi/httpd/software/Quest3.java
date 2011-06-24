@@ -2,7 +2,6 @@ package org.akquinet.audit.bsi.httpd.software;
 
 import java.io.File;
 import java.util.List;
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 import org.akquinet.audit.ModuleHelper;
@@ -29,6 +28,8 @@ public class Quest3 extends ModuleHelper implements YesNoQuestion
 		_uc.printHeading3(_id);
 		_uc.printParagraph( _labels.getString("Q0") );
 
+		reparse();
+		
 		List<Directive> loadList = getLoadModuleList();
 		for (Directive directive : loadList)
 		{

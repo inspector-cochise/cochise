@@ -75,4 +75,16 @@ public class ModuleHelper
 			return null;
 		}
 	}
+	
+	protected void reparse()
+	{
+		try
+		{
+			_conf.reparse();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
 }

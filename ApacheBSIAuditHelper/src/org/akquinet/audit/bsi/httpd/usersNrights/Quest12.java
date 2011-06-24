@@ -1,6 +1,6 @@
 package org.akquinet.audit.bsi.httpd.usersNrights;
 
-import java.util.Locale;
+import java.io.IOException;
 import java.util.ResourceBundle;
 
 import org.akquinet.audit.YesNoQuestion;
@@ -35,6 +35,15 @@ public class Quest12 implements YesNoQuestion
 	{
 		_uc.printHeading3(_id);
 		_uc.printParagraph( _labels.getString("Q0") );
+		
+		try
+		{
+			_conf.reparse();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 		
 		_uc.println( _labels.getString("L1") );
 		_uc.printHidingParagraph( _labels.getString("S0"), _labels.getString("P1") );
