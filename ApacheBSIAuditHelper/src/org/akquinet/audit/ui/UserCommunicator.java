@@ -287,12 +287,6 @@ public class UserCommunicator
 	{
 		_console.setIgnore_WaitForUserToContinue(b);
 	}
-	
-	public void setLocale(Locale locale)
-	{
-		_labels = ResourceBundle.getBundle("global", locale);
-		_console.setLocale(locale);
-	}
 
 	public void markReport()
 	{
@@ -302,5 +296,16 @@ public class UserCommunicator
 	public void resetReport()
 	{
 		_htmlLogger.reset();
+	}
+	
+	public Locale getLocale()
+	{
+		return _labels.getLocale();
+	}
+	
+	public void setLocale(Locale locale)
+	{
+		_labels = ResourceBundle.getBundle("global", locale);
+		_console.setLocale(locale);
 	}
 }
