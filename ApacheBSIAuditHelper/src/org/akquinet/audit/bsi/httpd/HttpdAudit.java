@@ -6,6 +6,9 @@ import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import org.akquinet.audit.Asker;
+import org.akquinet.audit.Heading2Printer;
+import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.bsi.httpd.os.Quest1;
 import org.akquinet.audit.bsi.httpd.software.Quest2;
 import org.akquinet.audit.bsi.httpd.software.Quest3;
@@ -177,45 +180,25 @@ public class HttpdAudit
 			
 			uc.printHeading1( labels.getString("H2") );
 			
-			boolean overallAnswer = true;
+			YesNoQuestion[] quests = { new Heading2Printer( labels.getString("H3") , 1),
+									   new Quest1(highSec),
+									   new Heading2Printer( labels.getString("H4") , 2),
+									   new Quest2(apacheExecutable),
+									   new Quest3(conf, apacheExecutable),
+									   new Quest4(conf, apacheExecutable),
+									   new Quest5(conf),
+									   new Quest6(apacheExecutable),
+									   new Quest7(conf),
+									   new Heading2Printer( labels.getString("H5") , 3),
+									   new Quest8(configFile, conf, highSec),
+									   new Quest9(conf, apacheExecutable.getName(), highSec),
+									   new Quest10(conf),
+									   new Quest11(conf),
+									   new Quest12(conf, apacheExecutable.getName())
+									 };
+			Asker a = new Asker(quests);
+			boolean overallAnswer = a.askQuestions();
 			
-
-			uc.printHeading2( labels.getString("H3") );
-			overallAnswer &= (new Quest1(highSec)).answer();
-			uc.waitForUserToContinue();
-			
-			uc.printHeading2( labels.getString("H4") );
-			boolean goodSyntax = (new Quest6(apacheExecutable)).answer();
-			uc.waitForUserToContinue();
-			overallAnswer &= goodSyntax;
-			if(!goodSyntax)
-			{
-				uc.printParagraph( labels.getString("E5HttpdAudit") );
-				uc.finishCommunication();
-				System.exit(0);
-			}
-			overallAnswer &= (new Quest2(apacheExecutable)).answer();
-			uc.waitForUserToContinue();
-			overallAnswer &= (new Quest3(conf, apacheExecutable)).answer();
-			uc.waitForUserToContinue();
-			overallAnswer &= (new Quest4(conf, apacheExecutable)).answer();
-			uc.waitForUserToContinue();
-			overallAnswer &= (new Quest5(conf)).answer();
-			uc.waitForUserToContinue();
-			overallAnswer &= (new Quest7(conf)).answer();
-			uc.waitForUserToContinue();
-			
-			uc.printHeading2( labels.getString("H5") );
-			overallAnswer &= (new Quest8(configFile, conf, highSec)).answer();
-			uc.waitForUserToContinue();
-			overallAnswer &= (new Quest9(conf, apacheExecutable.getName(), highSec)).answer();
-			uc.waitForUserToContinue();
-			overallAnswer &= (new Quest10(conf)).answer();
-			uc.waitForUserToContinue();
-			overallAnswer &= (new Quest11(conf)).answer();
-			uc.waitForUserToContinue();
-			overallAnswer &= (new Quest12(conf, apacheExecutable.getName())).answer();
-			uc.waitForUserToContinue();
 			
 			if(overallAnswer)
 			{
