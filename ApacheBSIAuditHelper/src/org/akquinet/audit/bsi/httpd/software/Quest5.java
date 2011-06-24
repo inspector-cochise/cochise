@@ -81,7 +81,7 @@ public class Quest5 implements YesNoQuestion
 	@Override
 	public int getNumber()
 	{
-		return 25;
+		return 5;
 	}
 
 	@Override
