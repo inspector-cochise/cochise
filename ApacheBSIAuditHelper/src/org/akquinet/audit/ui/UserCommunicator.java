@@ -28,7 +28,7 @@ public class UserCommunicator
 	{
 		_htmlReport = htmlReport;
 		_indentLevel = 0;
-		_htmlLogger = new HtmlReportLogger();
+		_htmlLogger = new HtmlReportLogger(Locale.getDefault());
 		_hide = false;
 		setLocale(Locale.getDefault());
 	}
@@ -307,5 +307,6 @@ public class UserCommunicator
 	{
 		_labels = ResourceBundle.getBundle("global", locale);
 		_console.setLocale(locale);
+		_htmlLogger.setLocale(locale);
 	}
 }

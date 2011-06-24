@@ -23,9 +23,9 @@ public class HtmlReportLogger
 	
 	private Backup _markBu;
 	
-	public HtmlReportLogger()
+	public HtmlReportLogger(Locale locale)
 	{
-		_labels = ResourceBundle.getBundle("global", UserCommunicator.getDefault().getLocale());
+		_labels = ResourceBundle.getBundle("global", locale);
 		_importantTags = new HashMap<Integer, HtmlTagPair>();
 		_indentSerialStack = new Stack<Integer>();
 		_hidingSerialStack = new Stack<Integer>();
@@ -276,5 +276,10 @@ public class HtmlReportLogger
 			logger._hidingSerialStack = __hidingSerialStack;
 			logger._openTags = __openTags;
 		}
+	}
+
+	public void setLocale(Locale locale)
+	{
+		_labels = ResourceBundle.getBundle("global", locale);
 	}
 }
