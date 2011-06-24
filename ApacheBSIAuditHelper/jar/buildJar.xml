@@ -10,7 +10,7 @@
 	
 	<property name="deploy.dir" value="${mainProject.dir}/deploy"/>
 	<property name="build.dir" value="${mainProject.dir}/jar"/>
-	
+	<buildnumber file="${build.dir}/build.number"/>
 
 	
     <target name="create_run_jar">
@@ -20,9 +20,11 @@
                 <attribute name="Class-Path" value="."/>
             </manifest>
             <fileset dir="${mainProject.dir}/bin"/>
+        	<fileset dir="${mainProject.dir}/src"/>
 			<fileset dir="${mainProject.dir}/properties"/>
         	<fileset file="${overallProject.dir}/LICENSE"/>
 			<fileset file="${overallProject.dir}/README"/>
+			<fileset file="${overallProject.dir}/build.number"/>
         </jar>
     </target>
 	
@@ -56,12 +58,15 @@
 	
 	<target name="clean">
 		<delete>
-			<fileset dir="${deploy.dir}" excludes="${build.dir}"/>
+			<fileset dir="${deploy.dir}">
+				<exclude name="${build.dir}"/>
+				<exclude name="**/*.tar.gz"/>
+			</fileset>
 		</delete>
 	</target>
 	
 	<target name="build" depends="create_run_jar,clean">
-		<tar destfile="${deploy.dir}/cochise.tar.gz" compression="gzip">
+		<tar destfile="${deploy.dir}/cochise_${build.number}.tar.gz" compression="gzip">
 			<tarfileset dir="${scriptProject.dir}" mode="755">
 				<include name="*.sh"/>
 			</tarfileset>
