@@ -23,7 +23,7 @@ public class FormattedConsole
 	private FormattedConsole()
 	{
 		_ignore_waitForUserToContinue = false;
-		_labels = ResourceBundle.getBundle("global", Locale.getDefault());
+		setLocale(Locale.getDefault());
 	}
 
 	public static FormattedConsole getDefault()
@@ -336,5 +336,10 @@ public class FormattedConsole
 		}
 		
 		return buf.toString().substring(0, buf.length()-1);	//without last '\n'
+	}
+
+	public void setLocale(Locale locale)
+	{
+		_labels = ResourceBundle.getBundle("global", locale);
 	}
 }

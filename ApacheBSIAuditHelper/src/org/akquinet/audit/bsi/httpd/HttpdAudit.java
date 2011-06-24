@@ -101,6 +101,7 @@ public class HttpdAudit
 			}
 			
 			UserCommunicator uc = UserCommunicator.getDefault();
+			uc.setLocale(locale);
 
 			for (String string : args)
 			{
