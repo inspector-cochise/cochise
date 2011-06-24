@@ -11,6 +11,9 @@ import org.akquinet.httpd.syntax.Head;
 public class ConfigFile
 {
 	private Head _head;
+	private File _file;
+	private long _fileLastModified;
+	private String _serverRoot;
 	
 	public ConfigFile(File file) throws IOException
 	{
@@ -24,8 +27,11 @@ public class ConfigFile
 	
 	public ConfigFile(File file, String serverRoot) throws IOException
 	{
-		FileInputStream input = new FileInputStream(file);
-		_head = new Head(null, new MultipleMarkerInputStream(input), serverRoot, file.getCanonicalPath());
+		_file = file;
+		_fileLastModified = _file.lastModified();
+		_serverRoot = serverRoot;
+		FileInputStream input = new FileInputStream(_file);
+		_head = new Head(null, new MultipleMarkerInputStream(input), _serverRoot, _file.getCanonicalPath());
 	}
 
 	/**
@@ -71,6 +77,22 @@ public class ConfigFile
 	public Head getHeadExpression()
 	{
 		return _head;
+	}
+	
+	/**
+	 * If the file has been modified since the creation of this object (or the last call to this method) it will
+	 * again read the config-file and parse is (i. e. this object will be aware of any changes made to the file).
+	 * @throws IOException
+	 */
+	public void reparse() throws IOException
+	{
+		long tmp = _file.lastModified();
+		if(tmp > _fileLastModified)
+		{
+			_fileLastModified = tmp;
+			FileInputStream input = new FileInputStream(_file);
+			_head = new Head(null, new MultipleMarkerInputStream(input), _serverRoot, _file.getCanonicalPath());
+		}
 	}
 	
 	public static void main(String[] args)
