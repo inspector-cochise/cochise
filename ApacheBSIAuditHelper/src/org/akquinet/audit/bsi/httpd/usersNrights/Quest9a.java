@@ -34,7 +34,7 @@ public class Quest9a implements YesNoQuestion
 		_user = user;
 		_commandPath = commandPath;
 		_command = command;
-		_labels = ResourceBundle.getBundle(_id, Locale.getDefault());
+		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 		_highSec = highSec;
 	}
 

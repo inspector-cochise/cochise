@@ -31,7 +31,7 @@ public class Quest12a implements YesNoQuestion
 		_command = command;
 		_getUserNGroupCommand = getUserNGroupCommand;
 		_apacheExecutable = apacheExecutable;
-		_labels = ResourceBundle.getBundle(_id, Locale.getDefault());
+		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 	}
 
 	@Override

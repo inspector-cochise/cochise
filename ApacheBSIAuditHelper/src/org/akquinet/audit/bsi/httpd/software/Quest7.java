@@ -22,7 +22,7 @@ public class Quest7 implements YesNoQuestion
 	public Quest7(ConfigFile conf)
 	{
 		_conf = conf;
-		_labels = ResourceBundle.getBundle(_id, Locale.getDefault());
+		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 	}
 
 	@Override

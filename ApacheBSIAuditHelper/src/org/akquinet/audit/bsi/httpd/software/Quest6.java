@@ -19,7 +19,7 @@ public class Quest6 implements YesNoQuestion
 	
 	public Quest6(File apacheExecutable)
 	{
-		_labels = ResourceBundle.getBundle(_id, Locale.getDefault());
+		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 		try
 		{
 			_httpd = new ProcessBuilder(apacheExecutable.getCanonicalPath(), "-t");

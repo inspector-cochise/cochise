@@ -24,7 +24,7 @@ public class Quest12 implements YesNoQuestion
 	
 	public Quest12(ConfigFile conf, String commandPath, String command, String getUserNGroupCommand, String apacheExecutable)
 	{
-		_labels = ResourceBundle.getBundle(_id, Locale.getDefault());
+		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 		_conf = conf;
 		_q12a = new Quest12a(commandPath, command, getUserNGroupCommand, apacheExecutable);
 		_q12b = new Quest12b(_conf, commandPath, command);

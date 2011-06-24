@@ -119,7 +119,7 @@ public class StatementList extends SyntaxElement
 			}
 			catch (ServerRootNotSetException e)
 			{
-				String message = ResourceBundle.getBundle("global", Locale.getDefault()).getString("E4");
+				String message = ResourceBundle.getBundle("global", UserCommunicator.getDefault().getLocale()).getString("E4");
 				UserCommunicator.getDefault().reportError(message);
 			}
 		}

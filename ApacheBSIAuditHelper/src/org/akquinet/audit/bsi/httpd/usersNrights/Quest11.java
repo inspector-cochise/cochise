@@ -20,7 +20,7 @@ public class Quest11 implements YesNoQuestion
 	public Quest11(ConfigFile conf)
 	{
 		_conf = conf;
-		_labels = ResourceBundle.getBundle(_id, Locale.getDefault());
+		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 		_q11a = new Quest11a();
 		_q11b = new Quest11b(_conf);
 	}

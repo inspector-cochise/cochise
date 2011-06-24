@@ -26,7 +26,7 @@ public class Quest1 implements YesNoQuestion
 		_highSecReq = highSecurityRequired;
 		_commandPath = commandPath;
 		_command = command;
-		_labels = ResourceBundle.getBundle(_id, Locale.getDefault());
+		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 	}
 
 	@Override

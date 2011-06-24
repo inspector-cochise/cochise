@@ -41,7 +41,7 @@ public class Quest9 implements YesNoQuestion
 		_command9a = command9a;
 		_getUserNGroupCommand = getUserNGroupCommand;
 		_apacheExecutable = apacheExecutable;
-		_labels = ResourceBundle.getBundle(_id, Locale.getDefault());
+		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 		_highSec = highSec;
 	}
 

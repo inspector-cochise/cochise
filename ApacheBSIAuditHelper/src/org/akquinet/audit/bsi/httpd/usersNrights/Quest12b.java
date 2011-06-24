@@ -30,7 +30,7 @@ public class Quest12b implements YesNoQuestion
 		_conf = conf;
 		_commandPath = commandPath;
 		_command = command;
-		_labels = ResourceBundle.getBundle(_id, Locale.getDefault());
+		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 	}
 
 	@Override

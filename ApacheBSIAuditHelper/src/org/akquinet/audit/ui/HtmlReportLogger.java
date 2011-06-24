@@ -25,7 +25,7 @@ public class HtmlReportLogger
 	
 	public HtmlReportLogger()
 	{
-		_labels = ResourceBundle.getBundle("global", Locale.getDefault());
+		_labels = ResourceBundle.getBundle("global", UserCommunicator.getDefault().getLocale());
 		_importantTags = new HashMap<Integer, HtmlTagPair>();
 		_indentSerialStack = new Stack<Integer>();
 		_hidingSerialStack = new Stack<Integer>();

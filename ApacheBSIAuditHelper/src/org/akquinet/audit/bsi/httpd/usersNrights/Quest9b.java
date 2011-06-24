@@ -17,7 +17,7 @@ public class Quest9b implements YesNoQuestion
 	public Quest9b(String serverRoot)
 	{
 		_serverRoot = serverRoot;
-		_labels = ResourceBundle.getBundle(_id, Locale.getDefault());
+		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 	}
 
 	@Override

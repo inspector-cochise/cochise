@@ -41,7 +41,7 @@ public class Quest8 implements YesNoQuestion
 		_commandPath = commandPath;
 		_command = command;
 		_conf = conf;
-		_labels = ResourceBundle.getBundle(_id, Locale.getDefault());
+		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 		_highSec = highSec;
 	}
 

@@ -20,7 +20,7 @@ public class Quest5 implements YesNoQuestion
 	
 	public Quest5(ConfigFile conf)
 	{
-		_labels = ResourceBundle.getBundle(_id, Locale.getDefault());
+		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 		_conf = conf;
 		_q5a = new Quest5a(_conf);
 		_q5b = new Quest5b(_conf);

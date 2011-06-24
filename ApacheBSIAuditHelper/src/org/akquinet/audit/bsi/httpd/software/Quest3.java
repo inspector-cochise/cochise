@@ -20,7 +20,7 @@ public class Quest3 extends ModuleHelper implements YesNoQuestion
 	public Quest3(ConfigFile conf, File apacheExecutable)
 	{
 		super(conf, apacheExecutable);
-		_labels = ResourceBundle.getBundle(_id, Locale.getDefault());
+		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 	}
 
 	@Override
