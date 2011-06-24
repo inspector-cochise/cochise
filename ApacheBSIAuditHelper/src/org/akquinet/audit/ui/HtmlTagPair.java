@@ -67,6 +67,7 @@ public class HtmlTagPair implements HtmlElement
 		return ret;
 	}
 
+	@Override
 	public void mark()
 	{
 		_markBu = new Backup(_content, _attributes);
@@ -76,6 +77,7 @@ public class HtmlTagPair implements HtmlElement
 		}
 	}
 
+	@Override
 	public void reset()
 	{
 		_markBu.restore(this);
