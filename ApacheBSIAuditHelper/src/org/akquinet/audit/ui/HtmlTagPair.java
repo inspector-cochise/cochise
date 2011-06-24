@@ -2,16 +2,16 @@ package org.akquinet.audit.ui;
 
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
 public class HtmlTagPair implements HtmlElement
 {
-	private List<HtmlElement> _content;
+	private LinkedList<HtmlElement> _content;
 	
 	private String _name;
-	private Map<String,String> _attributes;
+	private HashMap<String,String> _attributes;
 	private Integer _serial;
+	
+	private Backup _markBu;
 	
 	public HtmlTagPair(String name)
 	{
@@ -24,6 +24,7 @@ public class HtmlTagPair implements HtmlElement
 		_name = name;
 		_serial = serial;
 		_attributes = new HashMap<String, String>();
+		_markBu = new Backup(_content, _attributes);
 	}
 	
 	/**
@@ -64,5 +65,42 @@ public class HtmlTagPair implements HtmlElement
 		
 		ret = ret.append("</" + _name + ">\n");
 		return ret;
+	}
+
+	public void mark()
+	{
+		_markBu = new Backup(_content, _attributes);
+		for (HtmlElement ele : _content)
+		{
+			ele.mark();
+		}
+	}
+
+	public void reset()
+	{
+		_markBu.restore(this);
+		for (HtmlElement ele : _content)
+		{
+			ele.reset();
+		}
+	}
+	
+	private class Backup
+	{
+		private LinkedList<HtmlElement> __content;
+		private HashMap<String,String> __attributes;
+		
+		@SuppressWarnings("unchecked")
+		public Backup(LinkedList<HtmlElement> content, HashMap<String,String> attributes)
+		{
+			__content = (LinkedList<HtmlElement>) content.clone();
+			__attributes = (HashMap<String, String>) attributes.clone();
+		}
+		
+		public void restore(HtmlTagPair tp)
+		{
+			tp._content = __content;
+			tp._attributes = __attributes;
+		}
 	}
 }

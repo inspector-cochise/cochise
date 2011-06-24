@@ -293,4 +293,14 @@ public class UserCommunicator
 		_labels = ResourceBundle.getBundle("global", locale);
 		_console.setLocale(locale);
 	}
+
+	public void markReport()
+	{
+		_htmlLogger.mark();
+	}
+	
+	public void resetReport()
+	{
+		_htmlLogger.reset();
+	}
 }

@@ -5,13 +5,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Stack;
 
 public class HtmlReportLogger
 {
-	private Map<Integer, HtmlTagPair> _importantTags;
+	private HashMap<Integer, HtmlTagPair> _importantTags;
 	private int _serialCounter;
 	private Stack<Integer> _indentSerialStack;
 	private Stack<Integer> _hidingSerialStack;
@@ -21,6 +20,8 @@ public class HtmlReportLogger
 	private final int BODY_ID = 1;
 	
 	private Stack<HtmlTagPair> _openTags;
+	
+	private Backup _markBu;
 	
 	public HtmlReportLogger()
 	{
@@ -42,6 +43,7 @@ public class HtmlReportLogger
 		_serialCounter = BODY_ID + 1;
 		
 		_openTags.push(body);
+		_markBu = new Backup(_importantTags, _serialCounter, _indentSerialStack, _hidingSerialStack, _openTags);
 	}
 
 	private HtmlTagPair createHeadTag()
@@ -230,5 +232,49 @@ public class HtmlReportLogger
 		FileOutputStream os = new FileOutputStream(htmlFile);
 		os.write(_importantTags.get(HTML_ID).stringify().toString().getBytes());
 		os.close();
+	}
+
+	public void mark()
+	{
+		_markBu = new Backup(_importantTags, _serialCounter, _indentSerialStack, _hidingSerialStack, _openTags);
+		_importantTags.get(HTML_ID).mark();
+	}
+
+	public void reset()
+	{
+		_markBu.restore(this);
+		_importantTags.get(HTML_ID).reset();
+	}
+	
+	private class Backup
+	{
+		private HashMap<Integer, HtmlTagPair> __importantTags;
+		private int __serialCounter;
+		private Stack<Integer> __indentSerialStack;
+		private Stack<Integer> __hidingSerialStack;
+		private Stack<HtmlTagPair> __openTags;
+		
+		@SuppressWarnings("unchecked")
+		public Backup(HashMap<Integer, HtmlTagPair> importantTags,
+					  int serialCounter,
+					  Stack<Integer> indentSerialStack,
+					  Stack<Integer> hidingSerialStack,
+					  Stack<HtmlTagPair> openTags)
+		{
+			__importantTags = (HashMap<Integer, HtmlTagPair>) importantTags.clone();
+			__serialCounter = serialCounter;
+			__indentSerialStack = (Stack<Integer>) indentSerialStack.clone();
+			__hidingSerialStack = (Stack<Integer>) hidingSerialStack.clone();
+			__openTags = (Stack<HtmlTagPair>) openTags.clone();
+		}
+		
+		public void restore(HtmlReportLogger logger)
+		{
+			logger._importantTags = __importantTags;
+			logger._serialCounter = __serialCounter;
+			logger._indentSerialStack = __indentSerialStack;
+			logger._hidingSerialStack = __hidingSerialStack;
+			logger._openTags = __openTags;
+		}
 	}
 }
