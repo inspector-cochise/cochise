@@ -1,31 +1,81 @@
 package org.akquinet.audit;
 
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.Set;
+
+import org.akquinet.audit.ui.UserCommunicator;
 
 public class Asker
 {
 	private Set<YesNoQuestion> _questions;
+	private final UserCommunicator _uc = UserCommunicator.getDefault();
+	private ResourceBundle _labels;
+	
+	public Asker()
+	{
+		_labels = ResourceBundle.getBundle("global", _uc.getLocale());
+	}
+	
+	public Asker(Collection<YesNoQuestion> questions)
+	{
+		this();
+		_questions = new HashSet<YesNoQuestion>(questions);
+	}
+
+	public Asker(YesNoQuestion[] questions)
+	{
+		this();
+		_questions = new HashSet<YesNoQuestion>();
+		for (YesNoQuestion quest : questions)
+		{
+			_questions.add(quest);
+		}
+	}
 	
 	public boolean askQuestions()
 	{
-		//first draft:
 		List<YesNoQuestion> sorted = sortQuestions(_questions);
 		boolean overallAns = true;
 		
-		for (YesNoQuestion quest : sorted)
+		try
 		{
-			boolean ans = quest.answer();
-			overallAns &= ans;
-			
-			if(quest.isCritical() && !ans)
+			for (YesNoQuestion quest : sorted)
 			{
-				//TODO show some message
-				break;
+				boolean askAgain = true;
+				boolean ans = false;
+				while(askAgain)
+				{
+					_uc.resetReport();
+					_uc.markReport();
+					ans = quest.answer();
+					overallAns &= ans;
+					askAgain = !ans && _uc.askYesNoQuestion( _labels.getString("S11") , false);
+					
+					if(!askAgain)
+					{
+						_uc.waitForUserToContinue();
+					}
+				}
+				
+				if(quest.isCritical() && !ans)
+				{
+					_uc.println( _labels.getString("S12") );
+					_uc.waitForUserToContinue();
+					break;
+				}
 			}
+		}
+		catch (IOException e)
+		{
+			_uc.reportError(e.getMessage());
+			overallAns = false;
 		}
 		
 		return overallAns;
@@ -33,13 +83,19 @@ public class Asker
 	
 	private List<YesNoQuestion> sortQuestions(Set<YesNoQuestion> questions)
 	{
-		//first draft:
 		List<YesNoQuestion> ret = new LinkedList<YesNoQuestion>();
 		List<Set<YesNoQuestion>> blocks = new LinkedList<Set<YesNoQuestion>>();
 
-		//TODO split into blocks
+		splitIntoBlocks(questions, blocks);
 		
+		sortBlocks(ret, blocks);
 		
+		return ret;
+	}
+
+	private void sortBlocks(List<YesNoQuestion> ret,
+			List<Set<YesNoQuestion>> blocks)
+	{
 		for (Set<YesNoQuestion> block : blocks)
 		{
 			while(!block.isEmpty())
@@ -60,8 +116,51 @@ public class Asker
 				}
 			}
 		}
+	}
+
+	private void splitIntoBlocks(Set<YesNoQuestion> questions,
+			List<Set<YesNoQuestion>> blocks)
+	{
+		List<YesNoQuestion> tmp = new LinkedList<YesNoQuestion>(questions);
+		sortByBlockNumber(tmp);
 		
-		return ret;
+		blocks.add(new HashSet<YesNoQuestion>());
+		int blockNumber = tmp.get(0).getBlockNumber();
+		while(!tmp.isEmpty())
+		{
+			YesNoQuestion first = tmp.get(0);
+			int b = first.getBlockNumber();
+			if(b != blockNumber)
+			{
+				blockNumber = b;
+				blocks.add(new HashSet<YesNoQuestion>());
+			}
+
+			blocks.get(blocks.size()-1).add( first );
+			tmp.remove(0);
+		}
+	}
+
+	private void sortByBlockNumber(List<YesNoQuestion> tmp)
+	{
+		java.util.Collections.sort(tmp, new Comparator<YesNoQuestion>()
+		{
+			public int compare(YesNoQuestion q1, YesNoQuestion q2)
+			{
+				if(q1.getBlockNumber() < q2.getBlockNumber())
+				{
+					return -1;
+				}
+				else if(q1.getBlockNumber() > q2.getBlockNumber())
+				{
+					return 1;
+				}
+				else //if(q1.getBlockNumber() == q2.getBlockNumber())
+				{
+					return 0;
+				}
+			}
+		});
 	}
 
 	private List<YesNoQuestion> satisfy(YesNoQuestion first,
@@ -137,14 +236,25 @@ public class Asker
 
 	private YesNoQuestion getNumberFirst(Set<YesNoQuestion> block)
 	{
-		YesNoQuestion ret = block.iterator().next();
-		for (YesNoQuestion quest : block)
+		YesNoQuestion ret = java.util.Collections.min(block, new Comparator<YesNoQuestion>()
 		{
-			if(ret.getNumber() > quest.getNumber())
+			public int compare(YesNoQuestion q1, YesNoQuestion q2)
 			{
-				ret = quest;
+				if(q1.getNumber() < q2.getNumber())
+				{
+					return -1;
+				}
+				else if(q1.getNumber() > q2.getNumber())
+				{
+					return 1;
+				}
+				else //if(q1.getNumber() == q2.getNumber())
+				{
+					return 0;
+				}
 			}
-		}
+		});
+		
 		return ret;
 	}
 }
