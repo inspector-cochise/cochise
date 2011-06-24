@@ -50,12 +50,12 @@ public class Asker
 			{
 				boolean askAgain = true;
 				boolean ans = false;
+				_uc.markReport();
 				while(askAgain)
 				{
 					_uc.resetReport();
 					_uc.markReport();
 					ans = quest.answer();
-					overallAns &= ans;
 					askAgain = !ans && _uc.askYesNoQuestion( _labels.getString("S11") , false);
 					
 					if(!askAgain)
@@ -63,6 +63,7 @@ public class Asker
 						_uc.waitForUserToContinue();
 					}
 				}
+				overallAns &= ans;
 				
 				if(quest.isCritical() && !ans)
 				{
