@@ -109,7 +109,9 @@ public class Quest7 implements YesNoQuestion
 	@Override
 	public String[] getRequirements()
 	{
-		return new String[0];
+		String[] ret = new String[1];
+		ret[0] = "Quest6";
+		return ret;
 	}
 	
 	private void warnForPlugin(String optionsValue)

@@ -95,6 +95,8 @@ public class Quest4 extends ModuleHelper implements YesNoQuestion
 	@Override
 	public String[] getRequirements()
 	{
-		return new String[0];
+		String[] ret = new String[1];
+		ret[0] = "Quest6";
+		return ret;
 	}
 }
