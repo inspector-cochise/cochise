@@ -184,7 +184,8 @@ public class Asker
 			}
 		}
 		
-		return null;
+		ret.add(first);
+		return ret;
 	}
 
 	private List<YesNoQuestion> generateRequirementsList(String[] requirements,
