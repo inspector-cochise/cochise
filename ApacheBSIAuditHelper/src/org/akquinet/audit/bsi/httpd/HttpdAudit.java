@@ -39,122 +39,78 @@ public class HttpdAudit
 	 */
 	public static void main(String[] args)
 	{
-		Locale locale = Locale.getDefault();
-		for (String arg : args)
+		Locale locale = getLocale(args);
+		ResourceBundle labels = ResourceBundle.getBundle("global", locale);
+		ensureRootPermissions(labels);
+		String apacheExec;
+		String apacheConf;
+		String tmp = "";
+		
+		switch(getOperatingSystem())
 		{
-			if(arg.equals("en"))
-			{
-				locale = Locale.ENGLISH;
-				break;
-			}
-			else if(arg.equals("de"))
-			{
-				locale = Locale.GERMAN;
-				break;
-			}
+		case Ubuntu:
+			apacheExec = "/usr/sbin/apache2";
+			apacheConf = "/etc/apache2/apache2.conf";
+			break;
+		case SUSE:
+			apacheExec = "/usr/sbin/httpd2";
+			apacheConf = "/etc/apache2/httpd.conf";
+			break;
+		case RedHat:
+			apacheExec = "/usr/sbin/httpd";
+			apacheConf = "/etc/httpd/httpd.conf";
+			break;
+		case UNKNOWN:
+		default:
+			apacheExec = "/usr/sbin/httpd";
+			apacheConf = "/etc/httpd/httpd.conf";
+			break;
 		}
+		
+		setHtmlReportFile(labels);
+		
+		UserCommunicator uc = UserCommunicator.getDefault();
+		uc.setLocale(locale);
+		
+		setFastMode(args, uc);
+		
+		uc.printHeading1( labels.getString("H1") );
+		uc.printParagraph( labels.getString("P1") );
+		uc.printParagraph( labels.getString("P2") );
+		uc.printParagraph( labels.getString("P5") );
+		uc.printParagraph( labels.getString("P3") );
+		uc.printExample("/usr/sbin/apache2    (Debian/Ubuntu)\n" +
+				"/usr/sbin/httpd      (RedHat)\n" +
+		"/usr/sbin/httpd2     (SUSE)");
+		
+		tmp = uc.askStringQuestion( labels.getString("Q1") , apacheExec);
+		apacheExec = "".equals(tmp.trim()) ? apacheExec : tmp;
+		File apacheExecutable = new File(apacheExec);
+		
+		while(! apacheExecutable.exists() )
+		{
+			tmp = uc.askStringQuestion( MessageFormat.format(labels.getString("E2"), tmp) );
+			apacheExecutable = new File(tmp.trim());
+		}
+		uc.println("");
+		uc.println( labels.getString("L2") );
+		uc.printExample("/etc/apache2/apache2.conf    (Debian/Ubuntu)\n" +
+				"/etc/httpd/httpd.conf        (RedHat)\n" +
+		"/etc/apache2/httpd.conf      (SUSE)");
+		
+		tmp = uc.askStringQuestion( labels.getString("Q2") , apacheConf);
+		apacheConf = "".equals(tmp.trim()) ? apacheConf : tmp;
+		File configFile = new File(apacheConf);
+		
+		while(! configFile.exists() )
+		{
+			tmp = uc.askStringQuestion( MessageFormat.format(labels.getString("E3"), tmp) );
+			configFile = new File(tmp.trim());
+		}
+		ConfigFile conf = null;
 		
 		try
 		{
-			ResourceBundle labels = ResourceBundle.getBundle("global", locale);
-			
-			if(!"root".equals(System.getenv("USER")))
-			{
-				//System.out.println("This application has to be run as root!");
-				System.out.println( labels.getString("E1_notRunAsRoot") );
-				System.exit(1);
-			}
-			
-			String apacheExec;
-			String apacheConf;
-			String tmp = "";
-			
-			OperatingSystem os = getOperatingSystem();
-			switch(os)
-			{
-			case Ubuntu:
-				apacheExec = "/usr/sbin/apache2";
-				apacheConf = "/etc/apache2/apache2.conf";
-				break;
-			case SUSE:
-				apacheExec = "/usr/sbin/httpd2";
-				apacheConf = "/etc/apache2/httpd.conf";
-				break;
-			case RedHat:
-				apacheExec = "/usr/sbin/httpd";
-				apacheConf = "/etc/httpd/httpd.conf";
-				break;
-			case UNKNOWN:
-			default:
-				apacheExec = "/usr/sbin/httpd";
-				apacheConf = "/etc/httpd/httpd.conf";
-				break;
-			}
-			
-			try
-			{
-				File htmlReport = new File("./htmlReport.htm");
-				System.out.println( MessageFormat.format(labels.getString("L1_willSaveHTML"), htmlReport.getCanonicalPath()) );
-				//System.out.println("I will save a detailed and more readable report of this audit in " + htmlReport.getCanonicalPath() + " .");
-				UserCommunicator.setDefault(new UserCommunicator(htmlReport));
-			}
-			catch (Exception e) //shouldn't happen
-			{
-				e.printStackTrace();
-			}
-			
-			UserCommunicator uc = UserCommunicator.getDefault();
-			uc.setLocale(locale);
-
-			for (String string : args)
-			{
-				if(string.equals("--fast"))
-				{
-					uc.setIgnore_WaitForUserToContinue(true);
-				}
-			}
-			
-			uc.printHeading1( labels.getString("H1") );
-			
-			uc.printParagraph( labels.getString("P1") );
-
-			uc.printParagraph( labels.getString("P2") );
-			
-			uc.printParagraph( labels.getString("P5") );
-			
-			uc.printParagraph( labels.getString("P3") );
-			uc.printExample("/usr/sbin/apache2    (Debian/Ubuntu)\n" +
-					"/usr/sbin/httpd      (RedHat)\n" +
-					"/usr/sbin/httpd2     (SUSE)");
-			
-			tmp = uc.askStringQuestion( labels.getString("Q1") , apacheExec);
-			apacheExec = "".equals(tmp.trim()) ? apacheExec : tmp;
-			File apacheExecutable = new File(apacheExec);
-
-			while(! apacheExecutable.exists() )
-			{
-				tmp = uc.askStringQuestion( MessageFormat.format(labels.getString("E2"), tmp) );
-				//tmp = uc.askStringQuestion(tmp + " doesn't exist. So what is your apache executable? ");
-				apacheExecutable = new File(tmp.trim());
-			}
-			
-			uc.println("");
-			
-			uc.println( labels.getString("L2") );
-			uc.printExample("/etc/apache2/apache2.conf    (Debian/Ubuntu)\n" +
-					"/etc/httpd/httpd.conf        (RedHat)\n" +
-					"/etc/apache2/httpd.conf      (SUSE)");
-			tmp = uc.askStringQuestion( labels.getString("Q2") , apacheConf);
-			apacheConf = "".equals(tmp.trim()) ? apacheConf : tmp;
-			File configFile = new File(apacheConf);
-			
-			while(! configFile.exists() )
-			{
-				tmp = uc.askStringQuestion( MessageFormat.format(labels.getString("E3"), tmp) );
-				//tmp = uc.askStringQuestion(tmp + " doesn't exist. So what is you apache main configuration file? ");
-				configFile = new File(tmp.trim());
-			}
-			ConfigFile conf = null;
 			try
 			{
 				conf = new ConfigFile(configFile);
@@ -170,54 +126,110 @@ public class HttpdAudit
 			uc.println("");
 			
 			boolean highSec = uc.askYesNoQuestion( labels.getString("Q3") , true);
-			
 			boolean highPriv = uc.askYesNoQuestion( labels.getString("Q4") , true);
 			
 			uc.println("");
 			uc.printParagraph( labels.getString("P4") );
-			
 			uc.waitForUserToContinue();
-			
 			uc.printHeading1( labels.getString("H2") );
 			
 			YesNoQuestion[] quests = { new Heading2Printer( labels.getString("H3") , 1),
-									   new Quest1(highSec),
-									   new Heading2Printer( labels.getString("H4") , 2),
-									   new Quest2(apacheExecutable),
-									   new Quest3(conf, apacheExecutable),
-									   new Quest4(conf, apacheExecutable),
-									   new Quest5(conf),
-									   new Quest6(apacheExecutable),
-									   new Quest7(conf),
-									   new Heading2Printer( labels.getString("H5") , 3),
-									   new Quest8(configFile, conf, highSec),
-									   new Quest9(conf, apacheExecutable.getName(), highSec),
-									   new Quest10(conf),
-									   new Quest11(conf),
-									   new Quest12(conf, apacheExecutable.getName())
-									 };
+					new Quest1(highSec),
+					new Heading2Printer( labels.getString("H4") , 2),
+					new Quest2(apacheExecutable),
+					new Quest3(conf, apacheExecutable),
+					new Quest4(conf, apacheExecutable),
+					new Quest5(conf),
+					new Quest6(apacheExecutable),
+					new Quest7(conf),
+					new Heading2Printer( labels.getString("H5") , 3),
+					new Quest8(configFile, conf, highSec),
+					new Quest9(conf, apacheExecutable.getName(), highSec),
+					new Quest10(conf),
+					new Quest11(conf),
+					new Quest12(conf, apacheExecutable.getName())
+			};
 			Asker a = new Asker(quests);
-			boolean overallAnswer = a.askQuestions();
-			
-			
-			if(overallAnswer)
-			{
-				uc.printHeading1( labels.getString("H6") );
-				uc.printParagraph( labels.getString("L3_ok") );
-			}
-			else
-			{
-				uc.printHeading1( labels.getString("H6") );
-				uc.printParagraph( labels.getString("L3_bad") );
-			}
-			
-			uc.finishCommunication();
+			printResumee(labels, uc, a.askQuestions());
 		}
 		catch (IOException e)
 		{
 			UserCommunicator.getDefault().finishCommunication();
 			e.printStackTrace();
 		}
+		
+		
+		uc.finishCommunication();
+	}
+
+	private static void printResumee(ResourceBundle labels,
+			UserCommunicator uc, boolean overallAnswer)
+	{
+		if(overallAnswer)
+		{
+			uc.printHeading1( labels.getString("H6") );
+			uc.printParagraph( labels.getString("L3_ok") );
+		}
+		else
+		{
+			uc.printHeading1( labels.getString("H6") );
+			uc.printParagraph( labels.getString("L3_bad") );
+		}
+	}
+
+	private static void setFastMode(String[] args, UserCommunicator uc)
+	{
+		for (String string : args)
+		{
+			if(string.equals("--fast"))
+			{
+				uc.setIgnore_WaitForUserToContinue(true);
+			}
+		}
+	}
+
+	private static void setHtmlReportFile(ResourceBundle labels)
+	{
+		try
+		{
+			File htmlReport = new File("./htmlReport.htm");
+			System.out.println( MessageFormat.format(labels.getString("L1_willSaveHTML"), htmlReport.getCanonicalPath()) );
+			//System.out.println("I will save a detailed and more readable report of this audit in " + htmlReport.getCanonicalPath() + " .");
+			UserCommunicator.setDefault(new UserCommunicator(htmlReport));
+		}
+		catch (Exception e) //shouldn't happen
+		{
+			e.printStackTrace();
+		}
+	}
+
+	private static void ensureRootPermissions(ResourceBundle labels)
+	{
+		if(!"root".equals(System.getenv("USER")))
+		{
+			//System.out.println("This application has to be run as root!");
+			System.out.println( labels.getString("E1_notRunAsRoot") );
+			System.exit(1);
+		}
+	}
+
+	private static Locale getLocale(String[] args)
+	{
+		Locale locale = Locale.getDefault();
+		for (String arg : args)
+		{
+			if(arg.equals("en"))
+			{
+				locale = Locale.ENGLISH;
+				break;
+			}
+			else if(arg.equals("de"))
+			{
+				locale = Locale.GERMAN;
+				break;
+			}
+		}
+		return locale;
 	}
 
 	private static OperatingSystem getOperatingSystem()
