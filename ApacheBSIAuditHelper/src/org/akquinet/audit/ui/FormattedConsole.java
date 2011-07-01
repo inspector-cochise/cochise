@@ -208,14 +208,21 @@ public class FormattedConsole
 		return buf.toString();
 	}
 
-	public void waitForUserToContinue() throws IOException
+	public void waitForUserToContinue()
 	{
 		if (!_ignore_waitForUserToContinue)
 		{
 			String anyKeyMessage = "\n  " + _labels.getString("S6");
 			System.out.println(anyKeyMessage);
-
-			System.in.read();
+			
+			try
+			{
+				System.in.read();
+			}
+			catch (IOException e)
+			{
+				throw new RuntimeException(e);
+			}
 		}
 	}
 

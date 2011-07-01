@@ -22,7 +22,6 @@ import org.akquinet.audit.bsi.httpd.usersNrights.Quest12;
 import org.akquinet.audit.bsi.httpd.usersNrights.Quest8;
 import org.akquinet.audit.bsi.httpd.usersNrights.Quest9;
 import org.akquinet.audit.ui.UserCommunicator;
-import org.akquinet.httpd.ConfigFile;
 
 public class HttpdAudit
 {
@@ -44,7 +43,6 @@ public class HttpdAudit
 		ensureRootPermissions(labels);
 		String apacheExec;
 		String apacheConf;
-		String tmp = "";
 		
 		switch(getOperatingSystem())
 		{
@@ -74,82 +72,32 @@ public class HttpdAudit
 		
 		setFastMode(args, uc);
 		
-		uc.printHeading1( labels.getString("H1") );
-		uc.printParagraph( labels.getString("P1") );
-		uc.printParagraph( labels.getString("P2") );
-		uc.printParagraph( labels.getString("P5") );
-		uc.printParagraph( labels.getString("P3") );
-		uc.printExample("/usr/sbin/apache2    (Debian/Ubuntu)\n" +
-				"/usr/sbin/httpd      (RedHat)\n" +
-		"/usr/sbin/httpd2     (SUSE)");
-		
-		tmp = uc.askStringQuestion( labels.getString("Q1") , apacheExec);
-		apacheExec = "".equals(tmp.trim()) ? apacheExec : tmp;
-		File apacheExecutable = new File(apacheExec);
-		
-		while(! apacheExecutable.exists() )
-		{
-			tmp = uc.askStringQuestion( MessageFormat.format(labels.getString("E2"), tmp) );
-			apacheExecutable = new File(tmp.trim());
-		}
-		uc.println("");
-		uc.println( labels.getString("L2") );
-		uc.printExample("/etc/apache2/apache2.conf    (Debian/Ubuntu)\n" +
-				"/etc/httpd/httpd.conf        (RedHat)\n" +
-		"/etc/apache2/httpd.conf      (SUSE)");
-		
-		tmp = uc.askStringQuestion( labels.getString("Q2") , apacheConf);
-		apacheConf = "".equals(tmp.trim()) ? apacheConf : tmp;
-		File configFile = new File(apacheConf);
-		
-		while(! configFile.exists() )
-		{
-			tmp = uc.askStringQuestion( MessageFormat.format(labels.getString("E3"), tmp) );
-			configFile = new File(tmp.trim());
-		}
-		ConfigFile conf = null;
-		
 		try
 		{
-			try
-			{
-				conf = new ConfigFile(configFile);
-			}
-			catch(RuntimeException e)
-			{
-				uc.printParagraph(labels.getString("E4HttpdAudit"));
-				uc.printExample(e.getMessage());
-				uc.finishCommunication();
-				System.exit(1);
-			}
+			PrologueData pD = new PrologueData(apacheExec, apacheConf, null, null, null, true, true);
+			Asker a = new Asker();
 			
-			uc.println("");
-			
-			boolean highSec = uc.askYesNoQuestion( labels.getString("Q3") , true);
-			boolean highPriv = uc.askYesNoQuestion( labels.getString("Q4") , true);
-			
-			uc.println("");
-			uc.printParagraph( labels.getString("P4") );
-			uc.waitForUserToContinue();
-			uc.printHeading1( labels.getString("H2") );
+			a.askPrologue(new PrologueQuestion(pD));
 			
 			YesNoQuestion[] quests = { new Heading2Printer( labels.getString("H3") , 1),
-					new Quest1(highSec),
+					new Quest1(pD._highSec),
 					new Heading2Printer( labels.getString("H4") , 2),
-					new Quest2(apacheExecutable),
-					new Quest3(conf, apacheExecutable),
-					new Quest4(conf, apacheExecutable),
-					new Quest5(conf),
-					new Quest6(apacheExecutable),
-					new Quest7(conf),
+					new Quest2(pD._apacheExecutable),
+					new Quest3(pD._conf, pD._apacheExecutable),
+					new Quest4(pD._conf, pD._apacheExecutable),
+					new Quest5(pD._conf),
+					new Quest6(pD._apacheExecutable),
+					new Quest7(pD._conf),
 					new Heading2Printer( labels.getString("H5") , 3),
-					new Quest8(configFile, conf, highSec),
-					new Quest9(conf, apacheExecutable.getName(), highSec),
-					new Quest10(conf),
-					new Quest11(conf),
-					new Quest12(conf, apacheExecutable.getName())
+					new Quest8(pD._configFile, pD._conf, pD._highSec),
+					new Quest9(pD._conf, pD._apacheExecutable.getName(), pD._highSec),
+					new Quest10(pD._conf),
+					new Quest11(pD._conf),
+					new Quest12(pD._conf, pD._apacheExecutable.getName())
 			};
-			Asker a = new Asker(quests);
+			
+			a.addQuestions(quests);
+			
 			printResumee(labels, uc, a.askQuestions());
 		}
 		catch (IOException e)
@@ -258,5 +206,4 @@ public class HttpdAudit
 			return OperatingSystem.UNKNOWN;
 		}
 	}
-
 }

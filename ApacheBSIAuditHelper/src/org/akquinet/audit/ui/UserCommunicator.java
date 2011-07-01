@@ -256,7 +256,7 @@ public class UserCommunicator
 		return answer;
 	}
 	
-	public void waitForUserToContinue() throws IOException
+	public void waitForUserToContinue()
 	{
 		_console.waitForUserToContinue();
 	}

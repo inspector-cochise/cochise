@@ -62,78 +62,130 @@ public class Asker
 		}
 	}
 	
+	public void addQuestions(Collection<YesNoQuestion> questions) throws IOException
+	{
+		if(_questions == null)
+		{
+			_questions = new HashSet<YesNoQuestion>(questions);
+		}
+		else
+		{
+			_questions.addAll(questions);
+		}
+	}
+
+	public void addQuestions(YesNoQuestion[] questions) throws IOException
+	{
+		if(_questions == null)
+		{
+			_questions = new HashSet<YesNoQuestion>();
+		}
+		
+		for (YesNoQuestion quest : questions)
+		{
+			_questions.add(quest);
+		}
+	}
+	
+	public void askPrologue(YesNoQuestion prologue)
+	{
+		QuestionData qDat;
+		try
+		{
+			qDat = new QuestionData(prologue.getID(), _questionDataProps);
+		}
+		catch (DataNotFoundException e)
+		{
+			qDat = new QuestionData(prologue.getID(), "", false);
+		}
+		
+		if(qDat._tape.length() > 0)
+		{
+			_recorder.play(qDat._tape);
+		}
+		else
+		{
+			_recorder.record();
+		}
+		
+		prologue.answer();
+		
+		if(qDat._tape.length() > 0)
+		{
+			_recorder.stop();
+		}
+		else
+		{
+			_recorder.stop();
+			qDat._tape = _recorder.save();
+			qDat.saveToProperties(_questionDataProps);
+		}
+	}
+	
 	public boolean askQuestions()
 	{
 		List<YesNoQuestion> sorted = sortQuestions(_questions);
 		boolean overallAns = true;
 		
-		try
+		for (YesNoQuestion quest : sorted)
 		{
-			for (YesNoQuestion quest : sorted)
+			boolean askAgain = true;
+			boolean ans = false;
+			
+			_uc.markReport();
+			while(askAgain)
 			{
-				boolean askAgain = true;
-				boolean ans = false;
-				
+				_uc.resetReport();
 				_uc.markReport();
-				while(askAgain)
-				{
-					_uc.resetReport();
-					_uc.markReport();
-					
-					QuestionData qDat;
-					try
-					{
-						qDat = new QuestionData(quest.getID(), _questionDataProps);
-					}
-					catch (DataNotFoundException e)
-					{
-						qDat = new QuestionData(quest.getID(), "", false);
-					}
-					
-					if(qDat._answer && qDat._tape.length() > 0)
-					{
-						_recorder.play(qDat._tape);
-					}
-					else
-					{
-						_recorder.record();
-					}
-					
-					ans = quest.answer();
-					askAgain = !ans && _uc.askYesNoQuestion( _labels.getString("S11") , false);
-					
-					if(qDat._answer && qDat._tape.length() > 0)
-					{
-						_recorder.stop();
-					}
-					else
-					{
-						_recorder.stop();
-						qDat._tape = _recorder.save();
-						qDat._answer = ans;
-						qDat.saveToProperties(_questionDataProps);
-					}
-					
-					
-					if(!askAgain)
-					{
-						_uc.waitForUserToContinue();
-					}
-				}
-				overallAns &= ans;
 				
-				if(quest.isCritical() && !ans)
+				QuestionData qDat;
+				try
 				{
-					_uc.println( _labels.getString("S12") );
+					qDat = new QuestionData(quest.getID(), _questionDataProps);
+				}
+				catch (DataNotFoundException e)
+				{
+					qDat = new QuestionData(quest.getID(), "", false);
+				}
+				
+				if(qDat._answer && qDat._tape.length() > 0)
+				{
+					_recorder.play(qDat._tape);
+				}
+				else
+				{
+					_recorder.record();
+				}
+				
+				ans = quest.answer();
+				askAgain = !ans && _uc.askYesNoQuestion( _labels.getString("S11") , false);
+				
+				if(qDat._answer && qDat._tape.length() > 0)
+				{
+					_recorder.stop();
+				}
+				else
+				{
+					_recorder.stop();
+					qDat._tape = _recorder.save();
+					qDat._answer = ans;
+					qDat.saveToProperties(_questionDataProps);
+				}
+				
+				
+				if(!askAgain)
+				{
 					_uc.waitForUserToContinue();
-					break;
 				}
 			}
-		}
-		catch (IOException e)
-		{
-			_uc.reportError(e.getMessage());
-			overallAns = false;
+			overallAns &= ans;
+			
+			if(quest.isCritical() && !ans)
+			{
+				_uc.println( _labels.getString("S12") );
+				_uc.waitForUserToContinue();
+				break;
+			}
 		}
 		
 		try
