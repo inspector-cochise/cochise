@@ -16,13 +16,14 @@ public class StdInRecorderNPlayer extends InputStream
 	private State _state;
 	private String _playData;
 	private int _alreadyPlayedChars;
-	private static final InputStream _realIn = System.in;
+	private InputStream _realIn;
 	
 	private StringBuffer _recordedData;
 
 	public StdInRecorderNPlayer()
 	{
 		super();
+		_realIn = System.in;
 		_state = State.STOP;
 		_playData = "";
 		_alreadyPlayedChars = 0;
@@ -44,7 +45,9 @@ public class StdInRecorderNPlayer extends InputStream
 		case PLAY:
 			if(_alreadyPlayedChars < _playData.length())
 			{
-				return _playData.charAt(_alreadyPlayedChars++);
+				char c = _playData.charAt(_alreadyPlayedChars++);
+				System.out.print(c);
+				return c;
 			}
 			else
 			{
@@ -88,9 +91,14 @@ public class StdInRecorderNPlayer extends InputStream
 	
 	public String save()
 	{
-		String ret = _recordedData.toString();
+		String ret = _recordedData == null ? "" : _recordedData.toString();
 		_recordedData = null;
 		_state = State.STOP;
 		return ret;
+	}
+	
+	public InputStream getRealIn()
+	{
+		return _realIn;
 	}
 }

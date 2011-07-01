@@ -1,5 +1,9 @@
 package org.akquinet.audit;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
@@ -7,9 +11,12 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.Set;
 
+import org.akquinet.audit.QuestionData.DataNotFoundException;
+import org.akquinet.audit.ui.StdInRecorderNPlayer;
 import org.akquinet.audit.ui.UserCommunicator;
 
 public class Asker
@@ -17,19 +24,35 @@ public class Asker
 	private Set<YesNoQuestion> _questions;
 	private final UserCommunicator _uc = UserCommunicator.getDefault();
 	private ResourceBundle _labels;
+	private Properties _questionDataProps;
+	private static final File _questionDataPropsFile = new File("qDat.properties");
+	private StdInRecorderNPlayer _recorder;
 	
-	public Asker()
+	public Asker() throws IOException
 	{
 		_labels = ResourceBundle.getBundle("global", _uc.getLocale());
+		_questionDataProps = new Properties();
+		_recorder = new StdInRecorderNPlayer();
+		System.setIn(_recorder);
+		
+		try
+		{
+			_questionDataProps.load( new FileInputStream(_questionDataPropsFile) );
+		}
+		catch (FileNotFoundException e)
+		{
+			_questionDataProps = new Properties();
+			_questionDataPropsFile.createNewFile();
+		}
 	}
 	
-	public Asker(Collection<YesNoQuestion> questions)
+	public Asker(Collection<YesNoQuestion> questions) throws IOException
 	{
 		this();
 		_questions = new HashSet<YesNoQuestion>(questions);
 	}
 
-	public Asker(YesNoQuestion[] questions)
+	public Asker(YesNoQuestion[] questions) throws IOException
 	{
 		this();
 		_questions = new HashSet<YesNoQuestion>();
@@ -50,13 +73,47 @@ public class Asker
 			{
 				boolean askAgain = true;
 				boolean ans = false;
+				
 				_uc.markReport();
 				while(askAgain)
 				{
 					_uc.resetReport();
 					_uc.markReport();
+					
+					QuestionData qDat;
+					try
+					{
+						qDat = new QuestionData(quest.getID(), _questionDataProps);
+					}
+					catch (DataNotFoundException e)
+					{
+						qDat = new QuestionData(quest.getID(), "", false);
+					}
+					
+					if(qDat._answer && qDat._tape.length() > 0)
+					{
+						_recorder.play(qDat._tape);
+					}
+					else
+					{
+						_recorder.record();
+					}
+					
 					ans = quest.answer();
 					askAgain = !ans && _uc.askYesNoQuestion( _labels.getString("S11") , false);
+					
+					if(qDat._answer && qDat._tape.length() > 0)
+					{
+						_recorder.stop();
+					}
+					else
+					{
+						_recorder.stop();
+						qDat._tape = _recorder.save();
+						qDat._answer = ans;
+						qDat.saveToProperties(_questionDataProps);
+					}
+					
 					
 					if(!askAgain)
 					{
@@ -77,6 +134,21 @@ public class Asker
 		{
 			_uc.reportError(e.getMessage());
 			overallAns = false;
+		}
+		
+		try
+		{
+			_questionDataProps.store( new FileOutputStream(_questionDataPropsFile) , "");
+		}
+		catch (FileNotFoundException e)
+		{
+			_uc.reportError("Could not save question-data due to FileNotFoundException.");	//TODO move to properties (?)
+			e.printStackTrace();
+		}
+		catch (IOException e)
+		{
+			_uc.reportError("Could not save question-data due to IOException.");	//TODO move to properties (?)
+			e.printStackTrace();
 		}
 		
 		return overallAns;
