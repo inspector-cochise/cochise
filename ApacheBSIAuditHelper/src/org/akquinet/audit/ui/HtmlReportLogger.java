@@ -49,6 +49,9 @@ public class HtmlReportLogger
 	private HtmlTagPair createHeadTag()
 	{
 		HtmlTagPair head = new HtmlTagPair("head");
+
+		HtmlTagPair meta = new HtmlTagPair("meta");
+		meta.addAttribute("charset", System.getProperty("file.encoding"));
 		
 		HtmlTagPair title = new HtmlTagPair("title");
 		title.addContent(new HtmlText("Cochise audit report"));
@@ -62,6 +65,7 @@ public class HtmlReportLogger
 		javascript.addAttribute("language", "javascript");
 		javascript.addAttribute("src", "./html/script.js");
 		
+		head.addContent(meta);
 		head.addContent(title);
 		head.addContent(css);
 		head.addContent(javascript);
