@@ -45,10 +45,13 @@ public class Quest5a implements YesNoQuestion
 		if(!incList.isEmpty())
 		{
 			_uc.printAnswer(false, _labels.getString("S1_bad") );
+			StringBuffer buf = new StringBuffer();
 			for (Directive directive : incList)
 			{
-				_uc.println( directive.getContainingFile() + ":" + directive.getLinenumber() + ": " + directive.getName() + " " + directive.getValue());
+				buf.append( directive.getContainingFile() + ":" + directive.getLinenumber() + ": " + directive.getName() + " " + directive.getValue() + "\n");
 			}
+			buf.deleteCharAt(buf.length()-1);
+			_uc.printExample(buf.toString());
 			return false;
 		}
 		else
