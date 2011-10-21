@@ -63,6 +63,7 @@ public class Quest6 implements YesNoQuestion
 				}
 				_uc.printExample(buf.toString());
 				
+				_uc.printParagraph( _labels.getString("S5") );
 				printExtraInfo();
 				return false;
 			}
