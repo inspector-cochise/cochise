@@ -46,17 +46,7 @@ public class Quest9Test
 					Quest9 SUT = new Quest9(new ConfigFile(malformedFile), executable.getAbsoluteFile().getParent() + File.separator, executable.getName(), _userNGroupsCommand, _apacheExecutable, true);
 					System.setIn(new ByteArrayInputStream(stdIn.getBytes()));
 					
-					try
-					{
-						assertEquals(SUT.answer(), assertVal);
-					}
-					catch (RuntimeException e)
-					{
-						if (!serverRootNotSet && e.getMessage() != null && e.getMessage().endsWith(Quest9.SERVER_ROOT_NOT_SET))
-						{
-							throw e;
-						}
-					}
+					assertEquals(SUT.answer(), assertVal);
 					
 					System.setIn(stdInStream);
 				}
