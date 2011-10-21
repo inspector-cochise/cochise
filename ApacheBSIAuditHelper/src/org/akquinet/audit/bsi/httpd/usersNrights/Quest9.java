@@ -61,14 +61,13 @@ public class Quest9 implements YesNoQuestion
 		
 		_uc.println( _labels.getString("L1") );
 		
-		try
+		if(_serverRoot == null || _serverRoot == "")
 		{
-			_uc.printExample(_serverRoot);
+			_uc.printAnswer(false, _labels.getString("E1") );
+			return false;
 		}
-		catch(NullPointerException e)
-		{
-			throw new RuntimeException(SERVER_ROOT_NOT_SET, e);
-		}
+
+		_uc.printExample(_serverRoot);
 		
 		boolean ret = false;
 		if(_serverRoot != null)
