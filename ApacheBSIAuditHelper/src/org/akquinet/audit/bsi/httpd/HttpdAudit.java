@@ -28,6 +28,7 @@ public class HttpdAudit
 	enum OperatingSystem
 	{
 		Ubuntu,
+		Debian,
 		SUSE,
 		RedHat,
 		UNKNOWN
@@ -46,6 +47,7 @@ public class HttpdAudit
 		
 		switch(getOperatingSystem())
 		{
+		case Debian:
 		case Ubuntu:
 			apacheExec = "/usr/sbin/apache2";
 			apacheConf = "/etc/apache2/apache2.conf";
@@ -195,6 +197,8 @@ public class HttpdAudit
 				return OperatingSystem.SUSE;
 			case 30:
 				return OperatingSystem.RedHat;
+			case 40:
+				return OperatingSystem.Debian;
 			case 0:
 			default:
 				return OperatingSystem.UNKNOWN;
