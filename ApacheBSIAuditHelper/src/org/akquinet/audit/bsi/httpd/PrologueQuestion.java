@@ -2,15 +2,18 @@ package org.akquinet.audit.bsi.httpd;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
+import org.akquinet.audit.ShellAnsweredQuestion;
 import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
 
 public class PrologueQuestion implements YesNoQuestion
 {
+	private static final String GET_DEFAULT_SRV_ROOT_COMMAND = "./srvRoot.sh";
 	private static final String _id = "Prologue";
 	private static final UserCommunicator _uc = UserCommunicator.getDefault();
 	private PrologueData _pD;
@@ -61,7 +64,8 @@ public class PrologueQuestion implements YesNoQuestion
 		}
 		try
 		{
-			_pD._conf = new ConfigFile(_pD._configFile);
+			String defaultServerRoot = getDefaultServerRoot(_pD._apacheExec);
+			_pD._conf = new ConfigFile(_pD._configFile, defaultServerRoot);
 		}
 		catch(RuntimeException e)
 		{
@@ -89,6 +93,35 @@ public class PrologueQuestion implements YesNoQuestion
 		
 		
 		return true;
+	}
+
+	private String getDefaultServerRoot(String apacheExec)
+	{
+		ShellAnsweredQuestion q = new ShellAnsweredQuestion(GET_DEFAULT_SRV_ROOT_COMMAND, apacheExec);
+		q.answer();
+		try
+		{
+			int c = q.getStdOut().read();
+			StringBuffer buf = new StringBuffer();
+			while(c != -1)
+			{
+				buf.append((char)c);
+				c = q.getStdOut().read();
+			}
+			if(buf.charAt(buf.length()-1) == '\n')
+			{
+				return buf.substring(0, buf.length()-1);
+			}
+			else
+			{
+				return buf.toString();
+			}
+		}
+		catch (IOException e)
+		{
+			//getting the default server's root may be vital for the application
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Override
