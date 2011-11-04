@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.util.List;
 
 import org.akquinet.httpd.ConfigFile;
+import org.akquinet.httpd.ParserException;
 import org.akquinet.httpd.syntax.Directive;
 
 public class ModuleHelper
@@ -84,7 +85,11 @@ public class ModuleHelper
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+		catch (ParserException e)
+		{
+			throw new RuntimeException(e);
 		}
 	}
 }

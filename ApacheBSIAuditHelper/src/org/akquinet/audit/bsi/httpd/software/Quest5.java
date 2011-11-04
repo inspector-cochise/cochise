@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
+import org.akquinet.httpd.ParserException;
 
 public class Quest5 implements YesNoQuestion
 {
@@ -43,7 +44,11 @@ public class Quest5 implements YesNoQuestion
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+		catch (ParserException e)
+		{
+			throw new RuntimeException(e);
 		}
 		
 		_uc.println( _labels.getString("L1") );

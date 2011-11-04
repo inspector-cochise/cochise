@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
+import org.akquinet.httpd.ParserException;
 import org.akquinet.httpd.syntax.Directive;
 
 public class Quest5a implements YesNoQuestion
@@ -37,7 +38,11 @@ public class Quest5a implements YesNoQuestion
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+		catch (ParserException e)
+		{
+			throw new RuntimeException(e);
 		}
 		
 		List<Directive> incList = _conf.getAllDirectivesIgnoreCase("Include");

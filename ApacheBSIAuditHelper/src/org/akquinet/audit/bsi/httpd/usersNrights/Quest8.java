@@ -11,9 +11,9 @@ import org.akquinet.audit.ShellAnsweredQuestion;
 import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
+import org.akquinet.httpd.ParserException;
 import org.akquinet.httpd.syntax.Directive;
 import org.akquinet.httpd.syntax.StatementList;
-import org.akquinet.httpd.syntax.StatementList.ServerRootNotSetException;
 
 public class Quest8 implements YesNoQuestion
 {
@@ -56,7 +56,11 @@ public class Quest8 implements YesNoQuestion
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+		catch (ParserException e)
+		{
+			throw new RuntimeException(e);
 		}
 		
 		try
@@ -93,7 +97,7 @@ public class Quest8 implements YesNoQuestion
 			
 			return ret;
 		}
-		catch (StatementList.ServerRootNotSetException e)
+		catch (ParserException e)
 		{
 			UserCommunicator.getDefault().reportError(e.getMessage());
 			return false;
@@ -110,7 +114,7 @@ public class Quest8 implements YesNoQuestion
 		return new ShellAnsweredQuestion(_commandPath + _command, file.getCanonicalPath(), permissionPattern);
 	}
 
-	private Set<File> lookForProblems(String permissionPattern) throws IOException, ServerRootNotSetException
+	private Set<File> lookForProblems(String permissionPattern) throws IOException, ParserException
 	{
 		Set<File> problems = new HashSet<File>();
 		

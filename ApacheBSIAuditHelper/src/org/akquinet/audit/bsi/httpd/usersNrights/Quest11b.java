@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
+import org.akquinet.httpd.ParserException;
 import org.akquinet.httpd.syntax.Context;
 import org.akquinet.httpd.syntax.Directive;
 import org.akquinet.httpd.syntax.Statement;
@@ -39,7 +40,11 @@ public class Quest11b implements YesNoQuestion
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+		catch (ParserException e)
+		{
+			throw new RuntimeException(e);
 		}
 		
 		//first of all let's ensure, there are no "hidden" order/allow/deny directives like in

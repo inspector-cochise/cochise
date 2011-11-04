@@ -2,7 +2,6 @@ package org.akquinet.audit.bsi.httpd;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
@@ -10,6 +9,7 @@ import org.akquinet.audit.ShellAnsweredQuestion;
 import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
+import org.akquinet.httpd.ParserException;
 
 public class PrologueQuestion implements YesNoQuestion
 {
@@ -75,6 +75,12 @@ public class PrologueQuestion implements YesNoQuestion
 			System.exit(1);
 		}
 		catch (IOException e)
+		{
+			_uc.reportError(e.getMessage());
+			e.printStackTrace();
+			System.exit(1);
+		}
+		catch (ParserException e)
 		{
 			_uc.reportError(e.getMessage());
 			e.printStackTrace();
