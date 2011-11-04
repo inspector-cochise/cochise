@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.akquinet.httpd.ConfigFile;
+import org.akquinet.httpd.ParserException;
 import org.junit.Test;
 
 public class Quest12Test
@@ -31,63 +32,39 @@ public class Quest12Test
 	private static final String _apacheExecutable = "apache2";
 
 	@Test
-	public final void test_a0_b0() throws Throwable
+	public final void test_a0_b0() throws IOException, ParserException
 	{
-		try
-		{
-			InputStream stdin = System.in;
-			Quest12 SUT = new Quest12(new ConfigFile(_a0), _scriptPath, _failScript, _getUserNGroup, _apacheExecutable);
-			System.setIn(new ByteArrayInputStream("No\n".getBytes()));
-			
-			assertFalse(SUT.answer());
-			System.setIn(stdin);
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-			fail("Caught IOException...");
-		}
+		InputStream stdin = System.in;
+		Quest12 SUT = new Quest12(new ConfigFile(_a0), _scriptPath, _failScript, _getUserNGroup, _apacheExecutable);
+		System.setIn(new ByteArrayInputStream("No\n".getBytes()));
+		
+		assertFalse(SUT.answer());
+		System.setIn(stdin);
 	}
 	
 	@Test
-	public final void test_a0_b1() throws Throwable
+	public final void test_a0_b1() throws IOException, ParserException
 	{
-		try
-		{
-			Quest12 SUT = new Quest12(new ConfigFile(_a0), _scriptPath, _emptyScript, _getUserNGroup, _apacheExecutable);
-			assertTrue(SUT.answer());
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-			fail("Caught IOException...");
-		}
+		Quest12 SUT = new Quest12(new ConfigFile(_a0), _scriptPath, _emptyScript, _getUserNGroup, _apacheExecutable);
+		assertTrue(SUT.answer());
 	}
 	
 	@Test
-	public final void test_a1() throws Throwable
+	public final void test_a1() throws IOException, ParserException
 	{
-		try
-		{
-			Quest12 SUT = new Quest12(new ConfigFile(_a1), _scriptPath, _emptyScript, _getUserNGroup, _apacheExecutable);
-			assertTrue(SUT.answer());
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-			fail("Caught IOException...");
-		}
+		Quest12 SUT = new Quest12(new ConfigFile(_a1), _scriptPath, _emptyScript, _getUserNGroup, _apacheExecutable);
+		assertTrue(SUT.answer());
 	}
 	
 	@Test
-	public final void testGetID() throws IOException
+	public final void testGetID() throws IOException, ParserException
 	{
 		Quest12 SUT = new Quest12(new ConfigFile(_someConfig), _apacheExecutable);
 		assertTrue(SUT.getID().equals("Quest12"));
 	}
 
 	@Test
-	public final void testIsCritical() throws IOException
+	public final void testIsCritical() throws IOException, ParserException
 	{
 		Quest12 SUT = new Quest12(new ConfigFile(_someConfig), _apacheExecutable);
 		assertFalse(SUT.isCritical());

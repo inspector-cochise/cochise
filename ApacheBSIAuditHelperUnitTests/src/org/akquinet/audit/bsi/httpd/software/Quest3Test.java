@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.akquinet.httpd.ConfigFile;
+import org.akquinet.httpd.ParserException;
 import org.junit.Test;
 
 public class Quest3Test
@@ -34,7 +35,7 @@ public class Quest3Test
 	private static final File _emptyConfig = new File(_userDir + "/testFiles/Quest3/empty.conf"); 
 
 	@Test
-	public final void testNegativeTrivial_File() throws IOException
+	public final void testNegativeTrivial_File() throws IOException, ParserException
 	{
 		System.out.println((new File(_userDir)).getCanonicalPath());
 		Quest3 SUT = new Quest3(new ConfigFile(_negativeTrivial), _emptyExec);
@@ -42,35 +43,35 @@ public class Quest3Test
 	}
 	
 	@Test
-	public final void testNegativeSimilar_File() throws IOException
+	public final void testNegativeSimilar_File() throws IOException, ParserException
 	{
 		Quest3 SUT = new Quest3(new ConfigFile(_negativeSimilar), _emptyExec);
 		assertFalse(SUT.answer());
 	}
 	
 	@Test
-	public final void testNegativeMalformed_File() throws IOException
+	public final void testNegativeMalformed_File() throws IOException, ParserException
 	{
 		Quest3 SUT = new Quest3(new ConfigFile(_negativeMalformed), _emptyExec);
 		assertFalse(SUT.answer());
 	}
 	
 	@Test
-	public final void testNegativeConditionally_File() throws IOException
+	public final void testNegativeConditionally_File() throws IOException, ParserException
 	{
 		Quest3 SUT = new Quest3(new ConfigFile(_negativeConditionally), _emptyExec);
 		assertFalse(SUT.answer());
 	}
 	
 	@Test
-	public final void testPositiveTrivial_File() throws IOException
+	public final void testPositiveTrivial_File() throws IOException, ParserException
 	{
 		Quest3 SUT = new Quest3(new ConfigFile(_positiveTrivial), _emptyExec);
 		assertTrue(SUT.answer());
 	}
 	
 	@Test
-	public final void testPositiveMalformed_File() throws IOException
+	public final void testPositiveMalformed_File() throws IOException, ParserException
 	{
 		Quest3 SUT = new Quest3(new ConfigFile(_positiveMalformed), _emptyExec);
 		assertTrue(SUT.answer());
@@ -82,35 +83,35 @@ public class Quest3Test
 	
 	
 	@Test
-	public final void testNegativeTrivial_Exec() throws IOException, SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
+	public final void testNegativeTrivial_Exec() throws IOException, SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, ParserException
 	{
 		Quest3 SUT = new Quest3(new ConfigFile(_emptyConfig), _negativeTrivialExec);
 		assertFalse(SUT.answer());
 	}
 	
 	@Test
-	public final void testNegativeSimilar_Exec() throws IOException
+	public final void testNegativeSimilar_Exec() throws IOException, ParserException
 	{
 		Quest3 SUT = new Quest3(new ConfigFile(_emptyConfig), _negativeSimilarExec);
 		assertFalse(SUT.answer());
 	}
 	
 	@Test
-	public final void testNegativeMalformed_Exec() throws IOException
+	public final void testNegativeMalformed_Exec() throws IOException, ParserException
 	{
 		Quest3 SUT = new Quest3(new ConfigFile(_emptyConfig), _negativeMalformedExec);
 		assertFalse(SUT.answer());
 	}
 
 	@Test
-	public final void testPositiveTrivial_Exec() throws IOException
+	public final void testPositiveTrivial_Exec() throws IOException, ParserException
 	{
 		Quest3 SUT = new Quest3(new ConfigFile(_emptyConfig), _positiveTrivialExec);
 		assertTrue(SUT.answer());
 	}
 	
 	@Test
-	public final void testPositiveMalformed_Exec() throws IOException
+	public final void testPositiveMalformed_Exec() throws IOException, ParserException
 	{
 		Quest3 SUT = new Quest3(new ConfigFile(_emptyConfig), _positiveMalformedExec);
 		assertTrue(SUT.answer());
@@ -120,14 +121,14 @@ public class Quest3Test
 	
 	
 	@Test
-	public final void testGetID() throws IOException
+	public final void testGetID() throws IOException, ParserException
 	{
 		Quest3 SUT = new Quest3(new ConfigFile(_emptyConfig), _emptyExec);
 		assertTrue(SUT.getID().equals("Quest3"));
 	}
 	
 	@Test
-	public final void testIsCritical() throws IOException
+	public final void testIsCritical() throws IOException, ParserException
 	{
 		Quest3 SUT = new Quest3(new ConfigFile(_emptyConfig), _emptyExec);
 		assertFalse(SUT.isCritical());

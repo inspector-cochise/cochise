@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.akquinet.httpd.ConfigFile;
+import org.akquinet.httpd.ParserException;
 import org.junit.Test;
 
 public class Quest5bTest
@@ -23,49 +24,49 @@ public class Quest5bTest
 	private static final File _someConfig = _negativeTrivial;
 
 	@Test
-	public final void testNegativeTrivial() throws IOException
+	public final void testNegativeTrivial() throws IOException, ParserException
 	{
 		Quest5b SUT = new Quest5b(new ConfigFile(_negativeTrivial));
 		assertFalse(SUT.answer());
 	}
 	
 	@Test
-	public final void testNegativeConditional() throws IOException
+	public final void testNegativeConditional() throws IOException, ParserException
 	{
 		Quest5b SUT = new Quest5b(new ConfigFile(_negativeConditional));
 		assertFalse(SUT.answer());
 	}
 	
 	@Test
-	public final void testNegativeMalformed() throws IOException
+	public final void testNegativeMalformed() throws IOException, ParserException
 	{
 		Quest5b SUT = new Quest5b(new ConfigFile(_negativeMalformed));
 		assertFalse(SUT.answer());
 	}
 	
 	@Test
-	public final void testPositiveTrivial1() throws IOException
+	public final void testPositiveTrivial1() throws IOException, ParserException
 	{
 		Quest5b SUT = new Quest5b(new ConfigFile(_positiveTrivial1));
 		assertTrue(SUT.answer());
 	}
 	
 	@Test
-	public final void testPositiveTrivial2() throws IOException
+	public final void testPositiveTrivial2() throws IOException, ParserException
 	{
 		Quest5b SUT = new Quest5b(new ConfigFile(_positiveTrivial2));
 		assertTrue(SUT.answer());
 	}
 
 	@Test
-	public final void testGetID() throws IOException
+	public final void testGetID() throws IOException, ParserException
 	{
 		Quest5b SUT = new Quest5b(new ConfigFile(_someConfig));
 		assertTrue(SUT.getID().equals("Quest5b"));
 	}
 
 	@Test
-	public final void testIsCritical() throws IOException
+	public final void testIsCritical() throws IOException, ParserException
 	{
 		Quest5b SUT = new Quest5b(new ConfigFile(_someConfig));
 		assertFalse(SUT.isCritical());

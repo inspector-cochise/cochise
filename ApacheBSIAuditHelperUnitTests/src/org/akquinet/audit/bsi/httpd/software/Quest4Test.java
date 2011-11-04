@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.akquinet.httpd.ConfigFile;
+import org.akquinet.httpd.ParserException;
 import org.junit.Test;
 
 public class Quest4Test
@@ -22,7 +23,7 @@ public class Quest4Test
 	private static final File _someConfig = _trivial;
 
 	@Test
-	public final void testCorrectAnswer() throws IOException
+	public final void testCorrectAnswer() throws IOException, ParserException
 	{
 		InputStream stdin = System.in;
 		Quest4 SUT = new Quest4(new ConfigFile(_trivial), _emptyExec);
@@ -41,14 +42,14 @@ public class Quest4Test
 	
 
 	@Test
-	public final void testGetID() throws IOException
+	public final void testGetID() throws IOException, ParserException
 	{
 		Quest4 SUT = new Quest4(new ConfigFile(_someConfig), _emptyExec);
 		assertTrue(SUT.getID().equals("Quest4"));
 	}
 
 	@Test
-	public final void testIsCritical() throws IOException
+	public final void testIsCritical() throws IOException, ParserException
 	{
 		Quest4 SUT = new Quest4(new ConfigFile(_someConfig), _emptyExec);
 		assertFalse(SUT.isCritical());

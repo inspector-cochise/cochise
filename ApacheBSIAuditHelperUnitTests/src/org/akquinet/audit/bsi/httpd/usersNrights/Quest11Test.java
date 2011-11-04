@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.akquinet.httpd.ConfigFile;
+import org.akquinet.httpd.ParserException;
 import org.akquinet.test.util.RethrowingThread;
 import org.junit.Test;
 
@@ -44,6 +45,11 @@ public class Quest11Test
 				{
 					e.printStackTrace();
 					fail("Caught IOException...");
+				}
+				catch (ParserException e)
+				{
+					e.printStackTrace();
+					fail("Caught ParserException...");
 				}
 			}
 		};
@@ -82,6 +88,11 @@ public class Quest11Test
 					e.printStackTrace();
 					fail("Caught IOException...");
 				}
+				catch (ParserException e)
+				{
+					e.printStackTrace();
+					fail("Caught ParserException...");
+				}
 			}
 		};
 		
@@ -116,6 +127,11 @@ public class Quest11Test
 					e.printStackTrace();
 					fail("Caught IOException...");
 				}
+				catch (ParserException e)
+				{
+					e.printStackTrace();
+					fail("Caught ParserException...");
+				}
 			}
 		};
 		
@@ -132,14 +148,14 @@ public class Quest11Test
 	}
 
 	@Test
-	public final void testGetID() throws IOException
+	public final void testGetID() throws IOException, ParserException
 	{
 		Quest11 SUT = new Quest11(new ConfigFile(_someConfig));
 		assertTrue(SUT.getID().equals("Quest11"));
 	}
 
 	@Test
-	public final void testIsCritical() throws IOException
+	public final void testIsCritical() throws IOException, ParserException
 	{
 		Quest11 SUT = new Quest11(new ConfigFile(_someConfig));
 		assertFalse(SUT.isCritical());

@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.akquinet.httpd.ConfigFile;
+import org.akquinet.httpd.ParserException;
 import org.junit.Test;
 
 public class Quest10Test
@@ -22,35 +23,35 @@ public class Quest10Test
 	private static final String _failScript =  "failScript.bat";
 	
 	@Test
-	public final void testNegativeTrivial() throws IOException
+	public final void testNegativeTrivial() throws IOException, ParserException
 	{
 		Quest10 SUT = new Quest10(new ConfigFile(_someConfig), _commandPath, _failScript);
 		assertFalse(SUT.answer());
 	}
 	
 	@Test
-	public final void testPositiveTrivial() throws IOException
+	public final void testPositiveTrivial() throws IOException, ParserException
 	{
 		Quest10 SUT = new Quest10(new ConfigFile(_someConfig), _commandPath, _emptyScript);
 		assertTrue(SUT.answer());
 	}
 	
 	@Test
-	public final void testPositiveEmptyConf() throws IOException
+	public final void testPositiveEmptyConf() throws IOException, ParserException
 	{
 		Quest10 SUT = new Quest10(new ConfigFile(_emptyConfig), _commandPath, _failScript);
 		assertTrue(SUT.answer());
 	}
 	
 	@Test
-	public final void testGetID() throws IOException
+	public final void testGetID() throws IOException, ParserException
 	{
 		Quest10 SUT = new Quest10(new ConfigFile(_someConfig));
 		assertTrue(SUT.getID().equals("Quest10"));
 	}
 
 	@Test
-	public final void testIsCritical() throws IOException
+	public final void testIsCritical() throws IOException, ParserException
 	{
 		Quest10 SUT = new Quest10(new ConfigFile(_someConfig));
 		assertFalse(SUT.isCritical());

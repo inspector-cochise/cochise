@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.akquinet.httpd.ConfigFile;
+import org.akquinet.httpd.ParserException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -21,7 +22,7 @@ public class Quest8Test
 	private static ConfigFile _conf = null;
 	
 	@Before
-	public final void setUp() throws IOException
+	public final void setUp() throws IOException, ParserException
 	{
 		_conf = new ConfigFile(_userDir + "/testFiles/Quest8/emptyConf.conf");
 	}

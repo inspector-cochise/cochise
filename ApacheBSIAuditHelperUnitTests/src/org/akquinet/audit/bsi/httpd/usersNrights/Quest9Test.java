@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.akquinet.httpd.ConfigFile;
+import org.akquinet.httpd.ParserException;
 import org.akquinet.test.util.RethrowingThread;
 import org.junit.Test;
 
@@ -50,7 +51,7 @@ public class Quest9Test
 					
 					System.setIn(stdInStream);
 				}
-				catch (IOException e)
+				catch (Exception e)
 				{
 					throw new RuntimeException(e);
 				}
@@ -106,14 +107,14 @@ public class Quest9Test
 	}
 	
 	@Test
-	public final void testGetID() throws IOException
+	public final void testGetID() throws IOException, ParserException
 	{
 		Quest9 SUT = new Quest9(new ConfigFile(_someConfig), _apacheExecutable, true);
 		assertTrue(SUT.getID().equals("Quest9"));
 	}
 
 	@Test
-	public final void testIsCritical() throws IOException
+	public final void testIsCritical() throws IOException, ParserException
 	{
 		Quest9 SUT = new Quest9(new ConfigFile(_someConfig), _apacheExecutable, true);
 		assertFalse(SUT.isCritical());

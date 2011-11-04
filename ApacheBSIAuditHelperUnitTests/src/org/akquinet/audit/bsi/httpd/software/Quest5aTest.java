@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.akquinet.httpd.ConfigFile;
+import org.akquinet.httpd.ParserException;
 import org.junit.Test;
 
 public class Quest5aTest
@@ -19,35 +20,35 @@ public class Quest5aTest
 	private static final File _someConfig = _negativeTrivial;
 
 	@Test
-	public final void testNegativeTrivial() throws IOException
+	public final void testNegativeTrivial() throws IOException, ParserException
 	{
 		Quest5a SUT = new Quest5a(new ConfigFile(_negativeTrivial));
 		assertFalse(SUT.answer());
 	}
 	
 	@Test
-	public final void testNegativeConditional() throws IOException
+	public final void testNegativeConditional() throws IOException, ParserException
 	{
 		Quest5a SUT = new Quest5a(new ConfigFile(_negativeConditional));
 		assertFalse(SUT.answer());
 	}
 	
 	@Test
-	public final void testPositiveTrivial() throws IOException
+	public final void testPositiveTrivial() throws IOException, ParserException
 	{
 		Quest5a SUT = new Quest5a(new ConfigFile(_positiveTrivial));
 		assertTrue(SUT.answer());
 	}
 
 	@Test
-	public final void testGetID() throws IOException
+	public final void testGetID() throws IOException, ParserException
 	{
 		Quest5a SUT = new Quest5a(new ConfigFile(_someConfig));
 		assertTrue(SUT.getID().equals("Quest5a"));
 	}
 
 	@Test
-	public final void testIsCritical() throws IOException
+	public final void testIsCritical() throws IOException, ParserException
 	{
 		Quest5a SUT = new Quest5a(new ConfigFile(_someConfig));
 		assertFalse(SUT.isCritical());

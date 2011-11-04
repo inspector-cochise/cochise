@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.akquinet.httpd.ConfigFile;
+import org.akquinet.httpd.ParserException;
 import org.junit.Test;
 
 public class Quest12bTest
@@ -22,49 +23,49 @@ public class Quest12bTest
 	private static final File _someConfig = _negativeTrivial;
 
 	@Test
-	public final void testNegativeTrivial() throws IOException
+	public final void testNegativeTrivial() throws IOException, ParserException
 	{
 		Quest12b SUT = new Quest12b(new ConfigFile(_negativeTrivial), _userDir + "/testFiles/", "emptyScript.bat");
 		assertFalse(SUT.answer());
 	}
 	
 	@Test
-	public final void testNegativePartial1() throws IOException
+	public final void testNegativePartial1() throws IOException, ParserException
 	{
 		Quest12b SUT = new Quest12b(new ConfigFile(_negativePartial1), _userDir + "/testFiles/", "emptyScript.bat");
 		assertFalse(SUT.answer());
 	}
 	
 	@Test
-	public final void testNegativePartial2() throws IOException
+	public final void testNegativePartial2() throws IOException, ParserException
 	{
 		Quest12b SUT = new Quest12b(new ConfigFile(_negativePartial2), _userDir + "/testFiles/", "emptyScript.bat");
 		assertFalse(SUT.answer());
 	}
 	
 	@Test
-	public final void testNegativeExec() throws IOException
+	public final void testNegativeExec() throws IOException, ParserException
 	{
 		Quest12b SUT = new Quest12b(new ConfigFile(_positiveTrivial), _userDir + "/testFiles/", "failScript.bat");
 		assertFalse(SUT.answer());
 	}
 	
 	@Test
-	public final void testPositiveTrivial() throws IOException
+	public final void testPositiveTrivial() throws IOException, ParserException
 	{
 		Quest12b SUT = new Quest12b(new ConfigFile(_positiveTrivial), _userDir + "/testFiles/", "emptyScript.bat");
 		assertTrue(SUT.answer());
 	}
 	
 	@Test
-	public final void testGetID() throws IOException
+	public final void testGetID() throws IOException, ParserException
 	{
 		Quest12b SUT = new Quest12b(new ConfigFile(_someConfig));
 		assertTrue(SUT.getID().equals("Quest12b"));
 	}
 
 	@Test
-	public final void testIsCritical() throws IOException
+	public final void testIsCritical() throws IOException, ParserException
 	{
 		Quest12b SUT = new Quest12b(new ConfigFile(_someConfig));
 		assertFalse(SUT.isCritical());

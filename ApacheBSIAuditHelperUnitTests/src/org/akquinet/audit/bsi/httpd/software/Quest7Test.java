@@ -13,6 +13,7 @@ import java.io.InputStream;
 import java.io.PrintStream;
 
 import org.akquinet.httpd.ConfigFile;
+import org.akquinet.httpd.ParserException;
 import org.akquinet.test.util.RethrowingThread;
 import org.junit.Test;
 
@@ -31,7 +32,7 @@ public class Quest7Test
 	private static final File _someConfig = _negativeTrivial;
 
 	@Test
-	public final void testNegativeTrivial() throws IOException
+	public final void testNegativeTrivial() throws IOException, ParserException
 	{
 		InputStream stdin = System.in;
 		Quest7 SUT = new Quest7(new ConfigFile(_negativeTrivial));
@@ -43,7 +44,7 @@ public class Quest7Test
 	}
 	
 	@Test
-	public final void testNegativeConditional() throws IOException
+	public final void testNegativeConditional() throws IOException, ParserException
 	{
 		InputStream stdin = System.in;
 		Quest7 SUT = new Quest7(new ConfigFile(_negativeConditional));
@@ -75,6 +76,11 @@ public class Quest7Test
 					e.printStackTrace();
 					fail("Caught IOException...");
 				}
+				catch (ParserException e)
+				{
+					e.printStackTrace();
+					fail("Caught ParserException...");
+				}
 			}
 		};
 		
@@ -91,7 +97,7 @@ public class Quest7Test
 	}
 	
 	@Test
-	public final void testPositiveOthers() throws IOException
+	public final void testPositiveOthers() throws IOException, ParserException
 	{
 		InputStream stdin = System.in;
 		Quest7 SUT = new Quest7(new ConfigFile(_positiveOthers));
@@ -103,7 +109,7 @@ public class Quest7Test
 	}
 	
 	@Test
-	public final void testCorrectListing() throws IOException
+	public final void testCorrectListing() throws IOException, ParserException
 	{
 		InputStream stdin = System.in;
 		PrintStream stdout = System.out;
@@ -140,14 +146,14 @@ public class Quest7Test
 	}
 	
 	@Test
-	public final void testGetID() throws IOException
+	public final void testGetID() throws IOException, ParserException
 	{
 		Quest7 SUT = new Quest7(new ConfigFile(_someConfig));
 		assertTrue(SUT.getID().equals("Quest7"));
 	}
 
 	@Test
-	public final void testIsCritical() throws IOException
+	public final void testIsCritical() throws IOException, ParserException
 	{
 		Quest7 SUT = new Quest7(new ConfigFile(_someConfig));
 		assertFalse(SUT.isCritical());
