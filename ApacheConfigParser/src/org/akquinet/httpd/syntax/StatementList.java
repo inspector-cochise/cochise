@@ -44,7 +44,7 @@ public class StatementList extends SyntaxElement
 
 	protected void parse() throws ParserException
 	{
-		while (true)
+		while (available())
 		{
 			eatBlanks();
 			switch (getActualChar())
