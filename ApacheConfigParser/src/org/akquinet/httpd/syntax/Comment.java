@@ -18,10 +18,6 @@ public class Comment extends Statement
 	
 	protected void parse() throws ParserException
 	{
-		if(getActualChar() != '#')
-		{
-			throw new RuntimeException("Internal error while Parsing apache config file.");
-		}
 		try
 		{
 			eatRestOfLine();
