@@ -265,14 +265,20 @@ public class FormattedConsole
 	{
 		return str.equalsIgnoreCase( _labels.getString("S7_yes1") )
 			|| str.equalsIgnoreCase( _labels.getString("S7_yes2") )
-			|| str.equalsIgnoreCase( _labels.getString("S7_yes3") );
+			|| str.equalsIgnoreCase( _labels.getString("S7_yes3") )
+			|| str.equalsIgnoreCase( _labels.getString("S7_yes4") )
+			|| str.equalsIgnoreCase( _labels.getString("S7_yes5") )
+			|| str.equalsIgnoreCase( _labels.getString("S7_yes6") );
 	}
 
 	private boolean isNo(String str)
 	{
 		return str.equalsIgnoreCase( _labels.getString("S7_no1") )
 			|| str.equalsIgnoreCase( _labels.getString("S7_no2") )
-			|| str.equalsIgnoreCase( _labels.getString("S7_no3") );
+			|| str.equalsIgnoreCase( _labels.getString("S7_no3") )
+			|| str.equalsIgnoreCase( _labels.getString("S7_no4") )
+			|| str.equalsIgnoreCase( _labels.getString("S7_no5") )
+			|| str.equalsIgnoreCase( _labels.getString("S7_no6") );
 	}
 	
 	public String wrapString(String text, OutputLevel level)
