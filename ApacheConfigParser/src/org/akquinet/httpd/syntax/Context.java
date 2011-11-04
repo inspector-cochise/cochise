@@ -95,12 +95,12 @@ public class Context extends Statement
 	{
 		if (getActualChar() != '<')
 		{
-			throw new RuntimeException("Syntax Error. Expecting closing block for " + _name + " in line " + getActualLine() + ".");
+			throw new BadSyntaxException("Syntax Error. Expecting closing block for " + _name + " in line " + getActualLine() + ".");
 		}
 		readNextChar();
 		if (getActualChar() != '/')
 		{
-			throw new RuntimeException("Syntax Error. Expecting closing block for " + _name + " in line " + getActualLine() + ".");
+			throw new BadSyntaxException("Syntax Error. Expecting closing block for " + _name + " in line " + getActualLine() + ".");
 		}
 		readNextChar();
 	}
@@ -109,7 +109,7 @@ public class Context extends Statement
 	{
 		if (getActualChar() != '>')
 		{
-			throw new RuntimeException("Syntax Error. Missing '>' in line " + getActualLine() + ".");
+			throw new BadSyntaxException("Syntax Error. Missing '>' in line " + getActualLine() + ".");
 		}
 		readNextChar();
 	}
@@ -133,7 +133,7 @@ public class Context extends Statement
 		}
 		else
 		{
-			throw new RuntimeException("Syntax Error. Newline Expected after '>' .");
+			throw new BadSyntaxException("Syntax Error. Newline Expected after '>' .");
 		}
 	}
 	
