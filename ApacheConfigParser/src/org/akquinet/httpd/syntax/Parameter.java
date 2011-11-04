@@ -1,5 +1,6 @@
 package org.akquinet.httpd.syntax;
 
+import org.akquinet.httpd.BadSyntaxException;
 import org.akquinet.httpd.ParserException;
 
 public class Parameter extends SyntaxElement
@@ -32,7 +33,7 @@ public class Parameter extends SyntaxElement
 			}
 			catch (FileEndException e)
 			{
-				throw new RuntimeException("Syntax Error. Unexpected end of file.");
+				throw new BadSyntaxException("Syntax Error. Unexpected end of file.");
 			}
 		}
 		reset();

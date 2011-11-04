@@ -128,7 +128,7 @@ public class StatementList extends SyntaxElement
 			}
 			catch (IOException e)
 			{
-				throw new RuntimeException(e);
+				throw new ParserException(e);
 			}
 			ret.addAll(conf.getHeadExpression().getStatements()._statements);
 		}
@@ -136,7 +136,7 @@ public class StatementList extends SyntaxElement
 		return ret;
 	}
 
-	public static List<File> filesToInclude(String serverRoot, String fnmatchPath) throws ServerRootNotSetException
+	public static List<File> filesToInclude(String serverRoot, String fnmatchPath) throws ParserException
 	{
 		if(!fnmatchPath.startsWith("/") && serverRoot == null)
 		{
@@ -147,7 +147,7 @@ public class StatementList extends SyntaxElement
 		return recursiveFilesToInclude(fnmatchPath.startsWith("/") ? new File("/") : new File(serverRoot), pathParts);
 	}
 
-	private static List<File> recursiveFilesToInclude(File prepend, String[] pathParts)
+	private static List<File> recursiveFilesToInclude(File prepend, String[] pathParts) throws ParserException
 	{
 		try
 		{
@@ -225,7 +225,7 @@ public class StatementList extends SyntaxElement
 		}
 		catch (IOException e)
 		{
-			throw new RuntimeException(e);
+			throw new ParserException(e);
 		}
 	}
 
