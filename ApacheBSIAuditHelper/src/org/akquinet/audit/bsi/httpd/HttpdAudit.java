@@ -1,7 +1,6 @@
 package org.akquinet.audit.bsi.httpd;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
