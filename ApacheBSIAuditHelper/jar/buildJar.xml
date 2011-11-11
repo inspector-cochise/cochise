@@ -5,6 +5,7 @@
 	
 	<property name="overallProject.dir" value="/home/immanuel/workspace-git/cochise"/>
 	<property name="mainProject.dir" value="${overallProject.dir}/ApacheBSIAuditHelper"/>
+	<property name="parserProject.dir" value="${overallProject.dir}/ApacheConfigParser"/>
 	<property name="testProject.dir" value="${overallProject.dir}/ApacheBSIAuditHelperUnitTests"/>
 	<property name="scriptProject.dir" value="${overallProject.dir}/ScriptedChecker"/>
 	
@@ -22,6 +23,8 @@
             <fileset dir="${mainProject.dir}/bin"/>
         	<fileset dir="${mainProject.dir}/src"/>
 			<fileset dir="${mainProject.dir}/properties"/>
+        	<fileset dir="${parserProject.dir}/bin"/>
+        	<fileset dir="${parserProject.dir}/src"/>
         	<fileset file="${overallProject.dir}/LICENSE"/>
 			<fileset file="${overallProject.dir}/README"/>
 			<fileset file="${overallProject.dir}/build.number"/>
@@ -45,6 +48,7 @@
 				<pathelement location="${mainProject.dir}/properties"/>
 				<pathelement location="${testProject.dir}/bin"/>
 				<pathelement location="${mainProject.dir}/bin"/>
+				<pathelement location="${parserProject.dir}/bin"/>
 				<pathelement location="${build.dir}/junit.jar"/>
 			</classpath>
 	
