@@ -138,13 +138,24 @@ public class StatementList extends SyntaxElement
 
 	public static List<File> filesToInclude(String serverRoot, String fnmatchPath) throws ParserException
 	{
-		if(!fnmatchPath.startsWith("/") && serverRoot == null)
+		String[] pathParts = fnmatchPath.split("/");
+		
+		if(fnmatchPath.startsWith("/"))
+		{
+			return recursiveFilesToInclude(new File("/"), pathParts);
+		}
+		else if(fnmatchPath.startsWith("."))
+		{
+			return recursiveFilesToInclude(new File("."), pathParts);
+		}
+		else if(serverRoot == null)
 		{
 			throw new ServerRootNotSetException();
 		}
-		String[] pathParts = fnmatchPath.split("/");
-		
-		return recursiveFilesToInclude(fnmatchPath.startsWith("/") ? new File("/") : new File(serverRoot), pathParts);
+		else
+		{
+			return recursiveFilesToInclude(new File(serverRoot), pathParts);
+		}
 	}
 
 	private static List<File> recursiveFilesToInclude(File prepend, String[] pathParts) throws ParserException
