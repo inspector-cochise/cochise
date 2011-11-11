@@ -74,7 +74,7 @@ public class Asker
 		}
 	}
 
-	public void addQuestions(YesNoQuestion[] questions) throws IOException
+	public void addQuestions(YesNoQuestion[] questions)
 	{
 		if(_questions == null)
 		{
