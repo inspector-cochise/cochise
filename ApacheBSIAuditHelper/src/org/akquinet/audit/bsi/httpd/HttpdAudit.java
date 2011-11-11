@@ -102,14 +102,15 @@ public class HttpdAudit
 			
 			printResumee(labels, uc, a.askQuestions());
 		}
-		catch (IOException e)
+		catch (Exception e)
 		{
 			UserCommunicator.getDefault().finishCommunication();
 			e.printStackTrace();
 		}
-		
-		
-		uc.finishCommunication();
+		finally
+		{
+			uc.finishCommunication();
+		}
 	}
 
 	private static void printResumee(ResourceBundle labels,
