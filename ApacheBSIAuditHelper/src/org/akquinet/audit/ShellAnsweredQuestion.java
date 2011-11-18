@@ -23,16 +23,26 @@ public class ShellAnsweredQuestion
 			Process p = _command.start();
 			_stdOut = p.getInputStream();
 			_stdErr = p.getErrorStream();
-			p.waitFor();
+
+			boolean wait = true;
+
+			while(wait)
+			{
+				try
+				{
+					p.waitFor();
+					wait = false;
+				}
+				catch (InterruptedException e)
+				{
+					Thread.currentThread().interrupt();
+				}
+			}
+			
 			retVal = p.exitValue();
 		}
 		catch (IOException e)
 		{
-			throw new RuntimeException(e);
-		}
-		catch (InterruptedException e)
-		{
-			//TODO check whether this is a good idea or better exception handling could be done
 			throw new RuntimeException(e);
 		}
 		return retVal == 0;
