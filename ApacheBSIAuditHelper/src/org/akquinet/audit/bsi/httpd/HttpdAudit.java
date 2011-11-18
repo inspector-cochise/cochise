@@ -143,12 +143,11 @@ public class HttpdAudit
 		{
 			File htmlReport = new File("./htmlReport.htm");
 			System.out.println( MessageFormat.format(labels.getString("L1_willSaveHTML"), htmlReport.getCanonicalPath()) );
-			//System.out.println("I will save a detailed and more readable report of this audit in " + htmlReport.getCanonicalPath() + " .");
 			UserCommunicator.setDefault(new UserCommunicator(htmlReport));
 		}
-		catch (Exception e) //shouldn't happen
+		catch (Exception e)
 		{
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 	}
 
