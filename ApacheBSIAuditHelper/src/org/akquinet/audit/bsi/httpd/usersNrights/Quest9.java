@@ -117,7 +117,6 @@ public class Quest9 implements YesNoQuestion
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
 	}

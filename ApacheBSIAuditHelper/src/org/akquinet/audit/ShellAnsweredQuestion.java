@@ -28,11 +28,12 @@ public class ShellAnsweredQuestion
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 		catch (InterruptedException e)
 		{
-			e.printStackTrace();
+			//TODO check whether this is a good idea or better exception handling could be done
+			throw new RuntimeException(e);
 		}
 		return retVal == 0;
 	}

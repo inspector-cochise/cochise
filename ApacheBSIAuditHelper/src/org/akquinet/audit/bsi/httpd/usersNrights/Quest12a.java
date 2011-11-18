@@ -60,8 +60,7 @@ public class Quest12a implements YesNoQuestion
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
-			return false;
+			throw new RuntimeException(e);
 		}
 
 		_uc.println( MessageFormat.format(_labels.getString("L1"), user, group) );

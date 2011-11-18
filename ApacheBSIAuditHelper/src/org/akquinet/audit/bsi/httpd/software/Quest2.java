@@ -53,11 +53,11 @@ public class Quest2 implements YesNoQuestion
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 		catch (InterruptedException e)
 		{
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 		_uc.println(_labels.getString("S2"));
 		_uc.printExample(version);

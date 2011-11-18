@@ -30,7 +30,7 @@ public class ModuleHelper
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 	}
 	
@@ -67,13 +67,11 @@ public class ModuleHelper
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
-			return null;
+			throw new RuntimeException(e);
 		}
 		catch (InterruptedException e)
 		{
-			e.printStackTrace();
-			return null;
+			throw new RuntimeException(e);
 		}
 	}
 	
