@@ -117,19 +117,16 @@ public class StatementList extends SyntaxElement
 	private List<Statement> include(SyntaxElement parent, String fnmatchPath) throws ParserException
 	{
 		String serverRoot = getServerRoot();
+		List<File> filesToDo;
 		try
 		{
-			if(fnmatchPath.startsWith("\"") && fnmatchPath.endsWith("\""))
-			{
-				fnmatchPath = fnmatchPath.substring(1, fnmatchPath.length()-2);
-			}
+			filesToDo = filesToInclude(serverRoot , fnmatchPath);
 		}
 		catch(IndexOutOfBoundsException e)
 		{
 			throw new BadSemanticException("Error in " + this.getContainingFile() + " line " + getActualLine() + ". This is not a valid path.");
 		}
 		
-		List<File> filesToDo = filesToInclude(serverRoot , fnmatchPath);
 		List<Statement> ret = new LinkedList<Statement>();
 		
 		for (File file : filesToDo)
@@ -151,6 +148,11 @@ public class StatementList extends SyntaxElement
 
 	public static List<File> filesToInclude(String serverRoot, String fnmatchPath) throws ParserException
 	{
+		if(fnmatchPath.startsWith("\"") && fnmatchPath.endsWith("\""))
+		{
+			fnmatchPath = fnmatchPath.substring(1, fnmatchPath.length()-2);
+		}
+		
 		String[] pathParts = fnmatchPath.split("/");
 		
 		if(fnmatchPath.startsWith("/"))
