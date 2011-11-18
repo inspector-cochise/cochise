@@ -1,6 +1,7 @@
 package org.akquinet.audit.bsi.httpd;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -185,7 +186,21 @@ public class HttpdAudit
 		try
 		{
 			Process p = (new ProcessBuilder("./distro.sh")).start();
-			int exitVal = p.waitFor();
+			int exitVal = 0;
+			boolean wait = true;
+
+			while(wait)
+			{
+				try
+				{
+					exitVal = p.waitFor();
+					wait = false;
+				}
+				catch (InterruptedException e)
+				{
+					Thread.currentThread().interrupt();
+				}
+			}
 			
 			switch(exitVal)
 			{
@@ -202,11 +217,9 @@ public class HttpdAudit
 				return OperatingSystem.UNKNOWN;
 			}
 		}
-		catch (Exception e)
+		catch (IOException e)
 		{
-			//TODO better handling here
-			e.printStackTrace();
-			return OperatingSystem.UNKNOWN;
+			throw new RuntimeException(e); //this means something is not right calling the scripts. Will also cause problems later.
 		}
 	}
 }
