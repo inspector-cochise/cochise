@@ -36,13 +36,11 @@ public class UserCommunicator
 	public void reportError(String error)
 	{
 		_console.println(getLevel(), error);
-		//TODO HTML
 	}
 	
 	public void reportError(Exception error)
 	{
 		_console.reportException(getLevel(), error);
-		//TODO HTML
 	}
 
 	public void printHeading1(String heading)
