@@ -50,7 +50,8 @@ public class Parameter extends SyntaxElement
 		}
 		catch (FileEndException e)
 		{
-		} // this can not happen
+			throw new RuntimeException(e);
+		}
 
 		_content = buf.toString();
 	}
