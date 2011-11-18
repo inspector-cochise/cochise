@@ -103,7 +103,6 @@ public class HttpdAudit
 		}
 		catch (Exception e)
 		{
-			UserCommunicator.getDefault().finishCommunication();
 			e.printStackTrace();
 		}
 		finally
@@ -206,6 +205,7 @@ public class HttpdAudit
 		}
 		catch (Exception e)
 		{
+			//TODO better handling here
 			e.printStackTrace();
 			return OperatingSystem.UNKNOWN;
 		}
