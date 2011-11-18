@@ -85,14 +85,8 @@ public class Quest8 implements YesNoQuestion
 			
 			return ret;
 		}
-		catch (ParserException e)
-		{
-			UserCommunicator.getDefault().reportError(e.getMessage());
-			return false;
-		}
 		catch (IOException e)
 		{
-			UserCommunicator.getDefault().reportError(e.getMessage());
 			throw new RuntimeException(e);
 		}
 	}
@@ -102,21 +96,28 @@ public class Quest8 implements YesNoQuestion
 		return new ShellAnsweredQuestion(_commandPath + _command, file.getCanonicalPath(), permissionPattern);
 	}
 
-	private Set<File> lookForProblems(String permissionPattern) throws IOException, ParserException
+	private Set<File> lookForProblems(String permissionPattern) throws IOException
 	{
 		Set<File> problems = new HashSet<File>();
 		
-		for(Directive incDir : _conf.getAllDirectivesIgnoreCase("Include"))
+		try
 		{
-			List<File> files = StatementList.filesToInclude(_conf.getHeadExpression().getServerRoot(), incDir.getValue().trim());
-			for(File file : files)
+			for(Directive incDir : _conf.getAllDirectivesIgnoreCase("Include"))
 			{
-				ShellAnsweredQuestion quest = checkFile(file, permissionPattern);
-				if(!quest.answer())
+				List<File> files = StatementList.filesToInclude(_conf.getHeadExpression().getServerRoot(), incDir.getValue().trim());
+				for(File file : files)
 				{
-					problems.add(file);
+					ShellAnsweredQuestion quest = checkFile(file, permissionPattern);
+					if(!quest.answer())
+					{
+						problems.add(file);
+					}
 				}
 			}
+		}
+		catch (ParserException e)
+		{
+			throw new RuntimeException(e);
 		}
 		
 		ShellAnsweredQuestion quest = checkFile(_configFile, permissionPattern);
