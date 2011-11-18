@@ -66,17 +66,14 @@ public class Directive extends Statement
 			{
 				// for our first occurrence we have  value.indexOf('"')==0 because i is 0
 				int l = 0+1 + value.substring(0+1).indexOf('"'); // second occurrence
-				try
+				if( l+1 < value.length() && l == 0 && isBlank(value.charAt(l+1)) )
 				{
-					if(!( l != 0+1 -1 || !isBlank(value.charAt(l+1)) ))
-					{
-						// l has to be greater than 0 so we don't need to check that to prevent adding an empty string
-						retList.add(value.substring(0, l+1));
-						value = value.substring(l+1);
-						i = 0;
-					}
+					// l has to be greater than 0 so we don't need to check that to prevent adding an empty string
+					retList.add(value.substring(0, l+1));
+					value = value.substring(l+1);
+					i = 0;
 				}
-				catch(IndexOutOfBoundsException e) //that means l is the last index
+				else if(l+1 >= value.length())
 				{
 					// l has to be greater than 0 so we don't need to check that to prevent adding an empty string
 					retList.add(value.substring(0, l+1));
