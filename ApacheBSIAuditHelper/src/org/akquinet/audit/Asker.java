@@ -154,7 +154,6 @@ public class Asker
 				{
 					try
 					{
-						//TODO test this for EVERY question...
 						quest.initialize();
 						initialize = false;
 					}
