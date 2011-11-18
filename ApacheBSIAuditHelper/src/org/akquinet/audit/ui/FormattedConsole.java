@@ -1,6 +1,7 @@
 package org.akquinet.audit.ui;
 
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -354,5 +355,46 @@ public class FormattedConsole
 	public void setLocale(Locale locale)
 	{
 		_labels = ResourceBundle.getBundle("global", locale);
+	}
+
+	public void reportException(OutputLevel level, Exception error)
+	{
+		error.printStackTrace(new ExceptionPrintStream(level));
+	}
+	
+	private class ExceptionPrintStream extends PrintStream
+	{
+		StringBuilder str = new StringBuilder();
+		private OutputLevel _level;
+		
+		public ExceptionPrintStream(OutputLevel level)
+		{
+			super(System.out);
+			_level = level;
+		}
+		
+		@Override
+		public void write(int b)
+		{
+			str.append((char)b);
+			
+			if(b == '\n')
+			{
+				flush();
+			}
+		}
+		
+		@Override
+		public void flush()
+		{
+			char tmp[] = new char[str.length()];
+			str.getChars(0, str.length()-1, tmp, 0);
+			String s = (new String(tmp));
+			
+			FormattedConsole console = FormattedConsole.getDefault();
+			console.print(_level, s);
+			
+			str = new StringBuilder();
+		}
 	}
 }

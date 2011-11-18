@@ -28,7 +28,6 @@ public class Quest3 extends ModuleHelper implements YesNoQuestion
 		_uc.printHeading3(_id);
 		_uc.printParagraph( _labels.getString("Q0") );
 
-		reparse();
 		
 		List<Directive> loadList = getLoadModuleList();
 		for (Directive directive : loadList)
@@ -98,5 +97,11 @@ public class Quest3 extends ModuleHelper implements YesNoQuestion
 		String[] ret = new String[1];
 		ret[0] = "Quest6";
 		return ret;
+	}
+	
+	@Override
+	public void initialize() throws Exception
+	{
+		reparse();
 	}
 }

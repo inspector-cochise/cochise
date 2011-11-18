@@ -1,6 +1,5 @@
 package org.akquinet.audit.bsi.httpd.usersNrights;
 
-import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,7 +8,6 @@ import java.util.ResourceBundle;
 import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
-import org.akquinet.httpd.ParserException;
 import org.akquinet.httpd.syntax.Context;
 import org.akquinet.httpd.syntax.Directive;
 import org.akquinet.httpd.syntax.Statement;
@@ -34,18 +32,6 @@ public class Quest11b implements YesNoQuestion
 		_uc.printParagraph( _labels.getString("Q0") );
 		_uc.printExample( "<Directory />\n\tOrder Deny,Allow\n\tDeny from all\n</Directory>" );
 
-		try
-		{
-			_conf.reparse();
-		}
-		catch (IOException e)
-		{
-			throw new RuntimeException(e);
-		}
-		catch (ParserException e)
-		{
-			throw new RuntimeException(e);
-		}
 		
 		//first of all let's ensure, there are no "hidden" order/allow/deny directives like in
 		//neg_contained3.conf (see JUnit tests)
@@ -253,5 +239,11 @@ public class Quest11b implements YesNoQuestion
 	public String[] getRequirements()
 	{
 		return new String[0];
+	}
+	
+	@Override
+	public void initialize() throws Exception
+	{
+		_conf.reparse();
 	}
 }

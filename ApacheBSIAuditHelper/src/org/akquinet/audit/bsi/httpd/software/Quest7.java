@@ -1,6 +1,5 @@
 package org.akquinet.audit.bsi.httpd.software;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,7 +9,6 @@ import java.util.ResourceBundle;
 import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
-import org.akquinet.httpd.ParserException;
 import org.akquinet.httpd.syntax.Directive;
 
 public class Quest7 implements YesNoQuestion
@@ -32,18 +30,6 @@ public class Quest7 implements YesNoQuestion
 		_uc.printHeading3(_id);
 		_uc.printParagraph( _labels.getString("Q0") );
 		
-		try
-		{
-			_conf.reparse();
-		}
-		catch (IOException e)
-		{
-			throw new RuntimeException(e);
-		}
-		catch (ParserException e)
-		{
-			throw new RuntimeException(e);
-		}
 		
 		_uc.println( _labels.getString("L1") );
 		_uc.println( _labels.getString("L2") );
@@ -119,6 +105,7 @@ public class Quest7 implements YesNoQuestion
 		return ret;
 	}
 	
+	@SuppressWarnings("unused")
 	private void warnForPlugin(String optionsValue)
 	{
 		String[] pluginArr = optionsValue.split("[ \t]");
@@ -150,5 +137,11 @@ public class Quest7 implements YesNoQuestion
 				}
 			}
 		}
+	}
+	
+	@Override
+	public void initialize() throws Exception
+	{
+		_conf.reparse();
 	}
 }

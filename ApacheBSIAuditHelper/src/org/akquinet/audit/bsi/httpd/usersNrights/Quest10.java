@@ -42,7 +42,6 @@ public class Quest10 extends ModuleHelper implements YesNoQuestion
 		_uc.printHeading3(_id);
 		_uc.printParagraph( _labels.getString("Q0") );
 		
-		reparse();
 		
 		_uc.println( _labels.getString("L1") );
 		
@@ -141,4 +140,9 @@ public class Quest10 extends ModuleHelper implements YesNoQuestion
 		return new String[0];
 	}
 
+	@Override
+	public void initialize() throws Exception
+	{
+		reparse();
+	}
 }

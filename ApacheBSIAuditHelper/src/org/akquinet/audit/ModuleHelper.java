@@ -77,19 +77,8 @@ public class ModuleHelper
 		}
 	}
 	
-	protected void reparse()
+	protected void reparse() throws ParserException, IOException
 	{
-		try
-		{
-			_conf.reparse();
-		}
-		catch (IOException e)
-		{
-			throw new RuntimeException(e);
-		}
-		catch (ParserException e)
-		{
-			throw new RuntimeException(e);
-		}
+		_conf.reparse();
 	}
 }

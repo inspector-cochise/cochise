@@ -52,4 +52,10 @@ public class Heading2Printer implements YesNoQuestion
 		return false;
 	}
 
+	@Override
+	public void initialize() throws Exception
+	{
+		//nothing to do here
+	}
+
 }

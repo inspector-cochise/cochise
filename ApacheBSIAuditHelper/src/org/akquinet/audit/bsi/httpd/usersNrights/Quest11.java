@@ -1,17 +1,14 @@
 package org.akquinet.audit.bsi.httpd.usersNrights;
 
-import java.io.IOException;
 import java.util.ResourceBundle;
 
 import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
-import org.akquinet.httpd.ParserException;
 
 public class Quest11 implements YesNoQuestion
 {
 	private static final String _id = "Quest11";
-	private ConfigFile _conf;
 	private static final UserCommunicator _uc = UserCommunicator.getDefault();
 	
 	private Quest11a _q11a;
@@ -20,10 +17,9 @@ public class Quest11 implements YesNoQuestion
 	
 	public Quest11(ConfigFile conf)
 	{
-		_conf = conf;
 		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 		_q11a = new Quest11a();
-		_q11b = new Quest11b(_conf);
+		_q11b = new Quest11b(conf);
 	}
 
 	/**
@@ -36,18 +32,6 @@ public class Quest11 implements YesNoQuestion
 		_uc.printHeading3(_id);
 		_uc.printParagraph( _labels.getString("Q0") );
 
-		try
-		{
-			_conf.reparse();
-		}
-		catch (IOException e)
-		{
-			throw new RuntimeException(e);
-		}
-		catch (ParserException e)
-		{
-			throw new RuntimeException(e);
-		}
 		
 		_uc.printHidingParagraph(_labels.getString("S0"), _labels.getString("P0"));
 		
@@ -99,5 +83,12 @@ public class Quest11 implements YesNoQuestion
 	public String[] getRequirements()
 	{
 		return new String[0];
+	}
+	
+	@Override
+	public void initialize() throws Exception
+	{
+		_q11a.initialize();
+		_q11b.initialize();
 	}
 }

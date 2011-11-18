@@ -9,7 +9,6 @@ import java.util.ResourceBundle;
 import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
-import org.akquinet.httpd.ParserException;
 import org.akquinet.httpd.syntax.Directive;
 
 public class Quest9 implements YesNoQuestion
@@ -50,18 +49,6 @@ public class Quest9 implements YesNoQuestion
 		_uc.printHeading3(_id);
 		_uc.printParagraph( _labels.getString("Q0") );
 
-		try
-		{
-			_conf.reparse();
-		}
-		catch (IOException e)
-		{
-			throw new RuntimeException(e);
-		}
-		catch (ParserException e)
-		{
-			throw new RuntimeException(e);
-		}
 		
 		_uc.println( _labels.getString("L1") );
 		
@@ -135,6 +122,12 @@ public class Quest9 implements YesNoQuestion
 		}
 	}
 
+	/**
+	 * Retrieves the ServerRoot. It doesn't use the parser's methods to directly get it because we explicitly want this to
+	 * be mentioned by a valid directive. The parser's direct method would also support implicit ServerRoot (i.e. the
+	 * value compiled into the apache binary).
+	 * @return
+	 */
 	private String getServerRoot()
 	{
 		List<Directive> srvRootList = _conf.getDirective("ServerRoot");
@@ -182,4 +175,11 @@ public class Quest9 implements YesNoQuestion
 		return new String[0];
 	}
 
+	@Override
+	public void initialize() throws Exception
+	{
+		_conf.reparse();
+		_q9a.initialize();
+		_q9b.initialize();
+	}
 }

@@ -9,7 +9,6 @@ import org.akquinet.audit.ShellAnsweredQuestion;
 import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
-import org.akquinet.httpd.ParserException;
 
 public class Quest12b implements YesNoQuestion
 {
@@ -40,18 +39,6 @@ public class Quest12b implements YesNoQuestion
 		_uc.printParagraph( _labels.getString("Q0") );
 		_uc.printExample( _labels.getString("S0") );
 
-		try
-		{
-			_conf.reparse();
-		}
-		catch (IOException e)
-		{
-			throw new RuntimeException(e);
-		}
-		catch (ParserException e)
-		{
-			throw new RuntimeException(e);
-		}
 		
 		_uc.println( _labels.getString("L1") );
 		
@@ -134,5 +121,11 @@ public class Quest12b implements YesNoQuestion
 	public String[] getRequirements()
 	{
 		return new String[0];
+	}
+	
+	@Override
+	public void initialize() throws Exception
+	{
+		_conf.reparse();
 	}
 }

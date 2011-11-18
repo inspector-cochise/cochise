@@ -133,4 +133,10 @@ public class Quest12a implements YesNoQuestion
 	{
 		return new String[0];
 	}
+	
+	@Override
+	public void initialize() throws Exception
+	{
+		//nothing to do here
+	}
 }

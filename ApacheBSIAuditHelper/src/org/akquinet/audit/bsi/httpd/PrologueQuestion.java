@@ -70,20 +70,18 @@ public class PrologueQuestion implements YesNoQuestion
 		catch(RuntimeException e)
 		{
 			_uc.printParagraph(_labels.getString("E4HttpdAudit"));
-			_uc.printExample(e.getMessage());
+			_uc.reportError(e);
 			_uc.finishCommunication();
 			System.exit(1);
 		}
 		catch (IOException e)
 		{
-			_uc.reportError(e.getMessage());
-			e.printStackTrace();
+			_uc.reportError(e);
 			System.exit(1);
 		}
 		catch (ParserException e)
 		{
-			_uc.reportError(e.getMessage());
-			e.printStackTrace();
+			_uc.reportError(e);
 			System.exit(1);
 		}
 		
@@ -160,4 +158,9 @@ public class PrologueQuestion implements YesNoQuestion
 		return false;
 	}
 
+	@Override
+	public void initialize() throws Exception
+	{
+		//nothing to do here
+	}
 }

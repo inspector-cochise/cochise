@@ -50,18 +50,6 @@ public class Quest8 implements YesNoQuestion
 		_uc.printHeading3(_id);
 		_uc.printParagraph( _labels.getString("Q0") );
 		
-		try
-		{
-			_conf.reparse();
-		}
-		catch (IOException e)
-		{
-			throw new RuntimeException(e);
-		}
-		catch (ParserException e)
-		{
-			throw new RuntimeException(e);
-		}
 		
 		try
 		{
@@ -170,4 +158,9 @@ public class Quest8 implements YesNoQuestion
 		return new String[0];
 	}
 
+	@Override
+	public void initialize() throws Exception
+	{
+		_conf.reparse();
+	}
 }

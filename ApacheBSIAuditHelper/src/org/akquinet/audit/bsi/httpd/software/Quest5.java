@@ -1,13 +1,11 @@
 package org.akquinet.audit.bsi.httpd.software;
 
-import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
 import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
-import org.akquinet.httpd.ParserException;
 
 public class Quest5 implements YesNoQuestion
 {
@@ -38,18 +36,6 @@ public class Quest5 implements YesNoQuestion
 		_uc.printHidingParagraph(_labels.getString("S0"), _labels.getString("P0"));
 		_uc.printParagraph( _labels.getString("Q0") );
 		
-		try
-		{
-			_conf.reparse();
-		}
-		catch (IOException e)
-		{
-			throw new RuntimeException(e);
-		}
-		catch (ParserException e)
-		{
-			throw new RuntimeException(e);
-		}
 		
 		_uc.println( _labels.getString("L1") );
 		_uc.beginIndent();
@@ -95,5 +81,12 @@ public class Quest5 implements YesNoQuestion
 		String[] ret = new String[1];
 		ret[0] = "Quest6";
 		return ret;
+	}
+	
+	@Override
+	public void initialize() throws Exception
+	{
+		_q5a.initialize();
+		_q5b.initialize();
 	}
 }

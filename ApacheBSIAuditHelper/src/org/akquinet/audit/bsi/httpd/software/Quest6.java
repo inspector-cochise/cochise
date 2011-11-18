@@ -25,7 +25,7 @@ public class Quest6 implements YesNoQuestion
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -113,5 +113,11 @@ public class Quest6 implements YesNoQuestion
 	public String[] getRequirements()
 	{
 		return new String[0];
+	}
+	
+	@Override
+	public void initialize() throws Exception
+	{
+		//nothing to do here
 	}
 }

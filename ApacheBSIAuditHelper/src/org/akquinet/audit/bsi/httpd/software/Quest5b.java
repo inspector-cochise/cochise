@@ -1,6 +1,5 @@
 package org.akquinet.audit.bsi.httpd.software;
 
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -8,7 +7,6 @@ import java.util.ResourceBundle;
 import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
-import org.akquinet.httpd.ParserException;
 import org.akquinet.httpd.syntax.Directive;
 
 public class Quest5b implements YesNoQuestion
@@ -34,18 +32,6 @@ public class Quest5b implements YesNoQuestion
 		_uc.printHeading3(_id);
 		_uc.printParagraph( _labels.getString("Q0") );
 		
-		try
-		{
-			_conf.reparse();
-		}
-		catch (IOException e)
-		{
-			throw new RuntimeException(e);
-		}
-		catch (ParserException e)
-		{
-			throw new RuntimeException(e);
-		}
 		
 		List<Directive> dirList = _conf.getAllDirectives("AllowOverride");
 		List<Directive> problems = new LinkedList<Directive>();
@@ -111,5 +97,11 @@ public class Quest5b implements YesNoQuestion
 	public String[] getRequirements()
 	{
 		return new String[0];
+	}
+	
+	@Override
+	public void initialize() throws Exception
+	{
+		_conf.reparse();
 	}
 }

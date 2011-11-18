@@ -18,6 +18,7 @@ import java.util.Set;
 import org.akquinet.audit.QuestionData.DataNotFoundException;
 import org.akquinet.audit.ui.StdInRecorderNPlayer;
 import org.akquinet.audit.ui.UserCommunicator;
+import org.akquinet.httpd.ParserException;
 
 public class Asker
 {
@@ -147,6 +148,29 @@ public class Asker
 				{
 					qDat = new QuestionData(quest.getID(), "", false);
 				}
+
+				boolean initialize = true;
+				while(initialize)
+				{
+					try
+					{
+						//TODO test this for EVERY question...
+						quest.initialize();
+						initialize = false;
+					}
+					catch (ParserException e)
+					{
+						_uc.reportError( _labels.getString("S13") );
+						_uc.reportError(e);
+						initialize = _uc.askYesNoQuestion( _labels.getString("S13q"), true );
+					}
+					catch (Exception e)
+					{
+						_uc.reportError( _labels.getString("S14") );
+						_uc.reportError(e);
+						initialize = _uc.askYesNoQuestion( _labels.getString("S14q"), true );
+					}
+				}
 				
 				if(qDat._answer && qDat._tape.length() > 0)
 				{
@@ -194,13 +218,13 @@ public class Asker
 		}
 		catch (FileNotFoundException e)
 		{
-			_uc.reportError("Could not save question-data due to FileNotFoundException.");	//TODO move to properties (?)
-			e.printStackTrace();
+			_uc.reportError( _labels.getString("E5") );
+			_uc.reportError(e);
 		}
 		catch (IOException e)
 		{
-			_uc.reportError("Could not save question-data due to IOException.");	//TODO move to properties (?)
-			e.printStackTrace();
+			_uc.reportError( _labels.getString("E6") );
+			_uc.reportError(e);
 		}
 		
 		return overallAns;

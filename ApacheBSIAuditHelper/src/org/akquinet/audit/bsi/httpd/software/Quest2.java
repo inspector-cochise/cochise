@@ -96,4 +96,10 @@ public class Quest2 implements YesNoQuestion
 	{
 		return new String[0];
 	}
+	
+	@Override
+	public void initialize() throws Exception
+	{
+		//nothing to do here
+	}
 }
