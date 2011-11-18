@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.akquinet.httpd.BadSemanticException;
 import org.akquinet.httpd.BadSyntaxException;
 import org.akquinet.httpd.ConfigFile;
 import org.akquinet.httpd.MultipleMarkerInputStream;
@@ -116,6 +117,18 @@ public class StatementList extends SyntaxElement
 	private List<Statement> include(SyntaxElement parent, String fnmatchPath) throws ParserException
 	{
 		String serverRoot = getServerRoot();
+		try
+		{
+			if(fnmatchPath.startsWith("\"") && fnmatchPath.endsWith("\""))
+			{
+				fnmatchPath = fnmatchPath.substring(1, fnmatchPath.length()-2);
+			}
+		}
+		catch(IndexOutOfBoundsException e)
+		{
+			throw new BadSemanticException("Error in " + this.getContainingFile() + " line " + getActualLine() + ". This is not a valid path.");
+		}
+		
 		List<File> filesToDo = filesToInclude(serverRoot , fnmatchPath);
 		List<Statement> ret = new LinkedList<Statement>();
 		
