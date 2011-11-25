@@ -49,28 +49,39 @@ public class Quest2 implements YesNoQuestion
 		_uc.println(_labels.getString("S2"));
 		_uc.printExample(version);
 		
-		if(isNewest())
+		String running = getRunningVersion();
+		String newest = getNewestStableVersion();
+		int versionCompare = versionCompare(running, newest);
+		
+		if(versionCompare == 0)
 		{
 			_uc.printAnswer(true, _labels.getString("S4"));
 			return true;
 		}
-		else
+		else if(versionCompare == -1)
 		{
-			String newer = getNewestStableVersion();
-			_uc.printParagraph( MessageFormat.format(_labels.getString("S5"), newer) );
+			_uc.printParagraph( MessageFormat.format(_labels.getString("S5"), newest) );
 			
 			boolean ret = _uc.askYesNoQuestion(_labels.getString("Q1"));
 			_uc.printAnswer(ret, ret ? _labels.getString("S3_good")
 					: _labels.getString("S3_bad"));
 			return ret;
 		}
+		else //if(versionCompare == +1)
+		{
+			_uc.printAnswer(false, MessageFormat.format(_labels.getString("S6"), running, newest) );
+			return false;
+		}
 	}
 
-	private boolean isNewest()
+	/**
+	 * compares the running version number with the newest stable version number
+	 * @param running the version number of the running apache
+	 * @param newest the version number of the newest stable apache
+	 * @return 0 if both are equal, +1 if the running version is newer than the newest stable or -1 else (i.e. the running version is older than the newest stable)
+	 */
+	private int versionCompare(String running, String newest)
 	{
-		String running = getRunningVersion();
-		String newest = getNewestStableVersion();
-		
 		String[] tmp;
 		tmp = running.split("\\.");
 		int running_Major = Integer.parseInt(tmp[0]);
@@ -82,15 +93,19 @@ public class Quest2 implements YesNoQuestion
 		int newest_Minor = Integer.parseInt(tmp[1]);
 		int newest_release = Integer.parseInt(tmp[2]);
 		
-		if(running_Major > newest_Major ||
-		   running_Major == newest_Major && running_Minor > newest_Minor ||
-		   running_Major == newest_Major && running_Minor == newest_Minor && running_release >= newest_release)
+		if(running_Major == newest_Major && running_Minor == newest_Minor && running_release == newest_release)
 		{
-			return true;
+			return 0;
+		}
+		else if(running_Major > newest_Major ||
+				running_Major == newest_Major && running_Minor > newest_Minor ||
+				running_Major == newest_Major && running_Minor == newest_Minor && running_release > newest_release)
+		{
+			return +1;
 		}
 		else
 		{
-			return false;
+			return -1;
 		}
 	}
 

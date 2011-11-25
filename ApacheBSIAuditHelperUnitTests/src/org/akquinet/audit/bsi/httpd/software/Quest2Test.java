@@ -14,10 +14,15 @@ import java.io.PrintStream;
 import org.akquinet.test.util.RethrowingThread;
 import org.junit.Test;
 
+//TODO update this test class
 public class Quest2Test
 {
-	private static final File _emptyScript = new File("./testFiles/emptyScript.bat");
 	private static final File _correctListing = new File("./testFiles/Quest2/version.bat");
+	private static final String SCRIPT_PATH = "./testFiles/Quest2/";
+	private static final String _1_1_1 = "1.1.1.bat";
+	private static final String _1_1_2 = "1.1.2.bat";
+	private static final String _1_2_1 = "1.2.1.bat";
+	private static final String _2_1_1 = "2.1.1.bat";
 	
 	@Test
 	public final void testNegative() throws Throwable
@@ -27,10 +32,18 @@ public class Quest2Test
 			@Override
 			public void run()
 			{
-				InputStream stdin = System.in;
-				Quest2 SUT = new Quest2(_emptyScript);
+				final InputStream stdin = System.in;
 				
-				System.setIn(new ByteArrayInputStream("No".getBytes()));
+				Quest2 SUT = new Quest2(_correctListing, SCRIPT_PATH, _1_1_2, _1_1_1);
+				System.setIn(new ByteArrayInputStream("No\n".getBytes()));
+				assertFalse(SUT.answer());
+				
+				SUT = new Quest2(_correctListing, SCRIPT_PATH, _1_2_1, _1_1_1);
+				System.setIn(new ByteArrayInputStream("No\n".getBytes()));
+				assertFalse(SUT.answer());
+				
+				SUT = new Quest2(_correctListing, SCRIPT_PATH, _2_1_1, _1_1_1);
+				System.setIn(new ByteArrayInputStream("No\n".getBytes()));
 				assertFalse(SUT.answer());
 				
 				System.setIn(stdin);
@@ -38,7 +51,7 @@ public class Quest2Test
 		};
 		
 		th.start();
-		th.join(2000);
+		th.join(4000);
 		
 		if(th.isAlive())
 		{
@@ -57,10 +70,13 @@ public class Quest2Test
 			@Override
 			public void run()
 			{
-				InputStream stdin = System.in;
-				Quest2 SUT = new Quest2(_emptyScript);
+				final InputStream stdin = System.in;
 				
-				System.setIn(new ByteArrayInputStream("Yes".getBytes()));
+				Quest2 SUT = new Quest2(_correctListing, SCRIPT_PATH, _1_1_1, _1_1_1);
+				assertTrue(SUT.answer());
+				
+				SUT = new Quest2(_correctListing, SCRIPT_PATH, _2_1_1, _1_1_1);
+				System.setIn(new ByteArrayInputStream("Yes\n".getBytes()));
 				assertTrue(SUT.answer());
 				
 				System.setIn(stdin);
@@ -68,7 +84,7 @@ public class Quest2Test
 		};
 		
 		th.start();
-		th.join(2000);
+		th.join(4000);
 		
 		if(th.isAlive())
 		{
@@ -80,39 +96,78 @@ public class Quest2Test
 	}
 	
 	@Test
-	public final void testCorrectListing() throws IOException
+	public final void testCorrectListing() throws Throwable
 	{
-		InputStream stdin = System.in;
-		PrintStream stdout = System.out;
+		RethrowingThread th = new RethrowingThread()
+		{
+			@Override
+			public void run()
+			{
+				final PrintStream stdout = System.out;
+				
+				Quest2 SUT = new Quest2(_correctListing, SCRIPT_PATH, _1_1_1, _1_1_1);
+				ByteArrayOutputStream out = new ByteArrayOutputStream();
+				System.setOut(new PrintStream(out));
+				
+				SUT.answer();
+				
+				String printed = out.toString();
+				printed = printed.replaceAll("\r", "");	// there are problems with
+				printed = printed.replaceAll("\n", ""); // String.matches() and newlines
+				System.setOut(stdout);
+				System.out.print(printed);
+				assertTrue(printed.matches(".*12345VERSION54321.*"));
+			}
+		};
 		
-		Quest2 SUT = new Quest2(_correctListing);
-		System.setIn(new ByteArrayInputStream("Yes\n".getBytes()));
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		System.setOut(new PrintStream(out));
+		th.start();
+		th.join(4000);
 		
-		SUT.answer();
+		if(th.isAlive())
+		{
+			th.interrupt();
+			fail("Seems like this test takes too long, maybe Quest2 asks for more user input than expected. Check that!");
+		}
 		
-		String printed = out.toString();
-		printed = printed.replaceAll("\r", "");	// there are problems with
-		printed = printed.replaceAll("\n", ""); // String.matches() and newlines
-		System.setOut(stdout);
-		System.out.print(printed);
-		assertTrue(printed.matches(".*12345VERSION54321.*"));
+		th.throwCaughtThrowable();
+	}
+	
+	@Test
+	public final void testRunningIsNewerThanLatestStable() throws Throwable
+	{
+		RethrowingThread th = new RethrowingThread()
+		{
+			@Override
+			public void run()
+			{
+				Quest2 SUT = new Quest2(_correctListing, SCRIPT_PATH, _1_1_1, _2_1_1);
+				assertFalse(SUT.answer());
+			}
+		};
 		
-		System.setIn(stdin);
+		th.start();
+		th.join(4000);
+		
+		if(th.isAlive())
+		{
+			th.interrupt();
+			fail("Seems like this test takes too long, maybe Quest2 asks for more user input than expected. Check that!");
+		}
+		
+		th.throwCaughtThrowable();
 	}
 	
 	@Test
 	public final void testGetID() throws IOException
 	{
-		Quest2 SUT = new Quest2(_emptyScript);
+		Quest2 SUT = new Quest2(_correctListing);
 		assertTrue(SUT.getID().equals("Quest2"));
 	}
 
 	@Test
 	public final void testIsCritical() throws IOException
 	{
-		Quest2 SUT = new Quest2(_emptyScript);
+		Quest2 SUT = new Quest2(_correctListing);
 		assertFalse(SUT.isCritical());
 	}
 }
