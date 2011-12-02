@@ -134,7 +134,7 @@ public class Quest12a implements YesNoQuestion
 	}
 	
 	@Override
-	public void initialize() throws Exception
+	public void initialize()
 	{
 		//nothing to do here
 	}

@@ -79,7 +79,7 @@ public class Quest9b implements YesNoQuestion
 	}
 
 	@Override
-	public void initialize() throws Exception
+	public void initialize()
 	{
 		//nothing to do here
 	}

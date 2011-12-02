@@ -90,7 +90,7 @@ public class Quest1 implements YesNoQuestion
 	}
 
 	@Override
-	public void initialize() throws Exception
+	public void initialize()
 	{
 		//nothing to do here
 	}
