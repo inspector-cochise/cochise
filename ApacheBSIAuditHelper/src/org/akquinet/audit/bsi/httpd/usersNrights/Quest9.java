@@ -35,15 +35,12 @@ public class Quest9 implements YesNoQuestion
 	public Quest9(ConfigFile conf, String command9aPath, String command9a, String getUserNGroupCommand, String apacheExecutable, boolean highSec)
 	{
 		_conf = conf;
-		_serverRoot = getServerRoot();
 		_commandPath = command9aPath;
 		_command9a = command9a;
 		_getUserNGroupCommand = getUserNGroupCommand;
 		_apacheExecutable = apacheExecutable;
 		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 		_highSec = highSec;
-		
-		_q9b = new Quest9b(_serverRoot);
 	}
 
 	@Override
@@ -170,6 +167,7 @@ public class Quest9 implements YesNoQuestion
 	public void initialize() throws Exception
 	{
 		_conf.reparse();
+		_serverRoot = getServerRoot();
 		
 		_user = getApacheStartingUser();
 		if(_command9a != null && _commandPath  != null)
@@ -180,6 +178,7 @@ public class Quest9 implements YesNoQuestion
 		{
 			_q9a = new Quest9a(_serverRoot, _user, _highSec);
 		}
+		_q9b = new Quest9b(_serverRoot);
 		
 		_q9a.initialize();
 		_q9b.initialize();
