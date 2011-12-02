@@ -58,18 +58,6 @@ public class Quest11b implements YesNoQuestion
 		boolean ret = false;
 		for (Context dir : dirList)
 		{
-			if (!dir.getDirectiveIgnoreCase("allow").isEmpty())
-			{
-				_uc.printAnswer(false, _labels.getString("S1"));
-				List<Directive> allowList = dir.getDirectiveIgnoreCase("allow");
-				for (Directive directive : allowList)
-				{
-					_uc.println(directive.getContainingFile() + ":" + directive.getLinenumber() + ": " + directive.getName() + " " + directive.getValue());
-				}
-				ret = false;
-				break;
-			}
-
 			if (dir.getSurroundingContexts().get(0) != null)
 			{
 				continue;
@@ -97,6 +85,24 @@ public class Quest11b implements YesNoQuestion
 					ret = false;
 					break;
 				}
+			}
+			else if(allowList.size() > 0)
+			{
+				_uc.printAnswer(false, _labels.getString("S1"));
+				StringBuilder b = new StringBuilder();
+				for (Directive directive : allowList)
+				{
+					b = b.append(directive.getContainingFile()).append(":").append(directive.getLinenumber()).append(": ").append(directive.getName()).append(" ").append(directive.getValue()).append('\n');
+				}
+				_uc.printExample(b.toString());
+				ret = false;
+				break;
+			}
+			else if(orderList.size() == 0 || denyList.size() == 0)
+			{
+				_uc.printAnswer(false, _labels.getString("S8"));
+				ret = false;
+				break;
 			}
 			else
 			{
