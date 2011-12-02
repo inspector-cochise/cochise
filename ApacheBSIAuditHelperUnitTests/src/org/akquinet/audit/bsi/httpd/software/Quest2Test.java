@@ -17,8 +17,9 @@ import org.junit.Test;
 //TODO update this test class
 public class Quest2Test
 {
+	private static final String _userDir = System.getProperty("user.dir");
 	private static final File _correctListing = new File("./testFiles/Quest2/version.bat");
-	private static final String SCRIPT_PATH = "./testFiles/Quest2/";
+	private static final String SCRIPT_PATH = _userDir +  "/testFiles/Quest2/";
 	private static final String _1_1_1 = "1.1.1.bat";
 	private static final String _1_1_2 = "1.1.2.bat";
 	private static final String _1_2_1 = "1.2.1.bat";
