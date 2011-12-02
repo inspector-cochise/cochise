@@ -12,7 +12,6 @@ public class ConfigFile
 {
 	private Head _head;
 	private File _file;
-	private long _fileLastModified;
 	private String _serverRoot;
 	
 	public ConfigFile(File file) throws ParserException, IOException
@@ -31,7 +30,6 @@ public class ConfigFile
 		try
 		{
 			_file = file;
-			_fileLastModified = _file.lastModified();
 			_serverRoot = serverRoot;
 			input = new FileInputStream(_file);
 			_head = new Head(null, new MultipleMarkerInputStream(input), _serverRoot, _file.getCanonicalPath());
@@ -95,21 +93,16 @@ public class ConfigFile
 	 */
 	public void reparse() throws ParserException, IOException
 	{
-		long tmp = _file.lastModified();
-		if(tmp > _fileLastModified)
+		FileInputStream input = null;
+		try
 		{
-			FileInputStream input = null;
-			try
-			{
-				_fileLastModified = tmp;
-				input = new FileInputStream(_file);
-				_head = new Head(null, new MultipleMarkerInputStream(input), _serverRoot, _file.getCanonicalPath());
-			}
-			finally
-			{
-				if(input != null)
-					input.close();
-			}
+			input = new FileInputStream(_file);
+			_head = new Head(null, new MultipleMarkerInputStream(input), _serverRoot, _file.getCanonicalPath());
+		}
+		finally
+		{
+			if(input != null)
+				input.close();
 		}
 	}
 	
@@ -124,5 +117,10 @@ public class ConfigFile
 		{
 			e.printStackTrace();
 		}
+	}
+	
+	public String getFileName()
+	{
+		return _file.getAbsolutePath();
 	}
 }

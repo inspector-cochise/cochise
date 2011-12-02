@@ -34,7 +34,7 @@ public class Quest5 implements YesNoQuestion
 	{
 		_uc.printHeading3(_id);
 		_uc.printHidingParagraph(_labels.getString("S0"), _labels.getString("P0"));
-		_uc.printParagraph( _labels.getString("Q0") );
+		_uc.printParagraph( MessageFormat.format( _labels.getString("Q0") , _conf.getFileName()) );
 		
 		
 		_uc.println( _labels.getString("L1") );
