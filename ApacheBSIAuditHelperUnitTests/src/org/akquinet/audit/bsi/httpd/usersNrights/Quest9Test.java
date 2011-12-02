@@ -45,6 +45,7 @@ public class Quest9Test
 				{
 					InputStream stdInStream = System.in;
 					Quest9 SUT = new Quest9(new ConfigFile(malformedFile), executable.getAbsoluteFile().getParent() + File.separator, executable.getName(), _userNGroupsCommand, _apacheExecutable, true);
+					SUT.initialize();
 					System.setIn(new ByteArrayInputStream(stdIn.getBytes()));
 					
 					assertEquals(SUT.answer(), assertVal);

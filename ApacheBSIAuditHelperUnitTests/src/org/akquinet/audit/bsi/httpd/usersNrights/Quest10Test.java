@@ -23,23 +23,26 @@ public class Quest10Test
 	private static final String _failScript =  "failScript.bat";
 	
 	@Test
-	public final void testNegativeTrivial() throws IOException, ParserException
+	public final void testNegativeTrivial() throws Exception
 	{
 		Quest10 SUT = new Quest10(new ConfigFile(_someConfig), _commandPath, _failScript);
+		SUT.initialize();
 		assertFalse(SUT.answer());
 	}
 	
 	@Test
-	public final void testPositiveTrivial() throws IOException, ParserException
+	public final void testPositiveTrivial() throws Exception
 	{
 		Quest10 SUT = new Quest10(new ConfigFile(_someConfig), _commandPath, _emptyScript);
+		SUT.initialize();
 		assertTrue(SUT.answer());
 	}
 	
 	@Test
-	public final void testPositiveEmptyConf() throws IOException, ParserException
+	public final void testPositiveEmptyConf() throws Exception
 	{
 		Quest10 SUT = new Quest10(new ConfigFile(_emptyConfig), _commandPath, _failScript);
+		SUT.initialize();
 		assertTrue(SUT.answer());
 	}
 	

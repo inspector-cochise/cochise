@@ -21,6 +21,7 @@ public class Quest12aTest
 	public final void testNegativeTrivial() throws Throwable
 	{
 		Quest12a SUT = new Quest12a(_scriptPath, _failScript, _getUserNGroup, _apacheExecutable);
+		SUT.initialize();
 		assertFalse(SUT.answer());
 	}
 	
@@ -28,6 +29,7 @@ public class Quest12aTest
 	public final void testPositiveTrivial() throws Throwable
 	{
 		Quest12a SUT = new Quest12a(_scriptPath, _emptyScript, _getUserNGroup, _apacheExecutable);
+		SUT.initialize();
 		assertTrue(SUT.answer());
 	}
 	

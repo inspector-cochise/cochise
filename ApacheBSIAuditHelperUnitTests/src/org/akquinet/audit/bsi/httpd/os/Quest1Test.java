@@ -16,6 +16,7 @@ public class Quest1Test
 	public final void testNoHighSecurityLevel()
 	{
 		Quest1 SUT = new Quest1(false, _commandPath, _negExecutable);
+		SUT.initialize();
 		assertTrue(SUT.answer());
 	}
 	
@@ -23,6 +24,7 @@ public class Quest1Test
 	public final void testNegative()
 	{
 		Quest1 SUT = new Quest1(true, _commandPath, _negExecutable);
+		SUT.initialize();
 		assertFalse(SUT.answer());
 	}
 	
@@ -30,6 +32,7 @@ public class Quest1Test
 	public final void testPositive()
 	{
 		Quest1 SUT = new Quest1(true, _commandPath, _posExecutable);
+		SUT.initialize();
 		assertTrue(SUT.answer());
 	}
 	

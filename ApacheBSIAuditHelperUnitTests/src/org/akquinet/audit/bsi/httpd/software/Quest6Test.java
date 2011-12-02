@@ -16,16 +16,18 @@ public class Quest6Test
 	private static final File _failExec = new File(_userDir + "/testFiles/failScript.bat");
 	
 	@Test
-	public final void testNegative() throws IOException
+	public final void testNegative()
 	{
 		Quest6 SUT = new Quest6(_failExec);
+		SUT.initialize();
 		assertFalse(SUT.answer());
 	}
 	
 	@Test
-	public final void testPositive() throws IOException
+	public final void testPositive()
 	{
 		Quest6 SUT = new Quest6(_emptyExec);
+		SUT.initialize();
 		assertTrue(SUT.answer());
 	}
 	

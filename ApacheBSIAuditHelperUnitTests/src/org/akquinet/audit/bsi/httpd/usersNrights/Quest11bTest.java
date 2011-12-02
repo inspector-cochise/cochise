@@ -3,10 +3,7 @@ package org.akquinet.audit.bsi.httpd.usersNrights;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
-
 import org.akquinet.httpd.ConfigFile;
-import org.akquinet.httpd.ParserException;
 import org.junit.Test;
 
 public class Quest11bTest
@@ -31,93 +28,95 @@ public class Quest11bTest
 	
 
 	@Test
-	public final void testNegativeContained1() throws IOException, ParserException
+	public final void testNegativeContained1() throws Exception
 	{
 		assertFalse(getSUT(_negContained1).answer());
 	}
 
 	@Test
-	public final void testNegativeContained2() throws IOException, ParserException
+	public final void testNegativeContained2() throws Exception
 	{
 		assertFalse(getSUT(_negContained2).answer());
 	}
 
 	@Test
-	public final void testNegativeContained3() throws IOException, ParserException
+	public final void testNegativeContained3() throws Exception
 	{
 		assertFalse(getSUT(_negContained3).answer());
 	}
 	
 	@Test
-	public final void testNegativeFalseOrder() throws IOException, ParserException
+	public final void testNegativeFalseOrder() throws Exception
 	{
 		assertFalse(getSUT(_negFalseOrder).answer());
 	}
 	
 	@Test
-	public final void testNegativeMalformed1() throws IOException, ParserException
+	public final void testNegativeMalformed1() throws Exception
 	{
 		assertFalse(getSUT(_negMalformed1).answer());
 	}
 
 	@Test
-	public final void testNegativeMalformed2() throws IOException, ParserException
+	public final void testNegativeMalformed2() throws Exception
 	{
 		assertFalse(getSUT(_negMalformed2).answer());
 	}
 
 	@Test
-	public final void testNegativeMultipleOrder() throws IOException, ParserException
+	public final void testNegativeMultipleOrder() throws Exception
 	{
 		assertFalse(getSUT(_negMultipleOrder).answer());
 	}
 
 	@Test
-	public final void testNegativeSecureNet() throws IOException, ParserException
+	public final void testNegativeSecureNet() throws Exception
 	{
 		assertFalse(getSUT(_negSecureNet).answer());
 	}
 
 	@Test
-	public final void testNegativeTooSpecial() throws IOException, ParserException
+	public final void testNegativeTooSpecial() throws Exception
 	{
 		assertFalse(getSUT(_negTooSpecial).answer());
 	}
 	
 	@Test
-	public final void testNegativeTrivial() throws IOException, ParserException
+	public final void testNegativeTrivial() throws Exception
 	{
 		assertFalse(getSUT(_negTrivial).answer());
 	}
 
 	@Test
-	public final void testPositiveTrivial() throws IOException, ParserException
+	public final void testPositiveTrivial() throws Exception
 	{
 		assertTrue(getSUT(_posTrivial).answer());
 	}
 
 	@Test
-	public final void testPositiveWithExceptions() throws IOException, ParserException
+	public final void testPositiveWithExceptions() throws Exception
 	{
 		assertTrue(getSUT(_posWithExceptions).answer());
 	}
 	
 	@Test
-	public final void testGetID() throws IOException, ParserException
+	public final void testGetID() throws Exception
 	{
 		Quest11b SUT = getSUT(_someConfig);
 		assertTrue(SUT.getID().equals("Quest11b"));
 	}
 
 	@Test
-	public final void testIsCritical() throws IOException, ParserException
+	public final void testIsCritical() throws Exception
 	{
 		Quest11b SUT = getSUT(_someConfig);
 		assertFalse(SUT.isCritical());
 	}
 	
-	private final Quest11b getSUT(String confFile) throws IOException, ParserException
+	private final Quest11b getSUT(String confFile) throws Exception
 	{
-		return new Quest11b(new ConfigFile(confFile));
+		Quest11b SUT = new Quest11b(new ConfigFile(confFile));
+		SUT.initialize();
+		return SUT;
 	}
 }

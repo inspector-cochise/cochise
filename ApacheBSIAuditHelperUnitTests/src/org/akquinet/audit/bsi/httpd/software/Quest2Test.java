@@ -14,7 +14,6 @@ import java.io.PrintStream;
 import org.akquinet.test.util.RethrowingThread;
 import org.junit.Test;
 
-//TODO update this test class
 public class Quest2Test
 {
 	private static final String _userDir = System.getProperty("user.dir");
@@ -36,14 +35,17 @@ public class Quest2Test
 				final InputStream stdin = System.in;
 				
 				Quest2 SUT = new Quest2(_correctListing, SCRIPT_PATH, _1_1_2, _1_1_1);
+				SUT.initialize();
 				System.setIn(new ByteArrayInputStream("No\n".getBytes()));
 				assertFalse(SUT.answer());
 				
 				SUT = new Quest2(_correctListing, SCRIPT_PATH, _1_2_1, _1_1_1);
+				SUT.initialize();
 				System.setIn(new ByteArrayInputStream("No\n".getBytes()));
 				assertFalse(SUT.answer());
 				
 				SUT = new Quest2(_correctListing, SCRIPT_PATH, _2_1_1, _1_1_1);
+				SUT.initialize();
 				System.setIn(new ByteArrayInputStream("No\n".getBytes()));
 				assertFalse(SUT.answer());
 				
@@ -74,9 +76,11 @@ public class Quest2Test
 				final InputStream stdin = System.in;
 				
 				Quest2 SUT = new Quest2(_correctListing, SCRIPT_PATH, _1_1_1, _1_1_1);
+				SUT.initialize();
 				assertTrue(SUT.answer());
 				
 				SUT = new Quest2(_correctListing, SCRIPT_PATH, _2_1_1, _1_1_1);
+				SUT.initialize();
 				System.setIn(new ByteArrayInputStream("Yes\n".getBytes()));
 				assertTrue(SUT.answer());
 				
@@ -107,6 +111,7 @@ public class Quest2Test
 				final PrintStream stdout = System.out;
 				
 				Quest2 SUT = new Quest2(_correctListing, SCRIPT_PATH, _1_1_1, _1_1_1);
+				SUT.initialize();
 				ByteArrayOutputStream out = new ByteArrayOutputStream();
 				System.setOut(new PrintStream(out));
 				
@@ -142,6 +147,7 @@ public class Quest2Test
 			public void run()
 			{
 				Quest2 SUT = new Quest2(_correctListing, SCRIPT_PATH, _1_1_1, _2_1_1);
+				SUT.initialize();
 				assertFalse(SUT.answer());
 			}
 		};

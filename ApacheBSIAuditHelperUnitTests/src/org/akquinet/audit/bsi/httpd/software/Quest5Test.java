@@ -4,10 +4,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.akquinet.httpd.ConfigFile;
-import org.akquinet.httpd.ParserException;
 import org.junit.Test;
 
 public class Quest5Test
@@ -23,44 +21,50 @@ public class Quest5Test
 	private static final File _someConfig = _a0_b0;
 
 	@Test
-	public final void test_a0_b0() throws IOException, ParserException
+	public final void test_a0_b0() throws Exception
 	{
 		Quest5 SUT = new Quest5(new ConfigFile(_a0_b0));
+		SUT.initialize();
 		assertFalse(SUT.answer());
 	}
 	
 	@Test
-	public final void test_a0_b1() throws IOException, ParserException
+	public final void test_a0_b1() throws Exception
 	{
 		Quest5 SUT = new Quest5(new ConfigFile(_a0_b1));
+		SUT.initialize();
 		assertFalse(SUT.answer());
 	}
 	
 	@Test
-	public final void test_a1_b0() throws IOException, ParserException
+	public final void test_a1_b0() throws Exception
 	{
 		Quest5 SUT = new Quest5(new ConfigFile(_a1_b0));
+		SUT.initialize();
 		assertFalse(SUT.answer());
 	}
 	
 	@Test
-	public final void test_a1_b1() throws IOException, ParserException
+	public final void test_a1_b1() throws Exception
 	{
 		Quest5 SUT = new Quest5(new ConfigFile(_a1_b1));
+		SUT.initialize();
 		assertTrue(SUT.answer());
 	}
 
 	@Test
-	public final void testGetID() throws IOException, ParserException
+	public final void testGetID() throws Exception
 	{
 		Quest5 SUT = new Quest5(new ConfigFile(_someConfig));
+		SUT.initialize();
 		assertTrue(SUT.getID().equals("Quest5"));
 	}
 
 	@Test
-	public final void testIsCritical() throws IOException, ParserException
+	public final void testIsCritical() throws Exception
 	{
 		Quest5 SUT = new Quest5(new ConfigFile(_someConfig));
+		SUT.initialize();
 		assertFalse(SUT.isCritical());
 	}
 }

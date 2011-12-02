@@ -31,10 +31,11 @@ public class Quest12Test
 	private static final String _apacheExecutable = "apache2";
 
 	@Test
-	public final void test_a0_b0() throws IOException, ParserException
+	public final void test_a0_b0() throws Exception
 	{
 		InputStream stdin = System.in;
 		Quest12 SUT = new Quest12(new ConfigFile(_a0), _scriptPath, _failScript, _getUserNGroup, _apacheExecutable);
+		SUT.initialize();
 		System.setIn(new ByteArrayInputStream("No\n".getBytes()));
 		
 		assertFalse(SUT.answer());
@@ -42,16 +43,18 @@ public class Quest12Test
 	}
 	
 	@Test
-	public final void test_a0_b1() throws IOException, ParserException
+	public final void test_a0_b1() throws Exception
 	{
 		Quest12 SUT = new Quest12(new ConfigFile(_a0), _scriptPath, _emptyScript, _getUserNGroup, _apacheExecutable);
+		SUT.initialize();
 		assertTrue(SUT.answer());
 	}
 	
 	@Test
-	public final void test_a1() throws IOException, ParserException
+	public final void test_a1() throws Exception
 	{
 		Quest12 SUT = new Quest12(new ConfigFile(_a1), _scriptPath, _emptyScript, _getUserNGroup, _apacheExecutable);
+		SUT.initialize();
 		assertTrue(SUT.answer());
 	}
 	

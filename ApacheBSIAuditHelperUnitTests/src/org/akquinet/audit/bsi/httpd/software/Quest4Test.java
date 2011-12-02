@@ -22,10 +22,11 @@ public class Quest4Test
 	private static final File _someConfig = _trivial;
 
 	@Test
-	public final void testCorrectAnswer() throws IOException, ParserException
+	public final void testCorrectAnswer() throws Exception
 	{
 		InputStream stdin = System.in;
 		Quest4 SUT = new Quest4(new ConfigFile(_trivial), _emptyExec);
+		SUT.initialize();
 
 		System.setIn(new ByteArrayInputStream("No\n".getBytes()));
 		assertFalse("No should imply false", SUT.answer());

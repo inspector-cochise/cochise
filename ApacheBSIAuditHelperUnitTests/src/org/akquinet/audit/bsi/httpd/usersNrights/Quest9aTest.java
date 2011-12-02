@@ -22,6 +22,7 @@ public class Quest9aTest
 	public final void testNegative()
 	{
 		Quest9a SUT = new Quest9a("somePath", "someUser", _commandPath, _failExecutable, true);
+		SUT.initialize();
 		assertFalse(SUT.answer());
 	}
 	
@@ -29,6 +30,7 @@ public class Quest9aTest
 	public final void testPositive()
 	{
 		Quest9a SUT = new Quest9a("somePath", "someUser", _commandPath, _emptyExecutable, true);
+		SUT.initialize();
 		assertTrue(SUT.answer());
 	}
 	
@@ -40,6 +42,7 @@ public class Quest9aTest
 		System.setOut(new PrintStream(out));
 		
 		Quest9a SUT = new Quest9a("somePath", "someUser", _commandPath, _listExecutable, true);
+		SUT.initialize();
 		SUT.answer();
 		
 		String printed = out.toString();

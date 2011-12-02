@@ -22,6 +22,14 @@ public class Quest11aTest
 			{
 				InputStream stdin = System.in;
 				Quest11a SUT = new Quest11a();
+				try
+				{
+					SUT.initialize();
+				}
+				catch (Exception e)
+				{
+					throw new RuntimeException(e);
+				}
 				System.setIn(new ByteArrayInputStream("No\n".getBytes()));
 				
 				assertFalse(SUT.answer());
@@ -51,6 +59,14 @@ public class Quest11aTest
 			{
 				InputStream stdin = System.in;
 				Quest11a SUT = new Quest11a();
+				try
+				{
+					SUT.initialize();
+				}
+				catch (Exception e)
+				{
+					throw new RuntimeException(e);
+				}
 				System.setIn(new ByteArrayInputStream("Yes\n".getBytes()));
 				
 				assertTrue(SUT.answer());

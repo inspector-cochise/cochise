@@ -35,45 +35,51 @@ public class Quest3Test
 	private static final File _emptyConfig = new File(_userDir + "/testFiles/Quest3/empty.conf"); 
 
 	@Test
-	public final void testNegativeTrivial_File() throws IOException, ParserException
+	public final void testNegativeTrivial_File() throws Exception
 	{
 		System.out.println((new File(_userDir)).getCanonicalPath());
 		Quest3 SUT = new Quest3(new ConfigFile(_negativeTrivial), _emptyExec);
+		SUT.initialize();
 		assertFalse(SUT.answer());
 	}
 	
 	@Test
-	public final void testNegativeSimilar_File() throws IOException, ParserException
+	public final void testNegativeSimilar_File() throws Exception
 	{
 		Quest3 SUT = new Quest3(new ConfigFile(_negativeSimilar), _emptyExec);
+		SUT.initialize();
 		assertFalse(SUT.answer());
 	}
 	
 	@Test
-	public final void testNegativeMalformed_File() throws IOException, ParserException
+	public final void testNegativeMalformed_File() throws Exception
 	{
 		Quest3 SUT = new Quest3(new ConfigFile(_negativeMalformed), _emptyExec);
+		SUT.initialize();
 		assertFalse(SUT.answer());
 	}
 	
 	@Test
-	public final void testNegativeConditionally_File() throws IOException, ParserException
+	public final void testNegativeConditionally_File() throws Exception
 	{
 		Quest3 SUT = new Quest3(new ConfigFile(_negativeConditionally), _emptyExec);
+		SUT.initialize();
 		assertFalse(SUT.answer());
 	}
 	
 	@Test
-	public final void testPositiveTrivial_File() throws IOException, ParserException
+	public final void testPositiveTrivial_File() throws Exception
 	{
 		Quest3 SUT = new Quest3(new ConfigFile(_positiveTrivial), _emptyExec);
+		SUT.initialize();
 		assertTrue(SUT.answer());
 	}
 	
 	@Test
-	public final void testPositiveMalformed_File() throws IOException, ParserException
+	public final void testPositiveMalformed_File() throws Exception
 	{
 		Quest3 SUT = new Quest3(new ConfigFile(_positiveMalformed), _emptyExec);
+		SUT.initialize();
 		assertTrue(SUT.answer());
 	}
 	
@@ -83,37 +89,42 @@ public class Quest3Test
 	
 	
 	@Test
-	public final void testNegativeTrivial_Exec() throws IOException, SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, ParserException
+	public final void testNegativeTrivial_Exec() throws Exception
 	{
 		Quest3 SUT = new Quest3(new ConfigFile(_emptyConfig), _negativeTrivialExec);
+		SUT.initialize();
 		assertFalse(SUT.answer());
 	}
 	
 	@Test
-	public final void testNegativeSimilar_Exec() throws IOException, ParserException
+	public final void testNegativeSimilar_Exec() throws Exception
 	{
 		Quest3 SUT = new Quest3(new ConfigFile(_emptyConfig), _negativeSimilarExec);
+		SUT.initialize();
 		assertFalse(SUT.answer());
 	}
 	
 	@Test
-	public final void testNegativeMalformed_Exec() throws IOException, ParserException
+	public final void testNegativeMalformed_Exec() throws Exception
 	{
 		Quest3 SUT = new Quest3(new ConfigFile(_emptyConfig), _negativeMalformedExec);
+		SUT.initialize();
 		assertFalse(SUT.answer());
 	}
 
 	@Test
-	public final void testPositiveTrivial_Exec() throws IOException, ParserException
+	public final void testPositiveTrivial_Exec() throws Exception
 	{
 		Quest3 SUT = new Quest3(new ConfigFile(_emptyConfig), _positiveTrivialExec);
+		SUT.initialize();
 		assertTrue(SUT.answer());
 	}
 	
 	@Test
-	public final void testPositiveMalformed_Exec() throws IOException, ParserException
+	public final void testPositiveMalformed_Exec() throws Exception
 	{
 		Quest3 SUT = new Quest3(new ConfigFile(_emptyConfig), _positiveMalformedExec);
+		SUT.initialize();
 		assertTrue(SUT.answer());
 	}
 	

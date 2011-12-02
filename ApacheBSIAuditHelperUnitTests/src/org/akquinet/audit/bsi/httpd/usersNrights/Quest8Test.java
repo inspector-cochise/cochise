@@ -28,16 +28,18 @@ public class Quest8Test
 	}
 	
 	@Test
-	public final void testNegative() throws IOException
+	public final void testNegative() throws Exception
 	{
 		Quest8 SUT = new Quest8(_someFile, _conf, _userDir + "/testFiles/", _failExec, true);
+		SUT.initialize();
 		assertFalse(SUT.answer());
 	}
 	
 	@Test
-	public final void testPositive() throws IOException
+	public final void testPositive() throws Exception
 	{
 		Quest8 SUT = new Quest8(_someFile, _conf, _userDir + "/testFiles/", _emptyExec, true);
+		SUT.initialize();
 		assertTrue(SUT.answer());
 	}
 	

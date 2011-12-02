@@ -36,20 +36,15 @@ public class Quest11Test
 				{
 					InputStream stdin = System.in;
 					Quest11 SUT = new Quest11(new ConfigFile(_a0));
+					SUT.initialize();
 					System.setIn(new ByteArrayInputStream("No\n".getBytes()));
 					
 					assertFalse(SUT.answer());
 					System.setIn(stdin);
 				}
-				catch (IOException e)
+				catch (Exception e)
 				{
-					e.printStackTrace();
-					fail("Caught IOException...");
-				}
-				catch (ParserException e)
-				{
-					e.printStackTrace();
-					fail("Caught ParserException...");
+					throw new RuntimeException(e);
 				}
 			}
 		};
@@ -78,20 +73,15 @@ public class Quest11Test
 				{
 					InputStream stdin = System.in;
 					Quest11 SUT = new Quest11(new ConfigFile(_a0));
+					SUT.initialize();
 					System.setIn(new ByteArrayInputStream("Yes\n".getBytes()));
 					
 					assertTrue(SUT.answer());
 					System.setIn(stdin);
 				}
-				catch (IOException e)
+				catch (Exception e)
 				{
-					e.printStackTrace();
-					fail("Caught IOException...");
-				}
-				catch (ParserException e)
-				{
-					e.printStackTrace();
-					fail("Caught ParserException...");
+					throw new RuntimeException(e);
 				}
 			}
 		};
@@ -120,17 +110,12 @@ public class Quest11Test
 				{
 					//Quest11a should not be consulted, so we don't simulate user input
 					Quest11 SUT = new Quest11(new ConfigFile(_a1));
+					SUT.initialize();
 					assertTrue(SUT.answer());
 				}
-				catch (IOException e)
+				catch (Exception e)
 				{
-					e.printStackTrace();
-					fail("Caught IOException...");
-				}
-				catch (ParserException e)
-				{
-					e.printStackTrace();
-					fail("Caught ParserException...");
+					throw new RuntimeException(e);
 				}
 			}
 		};

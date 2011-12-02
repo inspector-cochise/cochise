@@ -23,37 +23,42 @@ public class Quest12bTest
 	private static final File _someConfig = _negativeTrivial;
 
 	@Test
-	public final void testNegativeTrivial() throws IOException, ParserException
+	public final void testNegativeTrivial() throws Exception
 	{
 		Quest12b SUT = new Quest12b(new ConfigFile(_negativeTrivial), _userDir + "/testFiles/", "emptyScript.bat");
+		SUT.initialize();
 		assertFalse(SUT.answer());
 	}
 	
 	@Test
-	public final void testNegativePartial1() throws IOException, ParserException
+	public final void testNegativePartial1() throws Exception
 	{
 		Quest12b SUT = new Quest12b(new ConfigFile(_negativePartial1), _userDir + "/testFiles/", "emptyScript.bat");
+		SUT.initialize();
 		assertFalse(SUT.answer());
 	}
 	
 	@Test
-	public final void testNegativePartial2() throws IOException, ParserException
+	public final void testNegativePartial2() throws Exception
 	{
 		Quest12b SUT = new Quest12b(new ConfigFile(_negativePartial2), _userDir + "/testFiles/", "emptyScript.bat");
+		SUT.initialize();
 		assertFalse(SUT.answer());
 	}
 	
 	@Test
-	public final void testNegativeExec() throws IOException, ParserException
+	public final void testNegativeExec() throws Exception
 	{
 		Quest12b SUT = new Quest12b(new ConfigFile(_positiveTrivial), _userDir + "/testFiles/", "failScript.bat");
+		SUT.initialize();
 		assertFalse(SUT.answer());
 	}
 	
 	@Test
-	public final void testPositiveTrivial() throws IOException, ParserException
+	public final void testPositiveTrivial() throws Exception
 	{
 		Quest12b SUT = new Quest12b(new ConfigFile(_positiveTrivial), _userDir + "/testFiles/", "emptyScript.bat");
+		SUT.initialize();
 		assertTrue(SUT.answer());
 	}
 	

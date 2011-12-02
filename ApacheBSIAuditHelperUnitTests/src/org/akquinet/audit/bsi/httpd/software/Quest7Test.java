@@ -32,10 +32,11 @@ public class Quest7Test
 	private static final File _someConfig = _negativeTrivial;
 
 	@Test
-	public final void testNegativeTrivial() throws IOException, ParserException
+	public final void testNegativeTrivial() throws Exception
 	{
 		InputStream stdin = System.in;
 		Quest7 SUT = new Quest7(new ConfigFile(_negativeTrivial));
+		SUT.initialize();
 		System.setIn(new ByteArrayInputStream("Yes\n".getBytes()));
 
 		assertFalse(SUT.answer());
@@ -44,10 +45,11 @@ public class Quest7Test
 	}
 	
 	@Test
-	public final void testNegativeConditional() throws IOException, ParserException
+	public final void testNegativeConditional() throws Exception
 	{
 		InputStream stdin = System.in;
 		Quest7 SUT = new Quest7(new ConfigFile(_negativeConditional));
+		SUT.initialize();
 		System.setIn(new ByteArrayInputStream("Yes\n".getBytes()));
 		
 		assertFalse(SUT.answer());
@@ -68,18 +70,13 @@ public class Quest7Test
 				try
 				{
 					SUT = new Quest7(new ConfigFile(_positiveTrivial));
+					SUT.initialize();
 					//we don't send any input cause we shouldn't be asked for anything
 					assertTrue(SUT.answer());
 				}
-				catch (IOException e)
+				catch (Exception e)
 				{
-					e.printStackTrace();
-					fail("Caught IOException...");
-				}
-				catch (ParserException e)
-				{
-					e.printStackTrace();
-					fail("Caught ParserException...");
+					throw new RuntimeException(e);
 				}
 			}
 		};
@@ -97,10 +94,11 @@ public class Quest7Test
 	}
 	
 	@Test
-	public final void testPositiveOthers() throws IOException, ParserException
+	public final void testPositiveOthers() throws Exception
 	{
 		InputStream stdin = System.in;
 		Quest7 SUT = new Quest7(new ConfigFile(_positiveOthers));
+		SUT.initialize();
 		System.setIn(new ByteArrayInputStream("Yes\n".getBytes()));
 		
 		assertTrue(SUT.answer());
@@ -109,12 +107,13 @@ public class Quest7Test
 	}
 	
 	@Test
-	public final void testCorrectListing() throws IOException, ParserException
+	public final void testCorrectListing() throws Exception
 	{
 		InputStream stdin = System.in;
 		PrintStream stdout = System.out;
 		
 		Quest7 SUT = new Quest7(new ConfigFile(_correctListing));
+		SUT.initialize();
 		System.setIn(new ByteArrayInputStream("Yes\n".getBytes()));
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		System.setOut(new PrintStream(out));

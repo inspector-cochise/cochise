@@ -31,6 +31,7 @@ public class Quest9bTest
 			{
 				InputStream stdin = System.in;
 				Quest9b SUT = new Quest9b(_srvRootHtdocs);
+				SUT.initialize();
 				System.setIn(new ByteArrayInputStream((answer1 + "\n" + answer2 + "\n").getBytes()));
 
 				assertEquals(SUT.answer(), assertVal);
@@ -83,6 +84,7 @@ public class Quest9bTest
 			public void run()
 			{
 				Quest9b SUT = new Quest9b(_srvRootNoHtdocs);
+				SUT.initialize();
 				assertTrue(SUT.answer());
 			}
 		};

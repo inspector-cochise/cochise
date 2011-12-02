@@ -4,10 +4,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.akquinet.httpd.ConfigFile;
-import org.akquinet.httpd.ParserException;
 import org.junit.Test;
 
 public class Quest5bTest
@@ -24,51 +22,58 @@ public class Quest5bTest
 	private static final File _someConfig = _negativeTrivial;
 
 	@Test
-	public final void testNegativeTrivial() throws IOException, ParserException
+	public final void testNegativeTrivial() throws Exception
 	{
 		Quest5b SUT = new Quest5b(new ConfigFile(_negativeTrivial));
+		SUT.initialize();
 		assertFalse(SUT.answer());
 	}
 	
 	@Test
-	public final void testNegativeConditional() throws IOException, ParserException
+	public final void testNegativeConditional() throws Exception
 	{
 		Quest5b SUT = new Quest5b(new ConfigFile(_negativeConditional));
+		SUT.initialize();
 		assertFalse(SUT.answer());
 	}
 	
 	@Test
-	public final void testNegativeMalformed() throws IOException, ParserException
+	public final void testNegativeMalformed() throws Exception
 	{
 		Quest5b SUT = new Quest5b(new ConfigFile(_negativeMalformed));
+		SUT.initialize();
 		assertFalse(SUT.answer());
 	}
 	
 	@Test
-	public final void testPositiveTrivial1() throws IOException, ParserException
+	public final void testPositiveTrivial1() throws Exception
 	{
 		Quest5b SUT = new Quest5b(new ConfigFile(_positiveTrivial1));
+		SUT.initialize();
 		assertTrue(SUT.answer());
 	}
 	
 	@Test
-	public final void testPositiveTrivial2() throws IOException, ParserException
+	public final void testPositiveTrivial2() throws Exception
 	{
 		Quest5b SUT = new Quest5b(new ConfigFile(_positiveTrivial2));
+		SUT.initialize();
 		assertTrue(SUT.answer());
 	}
 
 	@Test
-	public final void testGetID() throws IOException, ParserException
+	public final void testGetID() throws Exception
 	{
 		Quest5b SUT = new Quest5b(new ConfigFile(_someConfig));
+		SUT.initialize();
 		assertTrue(SUT.getID().equals("Quest5b"));
 	}
 
 	@Test
-	public final void testIsCritical() throws IOException, ParserException
+	public final void testIsCritical() throws Exception
 	{
 		Quest5b SUT = new Quest5b(new ConfigFile(_someConfig));
+		SUT.initialize();
 		assertFalse(SUT.isCritical());
 	}
 }
