@@ -3,14 +3,17 @@ package org.akquinet.httpd;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 
 import org.akquinet.httpd.syntax.Directive;
 import org.akquinet.httpd.syntax.Head;
 
-public class ConfigFile
+public class ConfigFile implements Serializable
 {
-	private Head _head;
+	private static final long serialVersionUID = -487133373233062784L;
+	
+	private transient Head _head;
 	private File _file;
 	private String _serverRoot;
 	
@@ -122,5 +125,12 @@ public class ConfigFile
 	public String getFileName()
 	{
 		return _file.getAbsolutePath();
+	}
+	
+	private synchronized void readObject( java.io.ObjectInputStream s ) throws IOException, ClassNotFoundException, ParserException
+	{
+		s.defaultReadObject();
+		FileInputStream input = new FileInputStream(_file);
+		_head = new Head(null, new MultipleMarkerInputStream(input), _serverRoot, _file.getCanonicalPath());
 	}
 }
