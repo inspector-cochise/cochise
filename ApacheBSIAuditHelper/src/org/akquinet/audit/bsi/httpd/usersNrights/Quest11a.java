@@ -1,15 +1,20 @@
 package org.akquinet.audit.bsi.httpd.usersNrights;
 
+import java.io.IOException;
 import java.util.ResourceBundle;
 
+import org.akquinet.audit.Interactive;
 import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.ui.UserCommunicator;
 
+@Interactive
 public class Quest11a implements YesNoQuestion
 {
+	private static final long serialVersionUID = 3232151063345849252L;
+	
 	private static final String _id = "Quest11a";
 	private static final UserCommunicator _uc = UserCommunicator.getDefault();
-	private ResourceBundle _labels;
+	private transient ResourceBundle _labels;
 
 	public Quest11a()
 	{
@@ -65,5 +70,11 @@ public class Quest11a implements YesNoQuestion
 	public void initialize() throws Exception
 	{
 		//nothing to do here
+	}
+	
+	private synchronized void readObject( java.io.ObjectInputStream s ) throws IOException, ClassNotFoundException
+	{
+		s.defaultReadObject();
+		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 	}
 }

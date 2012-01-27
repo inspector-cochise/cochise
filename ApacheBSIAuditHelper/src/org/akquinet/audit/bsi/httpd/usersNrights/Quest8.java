@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
 
+import org.akquinet.audit.Automated;
 import org.akquinet.audit.ShellAnsweredQuestion;
 import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.ui.UserCommunicator;
@@ -15,8 +16,11 @@ import org.akquinet.httpd.ParserException;
 import org.akquinet.httpd.syntax.Directive;
 import org.akquinet.httpd.syntax.StatementList;
 
+@Automated
 public class Quest8 implements YesNoQuestion
 {
+	private static final long serialVersionUID = 194397268054339885L;
+	
 	private static final String PERMISSION_PATTERN = "-...--.--.";
 	private static final String PERMISSION_PATTERN_LOW = "-....-..-.";
 	
@@ -25,7 +29,7 @@ public class Quest8 implements YesNoQuestion
 	private String _command;
 	private String _commandPath;
 	private File _configFile;
-	private ResourceBundle _labels;
+	private transient ResourceBundle _labels;
 	private ConfigFile _conf;
 	private boolean _highSec;
 
@@ -163,5 +167,11 @@ public class Quest8 implements YesNoQuestion
 	public void initialize() throws Exception
 	{
 		_conf.reparse();
+	}
+	
+	private synchronized void readObject( java.io.ObjectInputStream s ) throws IOException, ClassNotFoundException
+	{
+		s.defaultReadObject();
+		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 	}
 }

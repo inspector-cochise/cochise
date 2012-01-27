@@ -4,19 +4,24 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
+import java.util.List;
 import java.util.ResourceBundle;
 
+import org.akquinet.audit.Automated;
 import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.ui.UserCommunicator;
 
+@Automated
 public class Quest2 implements YesNoQuestion
 {
+	private static final long serialVersionUID = 8203489165356198530L;
+	
 	private static final String _id = "Quest2";
 	private static final UserCommunicator _uc = UserCommunicator.getDefault();
-	private ProcessBuilder _httpd;
-	private ProcessBuilder _getCurrent;
-	private ProcessBuilder _getRunning;
-	private ResourceBundle _labels;
+	private transient ProcessBuilder _httpd;
+	private transient ProcessBuilder _getCurrent;
+	private transient ProcessBuilder _getRunning;
+	private transient ResourceBundle _labels;
 	
 	public Quest2(File apacheExecutable)
 	{
@@ -211,5 +216,23 @@ public class Quest2 implements YesNoQuestion
 	public void initialize()
 	{
 		//nothing to do here
+	}
+	
+	private synchronized void writeObject( java.io.ObjectOutputStream s ) throws IOException
+	{
+		s.defaultWriteObject();
+		s.writeObject(_httpd.command());
+		s.writeObject(_getCurrent.command());
+		s.writeObject(_getRunning.command());
+	}
+	
+	@SuppressWarnings("unchecked")
+	private synchronized void readObject( java.io.ObjectInputStream s ) throws IOException, ClassNotFoundException
+	{
+		s.defaultReadObject();
+		_httpd = new ProcessBuilder((List<String>) s.readObject());
+		_getCurrent = new ProcessBuilder((List<String>) s.readObject());
+		_getRunning = new ProcessBuilder((List<String>) s.readObject());
+		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 	}
 }

@@ -11,6 +11,8 @@ import org.akquinet.audit.ui.UserCommunicator;
 
 public class Quest9a implements YesNoQuestion
 {
+	private static final long serialVersionUID = -1309714410747833013L;
+	
 	private static final String _id = "Quest9a";
 	private static final UserCommunicator _uc = UserCommunicator.getDefault();
 	private static final String PERMISSION_PATTERN = "...------";
@@ -19,7 +21,7 @@ public class Quest9a implements YesNoQuestion
 	private String _command;
 	private String _serverRoot;
 	private String _user;
-	private ResourceBundle _labels;
+	private transient ResourceBundle _labels;
 	private boolean _highSec;
 
 	public Quest9a(String serverRoot, String user, boolean highSec)
@@ -130,5 +132,11 @@ public class Quest9a implements YesNoQuestion
 	public void initialize()
 	{
 		//nothing to do here
+	}
+	
+	private synchronized void readObject( java.io.ObjectInputStream s ) throws IOException, ClassNotFoundException
+	{
+		s.defaultReadObject();
+		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 	}
 }

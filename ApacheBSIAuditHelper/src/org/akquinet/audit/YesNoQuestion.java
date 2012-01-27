@@ -1,6 +1,8 @@
 package org.akquinet.audit;
 
-public interface YesNoQuestion
+import java.io.Serializable;
+
+public interface YesNoQuestion extends Serializable
 {
 	/**
 	 * Asks the question and returns its answer.

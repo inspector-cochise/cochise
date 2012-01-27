@@ -1,21 +1,30 @@
 package org.akquinet.audit.bsi.httpd.usersNrights;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ResourceBundle;
 
+import org.akquinet.audit.Interactive;
 import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.ui.UserCommunicator;
 
+@Interactive
 public class Quest9b implements YesNoQuestion
 {
+	private static final long serialVersionUID = -1197600716075991886L;
+	
 	private static final String _id = "Quest9b";
 	private static final UserCommunicator _uc = UserCommunicator.getDefault();
 	private String _serverRoot;
-	private ResourceBundle _labels;
+	private transient ResourceBundle _labels;
+	private long _htdocsLastModified;
+	private boolean _lastUserAnswer;
 
 	public Quest9b(String serverRoot)
 	{
 		_serverRoot = serverRoot;
+		_htdocsLastModified = -1;
+		_lastUserAnswer = false;
 		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 	}
 
@@ -25,26 +34,34 @@ public class Quest9b implements YesNoQuestion
 		_uc.printHeading3(_id);
 		_uc.printParagraph( _labels.getString("Q0") );
 		
-		File srvRt = new File(_serverRoot + File.separator + "htdocs");
+		File htdocs = new File(_serverRoot + File.separator + "htdocs");
 		
-		if(!srvRt.exists())
+		if(!htdocs.exists())
 		{
 			_uc.printAnswer(true, _labels.getString("S1") );
 			return true;
 		}
 		else
 		{
-			if(!srvRt.isDirectory())
+			if(!htdocs.isDirectory())
 			{
 				_uc.printAnswer(false,  _labels.getString("S2") );
 				return false;
 			}
 			_uc.println( _labels.getString("L1") );
-			boolean isDoc = _uc.askYesNoQuestion( _labels.getString("Q1") );
-			boolean access = _uc.askYesNoQuestion( _labels.getString("Q2") );
-			_uc.printAnswer(isDoc && access, isDoc && access ?
+			
+			boolean isDoc = true;
+			boolean access = true;
+			if(htdocs.lastModified() > _htdocsLastModified || !_lastUserAnswer)
+			{
+				_htdocsLastModified = htdocs.lastModified();
+				isDoc = _uc.askYesNoQuestion( _labels.getString("Q1") );
+				access = _uc.askYesNoQuestion( _labels.getString("Q2") );
+				_lastUserAnswer = isDoc && access;
+			}
+			_uc.printAnswer(_lastUserAnswer, _lastUserAnswer ?
 									_labels.getString("S3") : _labels.getString("S4") );
-			return isDoc && access;
+			return _lastUserAnswer;
 		}
 	}
 
@@ -82,5 +99,11 @@ public class Quest9b implements YesNoQuestion
 	public void initialize()
 	{
 		//nothing to do here
+	}
+	
+	private synchronized void readObject( java.io.ObjectInputStream s ) throws IOException, ClassNotFoundException
+	{
+		s.defaultReadObject();
+		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 	}
 }

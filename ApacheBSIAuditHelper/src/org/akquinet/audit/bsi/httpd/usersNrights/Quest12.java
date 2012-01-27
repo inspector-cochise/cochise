@@ -1,19 +1,24 @@
 package org.akquinet.audit.bsi.httpd.usersNrights;
 
+import java.io.IOException;
 import java.util.ResourceBundle;
 
+import org.akquinet.audit.Automated;
 import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
 
+@Automated
 public class Quest12 implements YesNoQuestion
 {
+	private static final long serialVersionUID = -5241662827698850966L;
+	
 	private static final String _id = "Quest12";
 	private static final UserCommunicator _uc = UserCommunicator.getDefault();
 	
 	private Quest12a _q12a;
 	private Quest12b _q12b;
-	private ResourceBundle _labels;
+	private transient ResourceBundle _labels;
 	
 	public Quest12(ConfigFile conf, String apacheExecutable)
 	{
@@ -90,5 +95,11 @@ public class Quest12 implements YesNoQuestion
 	{
 		_q12a.initialize();
 		_q12b.initialize();
+	}
+	
+	private synchronized void readObject( java.io.ObjectInputStream s ) throws IOException, ClassNotFoundException
+	{
+		s.defaultReadObject();
+		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 	}
 }

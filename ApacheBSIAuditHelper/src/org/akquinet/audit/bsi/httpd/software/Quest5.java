@@ -1,21 +1,26 @@
 package org.akquinet.audit.bsi.httpd.software;
 
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
+import org.akquinet.audit.Automated;
 import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
 
+@Automated
 public class Quest5 implements YesNoQuestion
 {
+	private static final long serialVersionUID = -1579057546402929690L;
+	
 	private static final String _id = "Quest5";
 	private ConfigFile _conf;
 	private static final UserCommunicator _uc = UserCommunicator.getDefault();
 	
 	private Quest5a _q5a;
 	private Quest5b _q5b;
-	private ResourceBundle _labels;
+	private transient ResourceBundle _labels;
 	
 	public Quest5(ConfigFile conf)
 	{
@@ -33,8 +38,8 @@ public class Quest5 implements YesNoQuestion
 	public boolean answer()
 	{
 		_uc.printHeading3(_id);
-		_uc.printHidingParagraph(_labels.getString("S0"), _labels.getString("P0"));
 		_uc.printParagraph( MessageFormat.format( _labels.getString("Q0") , _conf.getFileName()) );
+		_uc.printHidingParagraph(_labels.getString("S0"), _labels.getString("P0"));
 		
 		
 		_uc.println( _labels.getString("L1") );
@@ -88,5 +93,11 @@ public class Quest5 implements YesNoQuestion
 	{
 		_q5a.initialize();
 		_q5b.initialize();
+	}
+	
+	private synchronized void readObject( java.io.ObjectInputStream s ) throws IOException, ClassNotFoundException
+	{
+		s.defaultReadObject();
+		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 	}
 }

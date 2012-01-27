@@ -3,18 +3,23 @@ package org.akquinet.audit.bsi.httpd.software;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.ResourceBundle;
 
+import org.akquinet.audit.Automated;
 import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.ui.UserCommunicator;
 
+@Automated
 public class Quest6 implements YesNoQuestion
 {
+	private static final long serialVersionUID = 5092103913021841065L;
+	
 	private static final String _id = "Quest6";
-	private ProcessBuilder _httpd;
 	private static final UserCommunicator _uc = UserCommunicator.getDefault();
-	private InputStream _stdErr;
-	private ResourceBundle _labels;
+
+	private transient ProcessBuilder _httpd;
+	private transient ResourceBundle _labels;
 	
 	public Quest6(File apacheExecutable)
 	{
@@ -42,7 +47,7 @@ public class Quest6 implements YesNoQuestion
 		try
 		{
 			Process p = _httpd.start();
-			_stdErr = p.getErrorStream();
+			InputStream stdErr = p.getErrorStream();
 			int exit = p.waitFor();
 			
 			if(exit == 0)
@@ -55,11 +60,11 @@ public class Quest6 implements YesNoQuestion
 			{
 				_uc.printAnswer(false, _labels.getString("S2") );
 				StringBuffer buf = new StringBuffer();
-				int b = _stdErr.read();
+				int b = stdErr.read();
 				while(b != -1)
 				{
 					buf.append((char)b);
-					b = _stdErr.read();
+					b = stdErr.read();
 				}
 				_uc.printExample(buf.toString());
 				
@@ -119,5 +124,19 @@ public class Quest6 implements YesNoQuestion
 	public void initialize()
 	{
 		//nothing to do here
+	}
+	
+	private synchronized void writeObject( java.io.ObjectOutputStream s ) throws IOException
+	{
+		s.defaultWriteObject();
+		s.writeObject(_httpd.command());
+	}
+	
+	@SuppressWarnings("unchecked")
+	private synchronized void readObject( java.io.ObjectInputStream s ) throws IOException, ClassNotFoundException
+	{
+		s.defaultReadObject();
+		_httpd = new ProcessBuilder((List<String>) s.readObject());
+		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 	}
 }
