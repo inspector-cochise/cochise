@@ -13,12 +13,14 @@ import org.akquinet.httpd.ParserException;
 
 public class PrologueQuestion implements YesNoQuestion
 {
+	private static final long serialVersionUID = 4589990157126160631L;
+	
 	private static final String GET_DEFAULT_SRV_ROOT_COMMAND = "./srvRoot.sh";
 	private static final String _id = "Prologue";
 	private static final UserCommunicator _uc = UserCommunicator.getDefault();
 	private PrologueData _pD;
 	
-	private ResourceBundle _labels;
+	private transient ResourceBundle _labels;
 
 	public PrologueQuestion(PrologueData pD)
 	{
@@ -162,5 +164,11 @@ public class PrologueQuestion implements YesNoQuestion
 	public void initialize() throws Exception
 	{
 		//nothing to do here
+	}
+	
+	private synchronized void readObject( java.io.ObjectInputStream s ) throws IOException, ClassNotFoundException
+	{
+		s.defaultReadObject();
+		_labels = ResourceBundle.getBundle("global", _uc.getLocale());
 	}
 }
