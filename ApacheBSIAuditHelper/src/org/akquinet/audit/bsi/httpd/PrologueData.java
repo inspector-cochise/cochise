@@ -5,17 +5,17 @@ import java.io.Serializable;
 
 import org.akquinet.httpd.ConfigFile;
 
-class PrologueData implements Serializable
+public class PrologueData implements Serializable
 {
 	private static final long serialVersionUID = -5150925213077439859L;
 	
-	String _apacheExec = null;
-	String _apacheConf = null;
-	File _apacheExecutable = null;
-	ConfigFile _conf = null;
-	File _configFile = null;
-	boolean _highSec = true;
-	boolean _highPriv = true;
+	public String _apacheExec = null;
+	public String _apacheConf = null;
+	public File _apacheExecutable = null;
+	public ConfigFile _conf = null;
+	public File _configFile = null;
+	public boolean _highSec = true;
+	public boolean _highPriv = true;
 	
 	
 	public PrologueData(String apacheExec,String apacheConf, File apacheExecutable,
