@@ -21,6 +21,7 @@ import org.akquinet.audit.bsi.httpd.usersNrights.Quest11;
 import org.akquinet.audit.bsi.httpd.usersNrights.Quest12;
 import org.akquinet.audit.bsi.httpd.usersNrights.Quest8;
 import org.akquinet.audit.bsi.httpd.usersNrights.Quest9;
+import org.akquinet.audit.ui.ConsoleUserCommunicator;
 import org.akquinet.audit.ui.UserCommunicator;
 
 public class HttpdAudit
@@ -144,7 +145,7 @@ public class HttpdAudit
 		{
 			File htmlReport = new File("./htmlReport.htm");
 			System.out.println( MessageFormat.format(labels.getString("L1_willSaveHTML"), htmlReport.getCanonicalPath()) );
-			UserCommunicator.setDefault(new UserCommunicator(htmlReport));
+			UserCommunicator.setDefault(new ConsoleUserCommunicator(htmlReport));
 		}
 		catch (Exception e)
 		{
