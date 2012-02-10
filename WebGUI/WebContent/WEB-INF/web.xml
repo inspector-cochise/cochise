@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app>
+  <display-name>Example</display-name>
+
+  <!-- Declare the existence of a servlet. -->
+  <servlet>
+    <servlet-name>AskerServlet</servlet-name>
+    <servlet-class>org.akquinet.web.AskerServlet</servlet-class>
+  </servlet>
+
+  <!-- Map URLs to that servlet. -->
+  <servlet-mapping>
+    <servlet-name>AskerServlet</servlet-name>
+    <url-pattern>/main.html</url-pattern>
+  </servlet-mapping>
+</web-app>
