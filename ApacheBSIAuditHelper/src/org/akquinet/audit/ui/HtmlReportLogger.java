@@ -3,21 +3,18 @@ package org.akquinet.audit.ui;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Stack;
 
 public class HtmlReportLogger
 {
-	private HashMap<Integer, HtmlTagPair> _importantTags;
 	private int _serialCounter;
 	private Stack<Integer> _indentSerialStack;
 	private Stack<Integer> _hidingSerialStack;
 	private ResourceBundle _labels;
-	
-	private final int HTML_ID = 0;
-	private final int BODY_ID = 1;
+
+	private HtmlTagPair _root;
 	
 	private Stack<HtmlTagPair> _openTags;
 	
@@ -25,25 +22,38 @@ public class HtmlReportLogger
 	
 	public HtmlReportLogger(Locale locale)
 	{
+		this(locale, true);
+	}
+	
+	public HtmlReportLogger(Locale locale, boolean createOuterTags)
+	{
 		_labels = ResourceBundle.getBundle("global", locale);
-		_importantTags = new HashMap<Integer, HtmlTagPair>();
 		_indentSerialStack = new Stack<Integer>();
 		_hidingSerialStack = new Stack<Integer>();
 		_openTags = new Stack<HtmlTagPair>();
+		_serialCounter = 1;
 
-		HtmlTagPair html = new HtmlTagPair("html");
-		HtmlTagPair head = createHeadTag();
-		HtmlTagPair body = new HtmlTagPair("body");
+		if(createOuterTags)
+		{
+			HtmlTagPair html = new HtmlTagPair("html");
+			HtmlTagPair head = createHeadTag();
+			HtmlTagPair body = new HtmlTagPair("body");
+			
+			html.addContent(head);
+			html.addContent(body);
+			
+			_openTags.push(body);
+			_root = html;
+		}
+		else
+		{
+			HtmlTagPair div = new HtmlTagPair("div");
+			
+			_openTags.push(div);
+			_root = div;
+		}
 		
-		html.addContent(head);
-		html.addContent(body);
-		
-		_importantTags.put(HTML_ID, html);
-		_importantTags.put(BODY_ID, body);
-		_serialCounter = BODY_ID + 1;
-		
-		_openTags.push(body);
-		_markBu = new Backup(_importantTags, _serialCounter, _indentSerialStack, _hidingSerialStack, _openTags);
+		_markBu = new Backup(_serialCounter, _indentSerialStack, _hidingSerialStack, _openTags);
 	}
 
 	private HtmlTagPair createHeadTag()
@@ -234,38 +244,40 @@ public class HtmlReportLogger
 	public void writeToFile(File htmlFile) throws IOException
 	{
 		FileOutputStream os = new FileOutputStream(htmlFile);
-		os.write(_importantTags.get(HTML_ID).stringify().toString().getBytes());
+		os.write(_root.stringify().toString().getBytes());
 		os.close();
+	}
+	
+	public String stringify()
+	{
+		return _root.stringify().toString();
 	}
 
 	public void mark()
 	{
-		_markBu = new Backup(_importantTags, _serialCounter, _indentSerialStack, _hidingSerialStack, _openTags);
-		_importantTags.get(HTML_ID).mark();
+		_markBu = new Backup(_serialCounter, _indentSerialStack, _hidingSerialStack, _openTags);
+		_root.mark();
 	}
 
 	public void reset()
 	{
 		_markBu.restore(this);
-		_importantTags.get(HTML_ID).reset();
+		_root.reset();
 	}
 	
 	private class Backup
 	{
-		private HashMap<Integer, HtmlTagPair> __importantTags;
 		private int __serialCounter;
 		private Stack<Integer> __indentSerialStack;
 		private Stack<Integer> __hidingSerialStack;
 		private Stack<HtmlTagPair> __openTags;
 		
 		@SuppressWarnings("unchecked")
-		public Backup(HashMap<Integer, HtmlTagPair> importantTags,
-					  int serialCounter,
+		public Backup(int serialCounter,
 					  Stack<Integer> indentSerialStack,
 					  Stack<Integer> hidingSerialStack,
 					  Stack<HtmlTagPair> openTags)
 		{
-			__importantTags = (HashMap<Integer, HtmlTagPair>) importantTags.clone();
 			__serialCounter = serialCounter;
 			__indentSerialStack = (Stack<Integer>) indentSerialStack.clone();
 			__hidingSerialStack = (Stack<Integer>) hidingSerialStack.clone();
@@ -274,7 +286,6 @@ public class HtmlReportLogger
 		
 		public void restore(HtmlReportLogger logger)
 		{
-			logger._importantTags = __importantTags;
 			logger._serialCounter = __serialCounter;
 			logger._indentSerialStack = __indentSerialStack;
 			logger._hidingSerialStack = __hidingSerialStack;
