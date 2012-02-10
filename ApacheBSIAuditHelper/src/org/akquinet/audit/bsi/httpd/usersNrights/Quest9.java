@@ -193,4 +193,10 @@ public class Quest9 implements YesNoQuestion
 		s.defaultReadObject();
 		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 	}
+	
+	@Override
+	public String getName()
+	{
+		return _labels.getString("name");
+	}
 }

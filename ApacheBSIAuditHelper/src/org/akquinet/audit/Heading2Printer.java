@@ -5,6 +5,8 @@ import org.akquinet.audit.ui.UserCommunicator;
 
 public class Heading2Printer implements YesNoQuestion
 {
+	private static final long serialVersionUID = -1015000052306322712L;
+	
 	private static final UserCommunicator _uc = UserCommunicator.getDefault();
 	private String _heading;
 	private int _blockNumber;
@@ -56,6 +58,12 @@ public class Heading2Printer implements YesNoQuestion
 	public void initialize() throws Exception
 	{
 		//nothing to do here
+	}
+
+	@Override
+	public String getName()
+	{
+		return "HeadingPrinter";
 	}
 
 }

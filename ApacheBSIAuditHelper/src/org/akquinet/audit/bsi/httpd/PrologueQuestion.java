@@ -171,4 +171,10 @@ public class PrologueQuestion implements YesNoQuestion
 		s.defaultReadObject();
 		_labels = ResourceBundle.getBundle("global", _uc.getLocale());
 	}
+	
+	@Override
+	public String getName()
+	{
+		return _labels.getString("PrologueQuestionName");
+	}
 }

@@ -139,4 +139,10 @@ public class Quest6 implements YesNoQuestion
 		_httpd = new ProcessBuilder((List<String>) s.readObject());
 		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 	}
+	
+	@Override
+	public String getName()
+	{
+		return _labels.getString("name");
+	}
 }

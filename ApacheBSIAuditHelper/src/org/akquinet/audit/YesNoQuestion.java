@@ -32,6 +32,12 @@ public interface YesNoQuestion extends Serializable
 	abstract public String getID();
 	
 	/**
+	 * The name of the question. Can be language dependent.
+	 * @return name
+	 */
+	abstract public String getName();
+	
+	/**
 	 * Number of that question in a block. Questions will be asked in order of these numbers if all requirements
 	 * are fulfilled.
 	 * @return number
