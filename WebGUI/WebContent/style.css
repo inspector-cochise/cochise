@@ -7,6 +7,9 @@ html, body {
 	background-color: #FFF;
 	font-family: Helvetica, Arial, sans-serif;
 }
+table {
+	color: #594A3E;
+}
 #header {
 	color: #B3937D;
 	background-color: #594A3E;
