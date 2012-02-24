@@ -15,10 +15,10 @@ import org.akquinet.httpd.syntax.Directive;
 @Interactive
 public class Quest4 extends ModuleHelper implements YesNoQuestion
 {
-	private static final long serialVersionUID = 8605771425006250958L;
+	private static final long serialVersionUID = -9165261597918536614L;
 	
 	private static final String _id = "Quest4";
-	private static final UserCommunicator _uc = UserCommunicator.getDefault();
+	private transient UserCommunicator _uc = UserCommunicator.getDefault();
 	private transient ResourceBundle _labels;
 	
 	private String[] _compiledIntoModules;
@@ -28,7 +28,13 @@ public class Quest4 extends ModuleHelper implements YesNoQuestion
 	
 	public Quest4(ConfigFile conf, File apacheExecutable)
 	{
+		this(conf, apacheExecutable, UserCommunicator.getDefault());
+	}
+	
+	public Quest4(ConfigFile conf, File apacheExecutable, UserCommunicator uc)
+	{
 		super(conf, apacheExecutable);
+		_uc = uc;
 		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 		_lastAnswer = false;
 	}
@@ -86,7 +92,7 @@ public class Quest4 extends ModuleHelper implements YesNoQuestion
 	
 	private String[] getLoadModules()
 	{
-		Directive[] loadModules = (Directive[]) getLoadModuleList().toArray();
+		Directive[] loadModules = (Directive[]) getLoadModuleList().toArray(new Directive[0]);
 		String[] ret = new String[loadModules.length];
 		for (int i = 0; i < loadModules.length; ++i)
 		{
@@ -176,6 +182,7 @@ public class Quest4 extends ModuleHelper implements YesNoQuestion
 	private synchronized void readObject( java.io.ObjectInputStream s ) throws IOException, ClassNotFoundException
 	{
 		s.defaultReadObject();
+		_uc = UserCommunicator.getDefault();
 		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 	}
 	
@@ -183,5 +190,11 @@ public class Quest4 extends ModuleHelper implements YesNoQuestion
 	public String getName()
 	{
 		return _labels.getString("name");
+	}
+
+	@Override
+	public void setUserCommunicator(UserCommunicator uc)
+	{
+		_uc = uc;
 	}
 }
