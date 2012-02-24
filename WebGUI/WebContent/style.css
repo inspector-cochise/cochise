@@ -7,9 +7,6 @@ html, body {
 	background-color: #FFF;
 	font-family: Helvetica, Arial, sans-serif;
 }
-table {
-	color: #594A3E;
-}
 #header {
 	color: #B3937D;
 	background-color: #594A3E;
@@ -27,6 +24,11 @@ table {
 	color: #594A3E;
 	width: 100%;
 }
+
+table {
+	color: #594A3E;
+}
+
 #footer {
 	color: #B3937D;
 	background-color: #594A3E;
@@ -44,7 +46,7 @@ table {
 	color: #594A3E;
 	padding: 3px;
 }
-a {
+#upper-left a {
 	color: #594A3E;
 	text-decoration: none;
 	font-weight: bold;
@@ -67,6 +69,10 @@ a {
 	border-color: #332a24;
 	text-align: center;
 }
+#lower-left a {
+	color: #B3937D;
+	text-decoration: underline;
+}
 #right {
 	margin-left: 300px;
 	padding: 5px;
@@ -84,6 +90,9 @@ ul {
 	font-weight: bold;
 	color: #94C01E;
 }
+.positive {
+	background-color: #cce880;
+}
 .open {
 	text-size: large;
 	font-weight: bold;
@@ -93,4 +102,13 @@ ul {
 	text-size: large;
 	font-weight: bold;
 	color: #c01e1f;
+}
+.negative {
+	background-color: #e88080;
+}
+.hidden {
+		border:2px dashed #d5d5d5;
+		background-color: #F7F8E0;
+		padding: 1.5em;
+		display: none;
 }

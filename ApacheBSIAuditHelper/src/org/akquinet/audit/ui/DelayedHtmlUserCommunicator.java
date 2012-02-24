@@ -1,5 +1,6 @@
 package org.akquinet.audit.ui;
 
+import java.rmi.UnexpectedException;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -9,13 +10,21 @@ public class DelayedHtmlUserCommunicator extends UserCommunicator
 	private Locale _locale;
 	private ResourceBundle _labels;
 	
-	private Object _inputBlocker;
+	public enum InputState
+	{
+		NO_INPUT_EXPECTED,
+		STRING_EXPECTED,
+		BOOLEAN_EXPECTED
+	}
+	
+	private InputState _inputState;
+	private Object _inputWaiter = new Object();
 	private Boolean _yesNoAnswer = null;
 	private String _stringAnswer = null;
 
 	public DelayedHtmlUserCommunicator()
 	{
-		_inputBlocker = new Object();
+		_inputState = InputState.NO_INPUT_EXPECTED;
 		_locale = Locale.getDefault();
 		_labels = ResourceBundle.getBundle("global", _locale);
 		_htmlBuilder = new HtmlReportLogger(_locale, false);
@@ -118,26 +127,29 @@ public class DelayedHtmlUserCommunicator extends UserCommunicator
 	@Override
 	public boolean askYesNoQuestion(String question, Boolean defaultAnswer)
 	{
-		synchronized (_inputBlocker)
+		synchronized (_inputWaiter)
 		{
+			_inputState = InputState.BOOLEAN_EXPECTED;
 			_htmlBuilder.mark();
 			
 			HtmlTagPair form = new HtmlTagPair("form");
 			form.addContent(new HtmlText(question + " "));
 			form.addContent(new HtmlText("<input type=\"button\" value=\"" + _labels.getString("S8_yes") +
-					"\" onclick=\"location='main.html'\"/>"));	//TODO set correct location
+					"\" onclick=\"location='main.html?answer=yes'\"/>"));
 			form.addContent(new HtmlText("<input type=\"button\" value=\"" + _labels.getString("S8_no") +
-					"\" onclick=\"location='main.html'\"/>"));	//TODO set correct location
+					"\" onclick=\"location='main.html?answer=no'\"/>"));
 			_htmlBuilder.printParagraph(form.stringify().toString());
 			
 			try
 			{
-				_inputBlocker.wait();
+				_inputWaiter.wait();
 			}
 			catch (InterruptedException e)
 			{
 				throw new RuntimeException(e);	//this should not happen
 			}
+			
+			_inputState = InputState.NO_INPUT_EXPECTED;
 			
 			boolean ret = _yesNoAnswer;
 			_yesNoAnswer = null;
@@ -145,7 +157,7 @@ public class DelayedHtmlUserCommunicator extends UserCommunicator
 			_htmlBuilder.reset();
 			_htmlBuilder.printParagraph(question + " <i>" +
 								(ret ? _labels.getString("S8_yes") : _labels.getString("S8_no"))
-								+ "<i/>");
+								+ "</i>");
 			
 			return ret;
 		}
@@ -160,24 +172,28 @@ public class DelayedHtmlUserCommunicator extends UserCommunicator
 	@Override
 	public String askStringQuestion(String question, String defaultAnswer)
 	{
-		synchronized (_inputBlocker)
+		synchronized (_inputWaiter)
 		{
+			_inputState = InputState.STRING_EXPECTED;
 			_htmlBuilder.mark();
 			
-			HtmlTagPair form = new HtmlTagPair("form");	//TODO set action
+			HtmlTagPair form = new HtmlTagPair("form");
+			form.addAttribute("action", "main.html");
 			form.addContent(new HtmlText(question + " "));
-			form.addContent(new HtmlText("<input type=\"text\" size=\"150\" value=\"" + defaultAnswer + "\"/>"));
+			form.addContent(new HtmlText("<input type=\"text\" name=\"answer\" size=\"40\" value=\"" + defaultAnswer + "\"/>"));
 			form.addContent(new HtmlText("<input type=\"submit\" value=\"Absenden\">"));
 			_htmlBuilder.printParagraph(form.stringify().toString());
 			
 			try
 			{
-				_inputBlocker.wait();
+				_inputWaiter.wait();
 			}
 			catch (InterruptedException e)
 			{
 				throw new RuntimeException(e);	//this should not happen
 			}
+			
+			_inputState = InputState.NO_INPUT_EXPECTED;
 			
 			String ret = _stringAnswer;
 			_stringAnswer = null;
@@ -186,8 +202,7 @@ public class DelayedHtmlUserCommunicator extends UserCommunicator
 			_htmlBuilder.printParagraph(question + " <i>" + ret + "<i/>");
 			
 			return ret;
-		}
-		
+		}		
 	}
 
 	@Override
@@ -207,5 +222,62 @@ public class DelayedHtmlUserCommunicator extends UserCommunicator
 	public String stringifyCurrentState()
 	{
 		return _htmlBuilder.stringify();
+	}
+	
+	public InputState getInputState()
+	{
+		return _inputState;
+	}
+	
+	public void setStringAnswer(String answer) throws UnexpectedException
+	{
+		if(_inputState == InputState.STRING_EXPECTED)
+		{
+			_stringAnswer = answer;
+			_inputWaiter.notifyAll();
+		}
+		else
+		{
+			throw new UnexpectedException("Internal Error: String expected.");
+		}
+	}
+	
+	public void setBooleanAnswer(boolean answer) throws UnexpectedException
+	{
+		if(_inputState == InputState.BOOLEAN_EXPECTED)
+		{
+			_yesNoAnswer = answer;
+			_inputWaiter.notifyAll();
+		}
+		else
+		{
+			throw new UnexpectedException("Internal Error: Boolean expected.");
+		}
+	}
+	
+	public void setBooleanAnswer(String answer) throws UnexpectedException
+	{
+		if(answer.equalsIgnoreCase("yes"))
+		{
+			setBooleanAnswer(true);
+		}
+		else
+		{
+			setBooleanAnswer(false);
+		}
+	}
+	
+	public void setAnswer(String answer) throws UnexpectedException
+	{
+		switch (_inputState)
+		{
+		case BOOLEAN_EXPECTED:
+			setBooleanAnswer(answer);
+			break;
+		case STRING_EXPECTED:
+			setStringAnswer(answer);
+		case NO_INPUT_EXPECTED:
+			throw new UnexpectedException("Internal Error: No Input expected.");
+		}
 	}
 }
