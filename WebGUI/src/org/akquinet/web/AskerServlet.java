@@ -3,6 +3,7 @@ package org.akquinet.web;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.rmi.UnexpectedException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Locale;
@@ -18,6 +19,9 @@ import org.akquinet.audit.ShellAnsweredQuestion;
 import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.bsi.httpd.PrologueData;
 import org.akquinet.audit.bsi.httpd.os.Quest1;
+import org.akquinet.audit.bsi.httpd.software.Quest2;
+import org.akquinet.audit.bsi.httpd.software.Quest3;
+import org.akquinet.audit.bsi.httpd.software.Quest4;
 import org.akquinet.audit.ui.DelayedHtmlUserCommunicator;
 import org.akquinet.httpd.ConfigFile;
 import org.akquinet.httpd.ParserException;
@@ -25,14 +29,17 @@ import org.akquinet.httpd.ParserException;
 @WebServlet("/main.html")
 public class AskerServlet extends HttpServlet
 {
-	private static final String ACTION = "action";
+	private static final String PARAM_REQUESTED_QUEST = "quest";
 	private static final String ACTION_GENERATE_REPORT = "genReport";
 	private static final String ACTION_SETTINGS = "settings";
+	private static final Object ACTION_ANSWER = "answer";
 
+	private static final String PARAM_ACTION = "action";
 	private static final String PARAM_APACHE_EXECUTABLE = "apacheExec";
 	private static final String PARAM_APACHE_CONFIG = "apacheConfig";
 	private static final String PARAM_HIGH_SECURITY = "highSec";
 	private static final String PARAM_HIGH_PRIVACY = "highPriv";
+	private static final String PARAM_ANSWER = "answer";
 	
 	private static final String GET_DEFAULT_SRV_ROOT_COMMAND = "./srvRoot.sh";
 	
@@ -64,16 +71,6 @@ public class AskerServlet extends HttpServlet
 		_labels = ResourceBundle.getBundle("AskerServlet", Locale.getDefault());
 		
 		_prologueData = new PrologueData(apacheExec, apacheConf, null, null, null, true, true);
-		
-		DelayedHtmlUserCommunicator c1	= new DelayedHtmlUserCommunicator();
-		YesNoQuestion q1				= new Quest1(_prologueData._highSec, c1);
-		_questionProperties.put(q1, new YesNoQuestionProperties(q1, c1, QuestionStatus.OPEN, new AnsweringThread(q1, this)));
-		
-		for (YesNoQuestion q : _questionProperties.keySet())
-		{
-			_questionsById.put(q.getID(), q);
-			_questionProperties.get(q).askingThread.start();
-		}
 	}
 	
 	@Override
@@ -113,7 +110,7 @@ public class AskerServlet extends HttpServlet
 		writer.println("		</div>");
 		writer.println("		<div id=\"lower-left\">");
 		writer.println("			" + _labels.getString("copyright") + "<br/>");
-		writer.println("		<a href=\"www.inspector-cochise.de\" target=\"_blank\">www.inspector-cochise.de</a>");
+		writer.println("		<a href=\"http://www.inspector-cochise.de\" target=\"_blank\">www.inspector-cochise.de</a>");
 		writer.println("		</div>");
 		writer.println("	</div>");
 		writer.println("	<div id=\"right\"><div id=\"content\">");
@@ -134,7 +131,7 @@ public class AskerServlet extends HttpServlet
 
 	private void writeMainContent(HttpServletRequest request, HttpServletResponse response) throws IOException
 	{
-		String requestedId = request.getParameter("quest");
+		String requestedId = request.getParameter(PARAM_REQUESTED_QUEST);
 		if(requestedId != null)
 		{
 			_mainContentId = requestedId;
@@ -160,6 +157,7 @@ public class AskerServlet extends HttpServlet
 		}
 		else
 		{
+			_prologueData._apacheExecutable = apacheExec;
 			return "";
 		}
 	}
@@ -173,10 +171,10 @@ public class AskerServlet extends HttpServlet
 		{
 			return "Diese Datei existiert nicht.";
 		}
+		_prologueData._configFile = apacheConf;
 
 		try
 		{
-			//ConfigFile conf = new ConfigFile(apacheConf);
 			ConfigFile conf = new ConfigFile(apacheConf, getDefaultServerRoot());
 			_prologueData._conf = conf;
 			return "";
@@ -250,13 +248,21 @@ public class AskerServlet extends HttpServlet
 				break;
 			}
 		}
-		int goodPercentage = (100*good) / _questionProperties.keySet().size();
-		int badPercentage = (100*bad) / _questionProperties.keySet().size();
-		int openPercentage = (100*open) / _questionProperties.keySet().size();
 		
-		writer.println("				<li><span class=\"good\">" + goodPercentage + "%</span> positiv beantwortet</li>");
-		writer.println("				<li><span class=\"open\">" + openPercentage + "%</span> noch nicht beantwortet</li>");
-		writer.println("				<li><span class=\"bad\">" + badPercentage + "%</span> negativ beantwortet</li>");
+		if(_questionProperties.keySet().size() == 0)
+		{
+			writer.println("				<li>Eine Liste der zu beantwortenden Fragen wird erstellt nachdem Sie alle Einstellungen gesetzt haben.</li>");
+		}
+		else
+		{
+			int goodPercentage = (100*good) / _questionProperties.keySet().size();
+			int badPercentage = (100*bad) / _questionProperties.keySet().size();
+			int openPercentage = (100*open) / _questionProperties.keySet().size();
+			
+			writer.println("				<li><span class=\"good\">" + goodPercentage + "%</span> positiv beantwortet</li>");
+			writer.println("				<li><span class=\"open\">" + openPercentage + "%</span> noch nicht beantwortet</li>");
+			writer.println("				<li><span class=\"bad\">" + badPercentage + "%</span> negativ beantwortet</li>");
+		}
 	}
 
 	private void viewPrologue(PrintWriter writer)
@@ -267,6 +273,10 @@ public class AskerServlet extends HttpServlet
 		if(execErrorMsg.equals("") && configErrorMsg.equals("") && "root".equals(System.getenv("USER")))
 		{
 			_prologueOk = true;
+			if(_questionProperties.isEmpty())
+			{
+				addQuestions();
+			}
 		}
 		else
 		{
@@ -323,16 +333,44 @@ public class AskerServlet extends HttpServlet
 		writer.println("		</table></form>");
 	}
 
+	private void addQuestions()
+	{
+		DelayedHtmlUserCommunicator c1	= new DelayedHtmlUserCommunicator();
+		YesNoQuestion q1				= new Quest1(_prologueData._highSec, c1);
+		c1.setQuestId(q1.getID());
+		_questionProperties.put(q1, new YesNoQuestionProperties(q1, c1, QuestionStatus.OPEN, new AnsweringThread(q1, this)));
+		
+		DelayedHtmlUserCommunicator c2	= new DelayedHtmlUserCommunicator();
+		YesNoQuestion q2				= new Quest2(_prologueData._apacheExecutable, c2);
+		c2.setQuestId(q2.getID());
+		_questionProperties.put(q2, new YesNoQuestionProperties(q2, c2, QuestionStatus.OPEN, new AnsweringThread(q2, this)));
+		
+		DelayedHtmlUserCommunicator c3	= new DelayedHtmlUserCommunicator();
+		YesNoQuestion q3				= new Quest3(_prologueData._conf, _prologueData._apacheExecutable, c3);
+		c3.setQuestId(q3.getID());
+		_questionProperties.put(q3, new YesNoQuestionProperties(q3, c3, QuestionStatus.OPEN, new AnsweringThread(q3, this)));
+		
+		DelayedHtmlUserCommunicator c4	= new DelayedHtmlUserCommunicator();
+		YesNoQuestion q4				= new Quest4(_prologueData._conf, _prologueData._apacheExecutable, c4);
+		c4.setQuestId(q4.getID());
+		_questionProperties.put(q4, new YesNoQuestionProperties(q4, c4, QuestionStatus.OPEN, new AnsweringThread(q4, this)));
+		
+		for (YesNoQuestion q : _questionProperties.keySet())
+		{
+			_questionsById.put(q.getID(), q);
+			_questionProperties.get(q).askingThread.start();
+		}
+	}
+
 	private void viewQuestion(YesNoQuestion quest, PrintWriter writer)
 	{
-		//TODO link/button targets
 		writer.println(_questionProperties.get(quest).communicator.stringifyCurrentState());
 	}
 
 	private void triggerActions(HttpServletRequest request)
 	{
-		String action = request.getParameter(ACTION);
-		if(action != null)
+		String action = request.getParameter(PARAM_ACTION);
+		if(action != null && _prologueOk)
 		{
 			if(action.equals(ACTION_SETTINGS))
 			{
@@ -383,9 +421,32 @@ public class AskerServlet extends HttpServlet
 			{
 				//TODO
 			}
-			else if(_questionsById.get(action) != null)
+			else if(action.equals(ACTION_ANSWER))
 			{
-				//TODO
+				String answer = request.getParameter(PARAM_ANSWER);
+				try
+				{
+					String requestedId = request.getParameter(PARAM_REQUESTED_QUEST);
+					YesNoQuestion q = _questionsById.get(requestedId);
+					DelayedHtmlUserCommunicator uc = _questionProperties.get(q).communicator;
+					uc.setAnswer(answer);
+					try
+					{
+						Thread.sleep(100);
+					}
+					catch (InterruptedException e)
+					{
+						//we just waited to give the AskingThread some time to call updateStatus, it's not so important...
+					}
+				}
+				catch (NullPointerException e)
+				{
+					throw new RuntimeException("You didn't specify all parameters needed for an answer.", e);
+				}
+				catch (UnexpectedException e)
+				{
+					throw new RuntimeException("I didn't expect to receive any answer.", e);
+				}
 			}
 			else
 			{
@@ -420,11 +481,6 @@ public class AskerServlet extends HttpServlet
 		{
 			_answer = _quest.answer();
 			_callback.updateStatus(_quest, _answer ? QuestionStatus.GOOD : QuestionStatus.BAD);
-		}
-		
-		public Boolean getAnswer()
-		{
-			return _answer;
 		}
 	}
 	
