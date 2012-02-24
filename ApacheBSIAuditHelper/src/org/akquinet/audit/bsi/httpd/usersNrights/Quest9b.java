@@ -11,10 +11,10 @@ import org.akquinet.audit.ui.UserCommunicator;
 @Interactive
 public class Quest9b implements YesNoQuestion
 {
-	private static final long serialVersionUID = -1197600716075991886L;
+	private static final long serialVersionUID = -407255239645449604L;
 	
 	private static final String _id = "Quest9b";
-	private static final UserCommunicator _uc = UserCommunicator.getDefault();
+	private transient UserCommunicator _uc = UserCommunicator.getDefault();
 	private String _serverRoot;
 	private transient ResourceBundle _labels;
 	private long _htdocsLastModified;
@@ -22,6 +22,12 @@ public class Quest9b implements YesNoQuestion
 
 	public Quest9b(String serverRoot)
 	{
+		this(serverRoot, UserCommunicator.getDefault());
+	}
+	
+	public Quest9b(String serverRoot, UserCommunicator uc)
+	{
+		_uc = uc;
 		_serverRoot = serverRoot;
 		_htdocsLastModified = -1;
 		_lastUserAnswer = false;
@@ -104,6 +110,7 @@ public class Quest9b implements YesNoQuestion
 	private synchronized void readObject( java.io.ObjectInputStream s ) throws IOException, ClassNotFoundException
 	{
 		s.defaultReadObject();
+		_uc = UserCommunicator.getDefault();
 		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 	}
 	
@@ -111,5 +118,11 @@ public class Quest9b implements YesNoQuestion
 	public String getName()
 	{
 		return _labels.getString("name");
+	}
+
+	@Override
+	public void setUserCommunicator(UserCommunicator uc)
+	{
+		_uc = uc;
 	}
 }

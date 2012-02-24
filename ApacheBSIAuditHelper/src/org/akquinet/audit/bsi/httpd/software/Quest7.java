@@ -16,12 +16,12 @@ import org.akquinet.httpd.syntax.Directive;
 @Interactive
 public class Quest7 implements YesNoQuestion
 {
-	private static final long serialVersionUID = 373411500569846577L;
+	private static final long serialVersionUID = 439781147472427459L;
 	
 	private static final String _id = "Quest7";
 	private ConfigFile _conf;
 	private transient ResourceBundle _labels;
-	private static final UserCommunicator _uc = UserCommunicator.getDefault();
+	private transient UserCommunicator _uc = UserCommunicator.getDefault();
 	
 	private boolean _lastAnswer;
 	private List<String> _problems;
@@ -30,6 +30,12 @@ public class Quest7 implements YesNoQuestion
 	
 	public Quest7(ConfigFile conf)
 	{
+		this(conf, UserCommunicator.getDefault());
+	}
+	
+	public Quest7(ConfigFile conf, UserCommunicator uc)
+	{
+		_uc = uc;
 		_conf = conf;
 		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 		_lastAnswer = false;
@@ -194,6 +200,7 @@ public class Quest7 implements YesNoQuestion
 	private synchronized void readObject( java.io.ObjectInputStream s ) throws IOException, ClassNotFoundException
 	{
 		s.defaultReadObject();
+		_uc = UserCommunicator.getDefault();
 		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 	}
 	
@@ -201,5 +208,11 @@ public class Quest7 implements YesNoQuestion
 	public String getName()
 	{
 		return _labels.getString("name");
+	}
+
+	@Override
+	public void setUserCommunicator(UserCommunicator uc)
+	{
+		_uc = uc;
 	}
 }

@@ -10,14 +10,20 @@ import org.akquinet.audit.ui.UserCommunicator;
 @Interactive
 public class Quest11a implements YesNoQuestion
 {
-	private static final long serialVersionUID = 3232151063345849252L;
+	private static final long serialVersionUID = 7769304827140943533L;
 	
 	private static final String _id = "Quest11a";
-	private static final UserCommunicator _uc = UserCommunicator.getDefault();
+	private transient UserCommunicator _uc = UserCommunicator.getDefault();
 	private transient ResourceBundle _labels;
 
 	public Quest11a()
 	{
+		this(UserCommunicator.getDefault());
+	}
+	
+	public Quest11a(UserCommunicator uc)
+	{
+		_uc = uc;
 		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 	}
 
@@ -75,6 +81,7 @@ public class Quest11a implements YesNoQuestion
 	private synchronized void readObject( java.io.ObjectInputStream s ) throws IOException, ClassNotFoundException
 	{
 		s.defaultReadObject();
+		_uc = UserCommunicator.getDefault();
 		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 	}
 	
@@ -82,5 +89,11 @@ public class Quest11a implements YesNoQuestion
 	public String getName()
 	{
 		return _labels.getString("name");
+	}
+
+	@Override
+	public void setUserCommunicator(UserCommunicator uc)
+	{
+		_uc = uc;
 	}
 }

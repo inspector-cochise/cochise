@@ -13,15 +13,21 @@ import org.akquinet.httpd.syntax.Directive;
 @Automated
 public class Quest5a implements YesNoQuestion
 {
-	private static final long serialVersionUID = -48818676574402025L;
+	private static final long serialVersionUID = 2140086557092986457L;
 	
 	private static final String _id = "Quest5a";
 	private ConfigFile _conf;
 	private transient ResourceBundle _labels;
-	private static final UserCommunicator _uc = UserCommunicator.getDefault();
+	private transient UserCommunicator _uc = UserCommunicator.getDefault();
 	
 	public Quest5a(ConfigFile conf)
 	{
+		this(conf, UserCommunicator.getDefault());
+	}
+	
+	public Quest5a(ConfigFile conf, UserCommunicator uc)
+	{
+		_uc = uc;
 		_conf = conf;
 		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 	}
@@ -96,6 +102,7 @@ public class Quest5a implements YesNoQuestion
 	private synchronized void readObject( java.io.ObjectInputStream s ) throws IOException, ClassNotFoundException
 	{
 		s.defaultReadObject();
+		_uc = UserCommunicator.getDefault();
 		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 	}
 	
@@ -103,5 +110,11 @@ public class Quest5a implements YesNoQuestion
 	public String getName()
 	{
 		return _labels.getString("name");
+	}
+
+	@Override
+	public void setUserCommunicator(UserCommunicator uc)
+	{
+		_uc = uc;
 	}
 }

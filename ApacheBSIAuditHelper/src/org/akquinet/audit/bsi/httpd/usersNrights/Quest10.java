@@ -19,10 +19,10 @@ import org.akquinet.httpd.syntax.Directive;
 @Automated
 public class Quest10 extends ModuleHelper implements YesNoQuestion
 {
-	private static final long serialVersionUID = 639892976242505232L;
+	private static final long serialVersionUID = 7570966044840051414L;
 	
 	private static final String _id = "Quest10";
-	private static final UserCommunicator _uc = UserCommunicator.getDefault();
+	private transient UserCommunicator _uc = UserCommunicator.getDefault();
 	private static final String PERMISSION_PATTERN = ".....-..-.";
 	private String _commandPath;
 	private String _command;
@@ -33,9 +33,20 @@ public class Quest10 extends ModuleHelper implements YesNoQuestion
 		this(conf, "./", "QfileSafe.sh");
 	}
 	
+	public Quest10(ConfigFile conf, UserCommunicator uc)
+	{
+		this(conf, "./", "QfileSafe.sh", uc);
+	}
+	
 	public Quest10(ConfigFile conf, String commandPath, String command)
 	{
+		this(conf, commandPath, command, UserCommunicator.getDefault());
+	}
+	
+	public Quest10(ConfigFile conf, String commandPath, String command, UserCommunicator uc)
+	{
 		super(conf);
+		_uc = uc;
 		_commandPath = commandPath;
 		_command = command;
 		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
@@ -153,6 +164,7 @@ public class Quest10 extends ModuleHelper implements YesNoQuestion
 	private synchronized void readObject( java.io.ObjectInputStream s ) throws IOException, ClassNotFoundException
 	{
 		s.defaultReadObject();
+		_uc = UserCommunicator.getDefault();
 		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 	}
 	
@@ -160,5 +172,11 @@ public class Quest10 extends ModuleHelper implements YesNoQuestion
 	public String getName()
 	{
 		return _labels.getString("name");
+	}
+
+	@Override
+	public void setUserCommunicator(UserCommunicator uc)
+	{
+		_uc = uc;
 	}
 }

@@ -11,10 +11,10 @@ import org.akquinet.audit.ui.UserCommunicator;
 
 public class Quest9a implements YesNoQuestion
 {
-	private static final long serialVersionUID = -1309714410747833013L;
+	private static final long serialVersionUID = 5698989142225751963L;
 	
 	private static final String _id = "Quest9a";
-	private static final UserCommunicator _uc = UserCommunicator.getDefault();
+	private transient UserCommunicator _uc = UserCommunicator.getDefault();
 	private static final String PERMISSION_PATTERN = "...------";
 	private static final String PERMISSION_PATTERN_LOW = "....--.--";
 	private String _commandPath;
@@ -29,8 +29,19 @@ public class Quest9a implements YesNoQuestion
 		this(serverRoot, user, "./", "quest9.sh", highSec);
 	}
 	
+	public Quest9a(String serverRoot, String user, boolean highSec, UserCommunicator uc)
+	{
+		this(serverRoot, user, "./", "quest9.sh", highSec, uc);
+	}
+	
 	public Quest9a(String serverRoot, String user, String commandPath, String command, boolean highSec)
 	{
+		this(serverRoot, user, commandPath, command, highSec, UserCommunicator.getDefault());
+	}
+	
+	public Quest9a(String serverRoot, String user, String commandPath, String command, boolean highSec, UserCommunicator uc)
+	{
+		_uc = uc;
 		_serverRoot = serverRoot;
 		_user = user;
 		_commandPath = commandPath;
@@ -137,6 +148,7 @@ public class Quest9a implements YesNoQuestion
 	private synchronized void readObject( java.io.ObjectInputStream s ) throws IOException, ClassNotFoundException
 	{
 		s.defaultReadObject();
+		_uc = UserCommunicator.getDefault();
 		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 	}
 	
@@ -144,5 +156,11 @@ public class Quest9a implements YesNoQuestion
 	public String getName()
 	{
 		return _labels.getString("name");
+	}
+
+	@Override
+	public void setUserCommunicator(UserCommunicator uc)
+	{
+		_uc = uc;
 	}
 }

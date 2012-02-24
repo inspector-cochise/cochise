@@ -2,6 +2,8 @@ package org.akquinet.audit;
 
 import java.io.Serializable;
 
+import org.akquinet.audit.ui.UserCommunicator;
+
 public interface YesNoQuestion extends Serializable
 {
 	/**
@@ -55,4 +57,10 @@ public interface YesNoQuestion extends Serializable
 	 * @return An array of the IDs (-> getID()) of the required questions.
 	 */
 	abstract public String[] getRequirements();
+	
+	/**
+	 * Set the questions communication endpoint. In general it needs to be set after deserialization.
+	 * @param uc The UserCommunicato that should be used by the question.
+	 */
+	abstract public void setUserCommunicator(UserCommunicator uc);
 }

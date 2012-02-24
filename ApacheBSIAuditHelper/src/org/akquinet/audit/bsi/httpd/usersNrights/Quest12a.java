@@ -13,10 +13,10 @@ import org.akquinet.audit.ui.UserCommunicator;
 @Automated
 public class Quest12a implements YesNoQuestion
 {
-	private static final long serialVersionUID = -3094338841857229602L;
+	private static final long serialVersionUID = -1132313583118521051L;
 	
 	private static final String _id = "Quest12a";
-	private static final UserCommunicator _uc = UserCommunicator.getDefault();
+	private transient UserCommunicator _uc = UserCommunicator.getDefault();
 	private String _commandPath;
 	private String _command;
 	private String _getUserNGroupCommand;
@@ -27,9 +27,20 @@ public class Quest12a implements YesNoQuestion
 	{
 		this("./", "quest12.sh", "getApacheStartingUser.sh", apacheExecutable);
 	}
-
+	
+	public Quest12a(String apacheExecutable, UserCommunicator uc)
+	{
+		this("./", "quest12.sh", "getApacheStartingUser.sh", apacheExecutable, uc);
+	}
+	
 	public Quest12a(String commandPath, String command, String getUserNGroupCommand, String apacheExecutable)
 	{
+		this(commandPath, command, getUserNGroupCommand, apacheExecutable, UserCommunicator.getDefault());
+	}
+
+	public Quest12a(String commandPath, String command, String getUserNGroupCommand, String apacheExecutable, UserCommunicator uc)
+	{
+		_uc = uc;
 		_commandPath = commandPath;
 		_command = command;
 		_getUserNGroupCommand = getUserNGroupCommand;
@@ -146,6 +157,7 @@ public class Quest12a implements YesNoQuestion
 	private synchronized void readObject( java.io.ObjectInputStream s ) throws IOException, ClassNotFoundException
 	{
 		s.defaultReadObject();
+		_uc = UserCommunicator.getDefault();
 		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 	}
 	
@@ -153,5 +165,11 @@ public class Quest12a implements YesNoQuestion
 	public String getName()
 	{
 		return _labels.getString("name");
+	}
+
+	@Override
+	public void setUserCommunicator(UserCommunicator uc)
+	{
+		_uc = uc;
 	}
 }

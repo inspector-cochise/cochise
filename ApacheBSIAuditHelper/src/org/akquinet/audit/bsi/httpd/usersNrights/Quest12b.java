@@ -14,12 +14,12 @@ import org.akquinet.httpd.ConfigFile;
 @Automated
 public class Quest12b implements YesNoQuestion
 {
-	private static final long serialVersionUID = 3943028141838717656L;
+	private static final long serialVersionUID = 3583119563799878098L;
 	
 	private static final String _id = "Quest12b";
 	private ConfigFile _conf;
 	private transient ResourceBundle _labels;
-	private static final UserCommunicator _uc = UserCommunicator.getDefault();
+	private transient UserCommunicator _uc = UserCommunicator.getDefault();
 	private static String _command;
 	private static String _commandPath;
 
@@ -28,8 +28,19 @@ public class Quest12b implements YesNoQuestion
 		this(conf, "./", "quest12.sh");
 	}
 	
+	public Quest12b(ConfigFile conf, UserCommunicator uc)
+	{
+		this(conf, "./", "quest12.sh", UserCommunicator.getDefault());
+	}
+	
 	public Quest12b(ConfigFile conf, String commandPath, String command)
 	{
+		this(conf, commandPath, command, UserCommunicator.getDefault());
+	}
+	
+	public Quest12b(ConfigFile conf, String commandPath, String command, UserCommunicator uc)
+	{
+		_uc = uc;
 		_conf = conf;
 		_commandPath = commandPath;
 		_command = command;
@@ -136,6 +147,7 @@ public class Quest12b implements YesNoQuestion
 	private synchronized void readObject( java.io.ObjectInputStream s ) throws IOException, ClassNotFoundException
 	{
 		s.defaultReadObject();
+		_uc = UserCommunicator.getDefault();
 		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 	}
 	
@@ -143,5 +155,11 @@ public class Quest12b implements YesNoQuestion
 	public String getName()
 	{
 		return _labels.getString("name");
+	}
+
+	@Override
+	public void setUserCommunicator(UserCommunicator uc)
+	{
+		_uc = uc;
 	}
 }

@@ -19,13 +19,13 @@ import org.akquinet.httpd.syntax.StatementList;
 @Automated
 public class Quest8 implements YesNoQuestion
 {
-	private static final long serialVersionUID = 194397268054339885L;
+	private static final long serialVersionUID = -2441169990468550625L;
 	
 	private static final String PERMISSION_PATTERN = "-...--.--.";
 	private static final String PERMISSION_PATTERN_LOW = "-....-..-.";
 	
 	private static final String _id = "Quest8";
-	private static final UserCommunicator _uc = UserCommunicator.getDefault();
+	private transient UserCommunicator _uc = UserCommunicator.getDefault();
 	private String _command;
 	private String _commandPath;
 	private File _configFile;
@@ -37,9 +37,20 @@ public class Quest8 implements YesNoQuestion
 	{
 		this(configFile, conf, "./", "QfileSafe.sh", highSec);
 	}
+	
+	public Quest8(File configFile, ConfigFile conf, boolean highSec, UserCommunicator uc)
+	{
+		this(configFile, conf, "./", "QfileSafe.sh", highSec, UserCommunicator.getDefault());
+	}
 
 	public Quest8(File configFile, ConfigFile conf, String commandPath, String command, boolean highSec)
 	{
+		this(configFile, conf, commandPath, command, highSec, UserCommunicator.getDefault());
+	}
+	
+	public Quest8(File configFile, ConfigFile conf, String commandPath, String command, boolean highSec, UserCommunicator uc)
+	{
+		_uc = uc;
 		_configFile = configFile;
 		_commandPath = commandPath;
 		_command = command;
@@ -172,6 +183,7 @@ public class Quest8 implements YesNoQuestion
 	private synchronized void readObject( java.io.ObjectInputStream s ) throws IOException, ClassNotFoundException
 	{
 		s.defaultReadObject();
+		_uc = UserCommunicator.getDefault();
 		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 	}
 	
@@ -179,5 +191,11 @@ public class Quest8 implements YesNoQuestion
 	public String getName()
 	{
 		return _labels.getString("name");
+	}
+
+	@Override
+	public void setUserCommunicator(UserCommunicator uc)
+	{
+		_uc = uc;
 	}
 }

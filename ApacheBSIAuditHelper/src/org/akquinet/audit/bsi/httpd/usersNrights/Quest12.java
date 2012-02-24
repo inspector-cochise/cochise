@@ -11,10 +11,10 @@ import org.akquinet.httpd.ConfigFile;
 @Automated
 public class Quest12 implements YesNoQuestion
 {
-	private static final long serialVersionUID = -5241662827698850966L;
+	private static final long serialVersionUID = 5225915545021155768L;
 	
 	private static final String _id = "Quest12";
-	private static final UserCommunicator _uc = UserCommunicator.getDefault();
+	private transient UserCommunicator _uc = UserCommunicator.getDefault();
 	
 	private Quest12a _q12a;
 	private Quest12b _q12b;
@@ -25,11 +25,22 @@ public class Quest12 implements YesNoQuestion
 		this(conf, "./", "quest12.sh", "getApacheStartingUser.sh", apacheExecutable);
 	}
 	
+	public Quest12(ConfigFile conf, String apacheExecutable, UserCommunicator uc)
+	{
+		this(conf, "./", "quest12.sh", "getApacheStartingUser.sh", apacheExecutable, uc);
+	}
+	
 	public Quest12(ConfigFile conf, String commandPath, String command, String getUserNGroupCommand, String apacheExecutable)
 	{
+		this(conf, commandPath, command, getUserNGroupCommand, apacheExecutable, UserCommunicator.getDefault());
+	}
+	
+	public Quest12(ConfigFile conf, String commandPath, String command, String getUserNGroupCommand, String apacheExecutable, UserCommunicator uc)
+	{
+		_uc = uc;
 		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
-		_q12a = new Quest12a(commandPath, command, getUserNGroupCommand, apacheExecutable);
-		_q12b = new Quest12b(conf, commandPath, command);
+		_q12a = new Quest12a(commandPath, command, getUserNGroupCommand, apacheExecutable, _uc);
+		_q12b = new Quest12b(conf, commandPath, command, _uc);
 	}
 
 	@Override
@@ -100,6 +111,7 @@ public class Quest12 implements YesNoQuestion
 	private synchronized void readObject( java.io.ObjectInputStream s ) throws IOException, ClassNotFoundException
 	{
 		s.defaultReadObject();
+		_uc = UserCommunicator.getDefault();
 		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 	}
 	
@@ -107,5 +119,11 @@ public class Quest12 implements YesNoQuestion
 	public String getName()
 	{
 		return _labels.getString("name");
+	}
+
+	@Override
+	public void setUserCommunicator(UserCommunicator uc)
+	{
+		_uc = uc;
 	}
 }

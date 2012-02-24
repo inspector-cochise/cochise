@@ -14,10 +14,10 @@ import org.akquinet.audit.ui.UserCommunicator;
 @Automated
 public class Quest2 implements YesNoQuestion
 {
-	private static final long serialVersionUID = 8203489165356198530L;
+	private static final long serialVersionUID = 8204295563575476314L;
 	
 	private static final String _id = "Quest2";
-	private static final UserCommunicator _uc = UserCommunicator.getDefault();
+	private transient UserCommunicator _uc = UserCommunicator.getDefault();
 	private transient ProcessBuilder _httpd;
 	private transient ProcessBuilder _getCurrent;
 	private transient ProcessBuilder _getRunning;
@@ -25,11 +25,22 @@ public class Quest2 implements YesNoQuestion
 	
 	public Quest2(File apacheExecutable)
 	{
-		this(apacheExecutable, "./", "newestVersion.sh", "runningVersion.sh");
+		this(apacheExecutable, UserCommunicator.getDefault());
+	}
+	
+	public Quest2(File apacheExecutable, UserCommunicator uc)
+	{
+		this(apacheExecutable, "./", "newestVersion.sh", "runningVersion.sh", uc);
 	}
 	
 	public Quest2(File apacheExecutable, String commandPath, String getCurrentVersionCommand, String getRunningVersionCommand)
 	{
+		this(apacheExecutable, commandPath, getCurrentVersionCommand, getRunningVersionCommand, UserCommunicator.getDefault());
+	}
+	
+	public Quest2(File apacheExecutable, String commandPath, String getCurrentVersionCommand, String getRunningVersionCommand, UserCommunicator uc)
+	{
+		_uc = uc;
 		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 		try
 		{
@@ -233,6 +244,8 @@ public class Quest2 implements YesNoQuestion
 		_httpd = new ProcessBuilder((List<String>) s.readObject());
 		_getCurrent = new ProcessBuilder((List<String>) s.readObject());
 		_getRunning = new ProcessBuilder((List<String>) s.readObject());
+		
+		_uc = UserCommunicator.getDefault();
 		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 	}
 	
@@ -240,5 +253,11 @@ public class Quest2 implements YesNoQuestion
 	public String getName()
 	{
 		return _labels.getString("name");
+	}
+
+	@Override
+	public void setUserCommunicator(UserCommunicator uc)
+	{
+		_uc = uc;
 	}
 }

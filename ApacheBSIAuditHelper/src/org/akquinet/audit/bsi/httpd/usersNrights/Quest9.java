@@ -15,10 +15,10 @@ import org.akquinet.httpd.syntax.Directive;
 @Interactive
 public class Quest9 implements YesNoQuestion
 {
-	private static final long serialVersionUID = -8691974320990058582L;
+	private static final long serialVersionUID = -4428911855077358238L;
 	
 	private static final String _id = "Quest9";
-	private static final UserCommunicator _uc = UserCommunicator.getDefault();
+	private transient UserCommunicator _uc = UserCommunicator.getDefault();
 	private ConfigFile _conf;
 	private String _serverRoot;
 	private String _commandPath;
@@ -36,8 +36,19 @@ public class Quest9 implements YesNoQuestion
 		this(conf, "./", "quest9.sh", "getApacheStartingUser.sh", apacheExecutable, highSec);
 	}
 	
+	public Quest9(ConfigFile conf, String apacheExecutable, boolean highSec, UserCommunicator uc)
+	{
+		this(conf, "./", "quest9.sh", "getApacheStartingUser.sh", apacheExecutable, highSec, uc);
+	}
+
 	public Quest9(ConfigFile conf, String command9aPath, String command9a, String getUserNGroupCommand, String apacheExecutable, boolean highSec)
 	{
+		this(conf, command9aPath, command9a, getUserNGroupCommand, apacheExecutable, highSec, UserCommunicator.getDefault());
+	}
+	
+	public Quest9(ConfigFile conf, String command9aPath, String command9a, String getUserNGroupCommand, String apacheExecutable, boolean highSec, UserCommunicator uc)
+	{
+		_uc = uc;
 		_conf = conf;
 		_commandPath = command9aPath;
 		_command9a = command9a;
@@ -176,13 +187,13 @@ public class Quest9 implements YesNoQuestion
 		_user = getApacheStartingUser();
 		if(_command9a != null && _commandPath  != null)
 		{
-			_q9a = new Quest9a(_serverRoot, _user, _commandPath, _command9a, _highSec);
+			_q9a = new Quest9a(_serverRoot, _user, _commandPath, _command9a, _highSec, _uc);
 		}
 		else
 		{
-			_q9a = new Quest9a(_serverRoot, _user, _highSec);
+			_q9a = new Quest9a(_serverRoot, _user, _highSec, _uc);
 		}
-		_q9b = new Quest9b(_serverRoot);
+		_q9b = new Quest9b(_serverRoot, _uc);
 		
 		_q9a.initialize();
 		_q9b.initialize();
@@ -191,6 +202,7 @@ public class Quest9 implements YesNoQuestion
 	private synchronized void readObject( java.io.ObjectInputStream s ) throws IOException, ClassNotFoundException
 	{
 		s.defaultReadObject();
+		_uc = UserCommunicator.getDefault();
 		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 	}
 	
@@ -198,5 +210,11 @@ public class Quest9 implements YesNoQuestion
 	public String getName()
 	{
 		return _labels.getString("name");
+	}
+
+	@Override
+	public void setUserCommunicator(UserCommunicator uc)
+	{
+		_uc = uc;
 	}
 }

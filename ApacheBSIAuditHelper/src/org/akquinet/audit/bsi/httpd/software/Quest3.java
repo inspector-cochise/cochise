@@ -15,15 +15,21 @@ import org.akquinet.httpd.syntax.Directive;
 @Automated
 public class Quest3 extends ModuleHelper implements YesNoQuestion
 {
-	private static final long serialVersionUID = 4473857607947470528L;
+	private static final long serialVersionUID = -994168432495652020L;
 	
 	private static final String _id = "Quest3";
-	private static final UserCommunicator _uc = UserCommunicator.getDefault();
+	private transient UserCommunicator _uc = UserCommunicator.getDefault();
 	private transient ResourceBundle _labels;
 	
 	public Quest3(ConfigFile conf, File apacheExecutable)
 	{
+		this(conf, apacheExecutable, UserCommunicator.getDefault());
+	}
+	
+	public Quest3(ConfigFile conf, File apacheExecutable, UserCommunicator uc)
+	{
 		super(conf, apacheExecutable);
+		_uc = uc;
 		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 	}
 
@@ -113,6 +119,7 @@ public class Quest3 extends ModuleHelper implements YesNoQuestion
 	private synchronized void readObject( java.io.ObjectInputStream s ) throws IOException, ClassNotFoundException
 	{
 		s.defaultReadObject();
+		_uc = UserCommunicator.getDefault();
 		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 	}
 	
@@ -120,5 +127,11 @@ public class Quest3 extends ModuleHelper implements YesNoQuestion
 	public String getName()
 	{
 		return _labels.getString("name");
+	}
+
+	@Override
+	public void setUserCommunicator(UserCommunicator uc)
+	{
+		_uc = uc;
 	}
 }

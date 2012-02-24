@@ -13,17 +13,23 @@ import org.akquinet.httpd.ParserException;
 
 public class PrologueQuestion implements YesNoQuestion
 {
-	private static final long serialVersionUID = 4589990157126160631L;
+	private static final long serialVersionUID = 7124109852732961812L;
 	
 	private static final String GET_DEFAULT_SRV_ROOT_COMMAND = "./srvRoot.sh";
 	private static final String _id = "Prologue";
-	private static final UserCommunicator _uc = UserCommunicator.getDefault();
+	private transient UserCommunicator _uc = UserCommunicator.getDefault();
 	private PrologueData _pD;
 	
 	private transient ResourceBundle _labels;
 
 	public PrologueQuestion(PrologueData pD)
 	{
+		this(pD, UserCommunicator.getDefault());
+	}
+	
+	public PrologueQuestion(PrologueData pD, UserCommunicator uc)
+	{
+		_uc = uc;
 		_pD = pD;
 		_labels = ResourceBundle.getBundle("global", _uc.getLocale());
 	}
@@ -169,6 +175,7 @@ public class PrologueQuestion implements YesNoQuestion
 	private synchronized void readObject( java.io.ObjectInputStream s ) throws IOException, ClassNotFoundException
 	{
 		s.defaultReadObject();
+		_uc = UserCommunicator.getDefault();
 		_labels = ResourceBundle.getBundle("global", _uc.getLocale());
 	}
 	
@@ -176,5 +183,11 @@ public class PrologueQuestion implements YesNoQuestion
 	public String getName()
 	{
 		return _labels.getString("PrologueQuestionName");
+	}
+
+	@Override
+	public void setUserCommunicator(UserCommunicator uc)
+	{
+		_uc = uc;
 	}
 }

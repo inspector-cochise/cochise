@@ -13,16 +13,22 @@ import org.akquinet.audit.ui.UserCommunicator;
 @Automated
 public class Quest6 implements YesNoQuestion
 {
-	private static final long serialVersionUID = 5092103913021841065L;
+	private static final long serialVersionUID = 1923926407490053986L;
 	
 	private static final String _id = "Quest6";
-	private static final UserCommunicator _uc = UserCommunicator.getDefault();
+	private transient UserCommunicator _uc = UserCommunicator.getDefault();
 
 	private transient ProcessBuilder _httpd;
 	private transient ResourceBundle _labels;
 	
 	public Quest6(File apacheExecutable)
 	{
+		this(apacheExecutable, UserCommunicator.getDefault());
+	}
+	
+	public Quest6(File apacheExecutable, UserCommunicator uc)
+	{
+		_uc = uc;
 		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 		try
 		{
@@ -137,6 +143,8 @@ public class Quest6 implements YesNoQuestion
 	{
 		s.defaultReadObject();
 		_httpd = new ProcessBuilder((List<String>) s.readObject());
+		
+		_uc = UserCommunicator.getDefault();
 		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 	}
 	
@@ -144,5 +152,11 @@ public class Quest6 implements YesNoQuestion
 	public String getName()
 	{
 		return _labels.getString("name");
+	}
+
+	@Override
+	public void setUserCommunicator(UserCommunicator uc)
+	{
+		_uc = uc;
 	}
 }

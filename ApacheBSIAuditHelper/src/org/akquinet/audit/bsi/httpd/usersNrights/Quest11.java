@@ -11,10 +11,10 @@ import org.akquinet.httpd.ConfigFile;
 @Interactive
 public class Quest11 implements YesNoQuestion
 {
-	private static final long serialVersionUID = -936378799140023359L;
+	private static final long serialVersionUID = -5859273882152739768L;
 	
 	private static final String _id = "Quest11";
-	private static final UserCommunicator _uc = UserCommunicator.getDefault();
+	private transient UserCommunicator _uc = UserCommunicator.getDefault();
 	
 	private Quest11a _q11a;
 	private Quest11b _q11b;
@@ -22,9 +22,15 @@ public class Quest11 implements YesNoQuestion
 	
 	public Quest11(ConfigFile conf)
 	{
+		this(conf, UserCommunicator.getDefault());
+	}
+	
+	public Quest11(ConfigFile conf, UserCommunicator uc)
+	{
+		_uc = uc;
 		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
-		_q11a = new Quest11a();
-		_q11b = new Quest11b(conf);
+		_q11a = new Quest11a(_uc);
+		_q11b = new Quest11b(conf, _uc);
 	}
 
 	/**
@@ -100,6 +106,7 @@ public class Quest11 implements YesNoQuestion
 	private synchronized void readObject( java.io.ObjectInputStream s ) throws IOException, ClassNotFoundException
 	{
 		s.defaultReadObject();
+		_uc = UserCommunicator.getDefault();
 		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 	}
 	
@@ -107,5 +114,11 @@ public class Quest11 implements YesNoQuestion
 	public String getName()
 	{
 		return _labels.getString("name");
+	}
+
+	@Override
+	public void setUserCommunicator(UserCommunicator uc)
+	{
+		_uc = uc;
 	}
 }
