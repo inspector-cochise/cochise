@@ -43,7 +43,7 @@ public class Quest5 implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		_uc.printHeading3(_id);
+		_uc.printHeading3( _labels.getString("name") );
 		_uc.printParagraph( MessageFormat.format( _labels.getString("Q0") , _conf.getFileName()) );
 		_uc.printHidingParagraph(_labels.getString("S0"), _labels.getString("P0"));
 		

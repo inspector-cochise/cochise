@@ -46,7 +46,7 @@ public class Quest12 implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		_uc.printHeading3(_id);
+		_uc.printHeading3( _labels.getString("name") );
 		_uc.printParagraph( _labels.getString("Q0") );
 		
 		
