@@ -84,13 +84,13 @@ public class Quest9 implements YesNoQuestion
 				ret = _q9a.answer();
 				ret &= _q9b.answer();
 			_uc.endIndent();
-			_uc.println( MessageFormat.format(_labels.getString("S1"), _id));
+			_uc.println( MessageFormat.format(_labels.getString("S1"), _labels.getString("name")));
 			_uc.printAnswer(ret, ret ?  _labels.getString("S2")  :  _labels.getString("S3") );
 			
 		}
 		else
 		{
-			_uc.println( MessageFormat.format(_labels.getString("S1"), _id));
+			_uc.println( MessageFormat.format(_labels.getString("S1"), _labels.getString("name")));
 			_uc.printAnswer(false,  _labels.getString("S4") );
 			ret = false;
 		}

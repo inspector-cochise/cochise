@@ -64,7 +64,7 @@ public class Quest12 implements YesNoQuestion
 			_uc.endIndent();
 		}
 		
-		_uc.println(_labels.getString("S2") + " " + _id);
+		_uc.println(_labels.getString("S2") + " " + _labels.getString("name"));
 		_uc.printAnswer(ret, ret ?
 				 	  _labels.getString("S1_good") 
 					: _labels.getString("S1_bad") );

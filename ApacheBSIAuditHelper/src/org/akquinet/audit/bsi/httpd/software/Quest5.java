@@ -55,7 +55,7 @@ public class Quest5 implements YesNoQuestion
 		boolean ret = answer5a && answer5b;
 		
 		_uc.endIndent();
-		_uc.println(MessageFormat.format( _labels.getString("L2") , _id));
+		_uc.println(MessageFormat.format( _labels.getString("L2") , _labels.getString("name")));
 		_uc.printAnswer(ret, ret ?
 				  _labels.getString("S1_good") 
 				: _labels.getString("S1_bad") );
