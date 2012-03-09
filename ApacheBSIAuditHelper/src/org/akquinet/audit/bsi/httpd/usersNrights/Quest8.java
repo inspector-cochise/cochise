@@ -40,7 +40,7 @@ public class Quest8 implements YesNoQuestion
 	
 	public Quest8(File configFile, ConfigFile conf, boolean highSec, UserCommunicator uc)
 	{
-		this(configFile, conf, "./", "QfileSafe.sh", highSec, UserCommunicator.getDefault());
+		this(configFile, conf, "./", "QfileSafe.sh", highSec, uc);
 	}
 
 	public Quest8(File configFile, ConfigFile conf, String commandPath, String command, boolean highSec)
