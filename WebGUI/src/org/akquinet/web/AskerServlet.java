@@ -95,24 +95,28 @@ public class AskerServlet extends HttpServlet
 		writer.println("	<script language=\"javascript\" src=\"script.js\" ></script>");
 		writer.println("	<script language=\"javascript\" src=\"jquery-1.7.1.js\" ></script>");
 		writer.println("	<script language=\"javascript\" src=\"hubu.js\" ></script>");
+		writer.println("	<script language=\"javascript\" src=\"disclosure.js\" ></script>");
 		
 		writer.println("	<script language=\"javascript\">");
 		writer.println("		$(document).ready(function(){");
 		writer.println("		");
 		writer.println("		  var title = $.trim( $(\"#container\").find('title').remove().text() );");
 		writer.println("		  if ( title ) document.title = title;");
+		writer.println("          var discl = disclosure();");
 		writer.println("		  hub");
-		writer.println("		      .registerComponent(disclosure(), {");
+		writer.println("		      .registerComponent(discl, {");
 		writer.println("		          disclosureId: '.disclosures .feature-title',");
 		writer.println("		          component_name: 'disclosure'");
 		writer.println("		      })");
 		writer.println("		      .start();");
-		writer.println("		");
+		writer.println("		  ");
+		writer.println("		  hub.publish(true, \"/container/load\", { containerId: 'body' });");
 		writer.println("		});");
 		writer.println("	</script>");
 		
 		writer.println("</head>");
 		writer.println("<body>");
+		writer.println("<div id=\"container\">");
 		writer.println("<div id=\"header\">");
 		writer.println("	<div id=\"logo\"></div>");
 		writer.println("</div>");
@@ -144,6 +148,7 @@ public class AskerServlet extends HttpServlet
 		writeMainContent(request, response);
 		
 		writer.println("	</div></div>");
+		writer.println("</div>");
 		writer.println("</div>");
 		writer.println("</body>");
 		writer.println("</html>");

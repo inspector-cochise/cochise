@@ -155,24 +155,20 @@ public class HtmlReportLogger
 	
 	public void beginHidingParagraph(String descriptionOfParagraph)
 	{
-		String divID = "div" + Integer.toString(_serialCounter);
-		String aID = "a" + Integer.toString(_serialCounter);
+		HtmlTagPair div = new HtmlTagPair("div");
 		
-		HtmlTagPair a = new HtmlTagPair("a", _serialCounter);
-		a.addAttribute("href",  "javascript:toggle('" + divID + "', '" + aID + "');"  );
-		a.addAttribute("id", aID);
-		a.addContent(new HtmlText(_labels.getString("S9") + " " + descriptionOfParagraph));
+		HtmlTagPair description = new HtmlTagPair("div");
+		description.addAttribute("class", "feature-title");
+		description.addContent(new HtmlText(descriptionOfParagraph));
 		
-		HtmlTagPair div = new HtmlTagPair("div", _serialCounter);
-		div.addAttribute("class", "hidden");
-		div.addAttribute("id", divID);
-		
-		HtmlTagPair p = new HtmlTagPair("p");
-		p.addContent(a);
-		p.addContent(div);
+		HtmlTagPair disclosures = new HtmlTagPair("div");
+		disclosures.addAttribute("class", "disclosures");
+		disclosures.addContent(new HtmlText("<a name=\""+ descriptionOfParagraph +"\"></a>"));
+		disclosures.addContent(description);
+		disclosures.addContent(div);
 		
 		_hidingSerialStack.push(_serialCounter++);
-		_openTags.peek().addContent(p);
+		_openTags.peek().addContent(disclosures);
 		_openTags.push(div);
 	}
 	

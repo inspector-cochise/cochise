@@ -110,9 +110,13 @@ ul {
 .negative {
 	background-color: #e88080;
 }
-.hidden {
-		border:2px dashed #d5d5d5;
+
+.disclosures {
+		border: 2px dashed #d5d5d5;
 		background-color: #F7F8E0;
-		padding: 1.5em;
-		display: none;
+		padding: 1em;
+}
+.disclosures .feature-title {
+		cursor: pointer;
+		border-bottom: 1px solid #594A3E;
 }
