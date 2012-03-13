@@ -22,6 +22,14 @@ import org.akquinet.audit.bsi.httpd.os.Quest1;
 import org.akquinet.audit.bsi.httpd.software.Quest2;
 import org.akquinet.audit.bsi.httpd.software.Quest3;
 import org.akquinet.audit.bsi.httpd.software.Quest4;
+import org.akquinet.audit.bsi.httpd.software.Quest5;
+import org.akquinet.audit.bsi.httpd.software.Quest6;
+import org.akquinet.audit.bsi.httpd.software.Quest7;
+import org.akquinet.audit.bsi.httpd.usersNrights.Quest10;
+import org.akquinet.audit.bsi.httpd.usersNrights.Quest11;
+import org.akquinet.audit.bsi.httpd.usersNrights.Quest12;
+import org.akquinet.audit.bsi.httpd.usersNrights.Quest8;
+import org.akquinet.audit.bsi.httpd.usersNrights.Quest9;
 import org.akquinet.audit.ui.DelayedHtmlUserCommunicator;
 import org.akquinet.httpd.ConfigFile;
 import org.akquinet.httpd.ParserException;
@@ -43,7 +51,7 @@ public class AskerServlet extends HttpServlet
 	
 	private static final String GET_DEFAULT_SRV_ROOT_COMMAND = "./srvRoot.sh";
 	
-	private static final Object PROLOGUE_ID = "settings";
+	private static final String PROLOGUE_ID = "settings";
 
 	private enum QuestionStatus
 	{
@@ -85,6 +93,24 @@ public class AskerServlet extends HttpServlet
 		writer.println("	<title>Inspector-Cochise</title>");
 		writer.println("	<link rel=\"stylesheet\" href=\"./style.css\" type=\"text/css\" />");
 		writer.println("	<script language=\"javascript\" src=\"script.js\" ></script>");
+		writer.println("	<script language=\"javascript\" src=\"jquery-1.7.1.js\" ></script>");
+		writer.println("	<script language=\"javascript\" src=\"hubu.js\" ></script>");
+		
+		writer.println("	<script language=\"javascript\">");
+		writer.println("		$(document).ready(function(){");
+		writer.println("		");
+		writer.println("		  var title = $.trim( $(\"#container\").find('title').remove().text() );");
+		writer.println("		  if ( title ) document.title = title;");
+		writer.println("		  hub");
+		writer.println("		      .registerComponent(disclosure(), {");
+		writer.println("		          disclosureId: '.disclosures .feature-title',");
+		writer.println("		          component_name: 'disclosure'");
+		writer.println("		      })");
+		writer.println("		      .start();");
+		writer.println("		");
+		writer.println("		});");
+		writer.println("	</script>");
+		
 		writer.println("</head>");
 		writer.println("<body>");
 		writer.println("<div id=\"header\">");
@@ -95,7 +121,7 @@ public class AskerServlet extends HttpServlet
 		writer.println("		<div id=\"upper-left\"><div id=\"content\">");
 		writer.println("			<table>");
 		
-		writeNavigationContent(writer);
+		writeNavigationContent(response);
 		
 		writer.println("			</table>");
 		writer.println("		</div></div>");
@@ -106,7 +132,7 @@ public class AskerServlet extends HttpServlet
 		writeStatistics(writer);
 		
 		writer.println("			</ul>");
-		writer.println("			<form><input type=\"button\" value=\"" + _labels.getString("genReportButton") + "\" onclick=\"location='main.html?action=" + ACTION_GENERATE_REPORT + "'\"/></form>");	//TODO make button work
+		writer.println("			<form><input type=\"button\" value=\"" + _labels.getString("genReportButton") + "\" onclick=\"location='" + response.encodeURL("main.html?action=" + ACTION_GENERATE_REPORT) +"'\"/></form>");	//TODO make button work
 		writer.println("		</div>");
 		writer.println("		<div id=\"lower-left\">");
 		writer.println("			" + _labels.getString("copyright") + "<br/>");
@@ -131,13 +157,7 @@ public class AskerServlet extends HttpServlet
 
 	private void writeMainContent(HttpServletRequest request, HttpServletResponse response) throws IOException
 	{
-		String requestedId = request.getParameter(PARAM_REQUESTED_QUEST);
-		if(requestedId != null)
-		{
-			_mainContentId = requestedId;
-		}
-		
-		if(_questionsById.get(_mainContentId) == null || !_prologueOk || _mainContentId.equals(PROLOGUE_ID))
+		if(shouldShowPrologue())
 		{
 			viewPrologue(response.getWriter());
 		}
@@ -147,13 +167,18 @@ public class AskerServlet extends HttpServlet
 		}
 	}
 
+	private boolean shouldShowPrologue()
+	{
+		return _mainContentId == null || _questionsById.get(_mainContentId) == null || !_prologueOk || _mainContentId.equals(PROLOGUE_ID);
+	}
+
 	private String getExecErrorMsg()
 	{
 		File apacheExec = new File(_prologueData._apacheExec);
 		
 		if(!apacheExec.exists())
 		{
-			return "Diese Datei existiert nicht.";	//TODO language dependency
+			return _labels.getString("E1");
 		}
 		else
 		{
@@ -164,12 +189,11 @@ public class AskerServlet extends HttpServlet
 
 	private String getConfigErrorMsg()
 	{
-		//TODO language dependency
 		File apacheConf = new File(_prologueData._apacheConf);
 		
 		if(!apacheConf.exists())
 		{
-			return "Diese Datei existiert nicht.";
+			return _labels.getString("E1");
 		}
 		_prologueData._configFile = apacheConf;
 
@@ -188,7 +212,7 @@ public class AskerServlet extends HttpServlet
 			else
 			{
 				return e.getClass().getName();
-				//return "Ihre Konfigurationsdatei enthält Fehler. Bitte beheben Sie diese.";	//TODO hint to envvars problem
+				//return _labels.getString("E3");	//TODO hint to envvars problem
 			}
 		}
 		catch (IOException e)
@@ -199,30 +223,50 @@ public class AskerServlet extends HttpServlet
 			}
 			else
 			{
-				return "Auf diese Konfigurationsdatei konnte nicht zugegriffen werden.";
+				return _labels.getString("E2");
 			}
 		}
 	}
 
-	private void writeNavigationContent(PrintWriter writer) throws IOException
+	private void writeNavigationContent(HttpServletResponse response) throws IOException
 	{
-		writer.println("				<tr><td><a href=\"./main.html?quest=" + PROLOGUE_ID + "\">Einstellungen</a></td>	<td/></tr>");
+		PrintWriter writer = response.getWriter();
+		writer.println("				<tr><td><a href=\"" + response.encodeURL("main.html?quest=" + PROLOGUE_ID) + "\">");
+		if(shouldShowPrologue())
+		{
+			writer.print("<b>");
+		}
+		writer.print(_labels.getString("prologue2"));
+		if(shouldShowPrologue())
+		{
+			writer.print("</b>");
+		}
+		writer.print("</a></td>	<td/></tr>");
 		writer.println("				<tr><td/>						<td/></tr>");
 		
 		for (YesNoQuestion q : _questionProperties.keySet())
 		{
-			writer.print("				<tr><td><a href=\"./main.html?quest=" + q.getID() + "\">");
+			writer.print("				<tr><td><a href=\"" + response.encodeURL("main.html?quest=" + q.getID()) + "\">");
+			if(q.getID().equals(_mainContentId))
+			{
+				writer.print("<b>");
+			}
 			writer.print(q.getName());
+			if(q.getID().equals(_mainContentId))
+			{
+				writer.print("</b>");
+			}
+			
 			switch(_questionProperties.get(q).status)
 			{
 			case GOOD:
-				writer.println("</a></td>	<td><span class=\"good\">positiv</span></td></tr>");
+				writer.println("</a></td>	<td><span class=\"good\">"+ _labels.getString("pos") +"</span></td></tr>");
 				break;
 			case BAD:
-				writer.println("</a></td>	<td><span class=\"bad\">negativ</span></td></tr>");
+				writer.println("</a></td>	<td><span class=\"bad\">"+ _labels.getString("neg") +"</span></td></tr>");
 				break;
 			case OPEN:
-				writer.println("</a></td>	<td><span class=\"open\">offen</span></td></tr>");
+				writer.println("</a></td>	<td><span class=\"open\">"+ _labels.getString("ope") +"</span></td></tr>");
 				break;
 			}
 		}
@@ -251,17 +295,51 @@ public class AskerServlet extends HttpServlet
 		
 		if(_questionProperties.keySet().size() == 0)
 		{
-			writer.println("				<li>Eine Liste der zu beantwortenden Fragen wird erstellt nachdem Sie alle Einstellungen gesetzt haben.</li>");
+			writer.println("				<li>"+ _labels.getString("stat1") +"</li>");
 		}
 		else
 		{
-			int goodPercentage = (100*good) / _questionProperties.keySet().size();
-			int badPercentage = (100*bad) / _questionProperties.keySet().size();
-			int openPercentage = (100*open) / _questionProperties.keySet().size();
+			int goodPercentage = Math.round((100.0f*good) / _questionProperties.keySet().size());
+			int badPercentage = Math.round((100.0f*bad) / _questionProperties.keySet().size());
+			int openPercentage = Math.round((100.0f*open) / _questionProperties.keySet().size());
+
+			//correct the 2 possible round errors
+			//if 2 percantages are xx.5 then the sum grows over 100
+			if(goodPercentage + badPercentage + openPercentage > 100)
+			{
+				if(goodPercentage > 0)
+				{
+					--goodPercentage;
+				}
+				else if(openPercentage > 0)
+				{
+					--openPercentage;
+				}
+				else if(badPercentage > 0)
+				{
+					--badPercentage;
+				}
+			}
+			//if all percantages are xx.y with y < .5 then the sum is 99
+			else if(goodPercentage + badPercentage + openPercentage < 100)
+			{
+				if(badPercentage < 100)
+				{
+					++badPercentage;
+				}
+				else if(openPercentage < 100)
+				{
+					++openPercentage;
+				}
+				else if(goodPercentage < 100)
+				{
+					++goodPercentage;
+				}
+			}
 			
-			writer.println("				<li><span class=\"good\">" + goodPercentage + "%</span> positiv beantwortet</li>");
-			writer.println("				<li><span class=\"open\">" + openPercentage + "%</span> noch nicht beantwortet</li>");
-			writer.println("				<li><span class=\"bad\">" + badPercentage + "%</span> negativ beantwortet</li>");
+			writer.println("				<li><span class=\"good\">" + goodPercentage + "%</span> "+ _labels.getString("stat2") +"</li>");
+			writer.println("				<li><span class=\"open\">" + openPercentage + "%</span> "+ _labels.getString("stat3") +"</li>");
+			writer.println("				<li><span class=\"bad\">" + badPercentage + "%</span> "+ _labels.getString("stat4") +"</li>");
 		}
 	}
 
@@ -285,18 +363,17 @@ public class AskerServlet extends HttpServlet
 		
 		if(!"root".equals(System.getenv("USER")))
 		{
-			writer.println("		<span class=\"bad\">Diese Anwendung (d. h. der Tomcat-Server) muss mit von root ausgeführt werden.</span>");
+			writer.println("		<span class=\"bad\">"+ _labels.getString("prologue1") +"</span>");
 		}
 		
-		// TODO language dependency
-		writer.println("		<h1>Einstellungen</h1>");
-		writer.println("		Bitte stellen Sie die folgenden Werte passend für Ihr System ein:");
+		writer.println("		<h1>"+ _labels.getString("prologue2") +"</h1>");
+		writer.println("		"+ _labels.getString("prologue3") +"");
 		writer.println("		<form action=\"main.html\"><table>");
 		writer.println("		<input type=\"hidden\"" +
 										"name=\"action\"" +
 										"value=\"" + ACTION_SETTINGS + "\" />");
 		
-		writer.println("			<tr><td>Ihr Apache Executable</td>" +
+		writer.println("			<tr><td>"+ _labels.getString("prologue4") +"</td>" +
 				"<td><input type=\"text\"" +
 				"name=\""+ PARAM_APACHE_EXECUTABLE + "\"" +
 				"size=\"40\"" +
@@ -304,7 +381,7 @@ public class AskerServlet extends HttpServlet
 				execErrorMsg +
 				"</span></td></tr>");
 		
-		writer.println("			<tr><td>Ihre Hauptkonfigurationsdatei</td>" +
+		writer.println("			<tr><td>"+ _labels.getString("prologue5") +"</td>" +
 				"<td><input type=\"text\"" +
 							"name=\""+ PARAM_APACHE_CONFIG + "\"" +
 							"size=\"40\"" +
@@ -314,14 +391,14 @@ public class AskerServlet extends HttpServlet
 		
 		
 		
-		writer.println("			<tr><td>Ist ein hohes Maß an Sicherheit erforderlich?</td>" +
+		writer.println("			<tr><td>"+ _labels.getString("prologue6") +"</td>" +
 				"<td><input type=\"checkbox\"" +
 				"name=\""+ PARAM_HIGH_SECURITY + "\"" +
 				"value=\"val\"" +
 				(_prologueData._highSec ? "checked=\"checked\"" : "") +
 				"/></td></tr>");
 		
-		writer.println("			<tr><td>Ist ein hohes Maß an Vertraulichkeit erforderlich?</td>" +
+		writer.println("			<tr><td>"+ _labels.getString("prologue7") +"</td>" +
 				"<td><input type=\"checkbox\"" +
 							"name=\""+ PARAM_HIGH_PRIVACY + "\"" +
 							"value=\"val\"" +
@@ -329,7 +406,7 @@ public class AskerServlet extends HttpServlet
 							"/></td></tr>");
 		
 		writer.println("			<tr><td/><td><input type=\"submit\"" +
-														"value=\"Übernehmen\" /></td></tr>");
+														"value=\""+ _labels.getString("prologue8") +"\" /></td></tr>");
 		writer.println("		</table></form>");
 	}
 
@@ -355,6 +432,46 @@ public class AskerServlet extends HttpServlet
 		c4.setQuestId(q4.getID());
 		_questionProperties.put(q4, new YesNoQuestionProperties(q4, c4, QuestionStatus.OPEN, new AnsweringThread(q4, this)));
 		
+		DelayedHtmlUserCommunicator c5	= new DelayedHtmlUserCommunicator();
+		YesNoQuestion q5				= new Quest5(_prologueData._conf, c5);
+		c5.setQuestId(q5.getID());
+		_questionProperties.put(q5, new YesNoQuestionProperties(q5, c5, QuestionStatus.OPEN, new AnsweringThread(q5, this)));
+		
+		DelayedHtmlUserCommunicator c6	= new DelayedHtmlUserCommunicator();
+		YesNoQuestion q6				= new Quest6(_prologueData._apacheExecutable, c6);
+		c6.setQuestId(q6.getID());
+		_questionProperties.put(q6, new YesNoQuestionProperties(q6, c6, QuestionStatus.OPEN, new AnsweringThread(q6, this)));
+
+		DelayedHtmlUserCommunicator c7	= new DelayedHtmlUserCommunicator();
+		YesNoQuestion q7				= new Quest7(_prologueData._conf, c7);
+		c7.setQuestId(q7.getID());
+		_questionProperties.put(q7, new YesNoQuestionProperties(q7, c7, QuestionStatus.OPEN, new AnsweringThread(q7, this)));
+		
+		DelayedHtmlUserCommunicator c8	= new DelayedHtmlUserCommunicator();
+		YesNoQuestion q8				= new Quest8(_prologueData._configFile, _prologueData._conf, _prologueData._highSec, c8);
+		c8.setQuestId(q8.getID());
+		_questionProperties.put(q8, new YesNoQuestionProperties(q8, c8, QuestionStatus.OPEN, new AnsweringThread(q8, this)));
+		
+		DelayedHtmlUserCommunicator c9	= new DelayedHtmlUserCommunicator();
+		YesNoQuestion q9				= new Quest9(_prologueData._conf, _prologueData._apacheExec, _prologueData._highSec, c9);
+		c9.setQuestId(q9.getID());
+		_questionProperties.put(q9, new YesNoQuestionProperties(q9, c9, QuestionStatus.OPEN, new AnsweringThread(q9, this)));
+		
+		DelayedHtmlUserCommunicator c10	= new DelayedHtmlUserCommunicator();
+		YesNoQuestion q10				= new Quest10(_prologueData._conf, c10);
+		c10.setQuestId(q10.getID());
+		_questionProperties.put(q10, new YesNoQuestionProperties(q10, c10, QuestionStatus.OPEN, new AnsweringThread(q10, this)));
+		
+		DelayedHtmlUserCommunicator c11	= new DelayedHtmlUserCommunicator();
+		YesNoQuestion q11				= new Quest11(_prologueData._conf, c11);
+		c11.setQuestId(q11.getID());
+		_questionProperties.put(q11, new YesNoQuestionProperties(q11, c11, QuestionStatus.OPEN, new AnsweringThread(q11, this)));
+		
+		DelayedHtmlUserCommunicator c12	= new DelayedHtmlUserCommunicator();
+		YesNoQuestion q12				= new Quest12(_prologueData._conf, _prologueData._apacheExec, c12);
+		c12.setQuestId(q12.getID());
+		_questionProperties.put(q12, new YesNoQuestionProperties(q12, c12, QuestionStatus.OPEN, new AnsweringThread(q12, this)));
+		
 		for (YesNoQuestion q : _questionProperties.keySet())
 		{
 			_questionsById.put(q.getID(), q);
@@ -369,6 +486,8 @@ public class AskerServlet extends HttpServlet
 
 	private void triggerActions(HttpServletRequest request)
 	{
+		_mainContentId = request.getParameter(PARAM_REQUESTED_QUEST) != null ? request.getParameter(PARAM_REQUESTED_QUEST) : _mainContentId;
+		
 		String action = request.getParameter(PARAM_ACTION);
 		if(action != null && _prologueOk)
 		{
@@ -421,13 +540,12 @@ public class AskerServlet extends HttpServlet
 			{
 				//TODO
 			}
-			else if(action.equals(ACTION_ANSWER))
+			else if(action.equals(ACTION_ANSWER) && _mainContentId != null)
 			{
 				String answer = request.getParameter(PARAM_ANSWER);
 				try
 				{
-					String requestedId = request.getParameter(PARAM_REQUESTED_QUEST);
-					YesNoQuestion q = _questionsById.get(requestedId);
+					YesNoQuestion q = _questionsById.get(_mainContentId);
 					DelayedHtmlUserCommunicator uc = _questionProperties.get(q).communicator;
 					uc.setAnswer(answer);
 					try
@@ -479,6 +597,15 @@ public class AskerServlet extends HttpServlet
 		@Override
 		public void run()
 		{
+			try
+			{
+				_quest.initialize();
+			}
+			catch (Exception e)
+			{
+				throw new RuntimeException(e);
+			}
+			
 			_answer = _quest.answer();
 			_callback.updateStatus(_quest, _answer ? QuestionStatus.GOOD : QuestionStatus.BAD);
 		}
