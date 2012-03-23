@@ -1,20 +1,24 @@
 package org.akquinet.web;
 
 import java.io.IOException;
+import java.util.Enumeration;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+@WebServlet(urlPatterns="/checkLogin")
 public class AuthenticatorServlet extends HttpServlet
 {
 	private static final long serialVersionUID = 2690042938888465169L;
 	
-	private static final String NO_SSL_REDIRECT_URL = null;	//TODO value for NO_SSL_REDIRECT_URL
-	private static final String MAIN_SERVLET_URL = "/main.html";
+	private static final String MAIN_SERVLET_URL = "inspector.jsp";
 	private static final String COCHISE_PROPERTIES_PASSKEY = "cochisePass";
+	private static final String LOGIN_PAGE = "login.jsp";
+	
+	private static boolean _someoneLoggedIn = false;
 
 	public AuthenticatorServlet()
 	{
@@ -24,21 +28,29 @@ public class AuthenticatorServlet extends HttpServlet
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
-		if(!request.isSecure())
+		String logout = request.getParameter("logout");
+		if(logout != null)
 		{
-			response.sendRedirect(NO_SSL_REDIRECT_URL);
+			_someoneLoggedIn = false;
+			request.getSession().removeAttribute("loggedIn");
+			request.getSession().invalidate();
+			response.sendRedirect(response.encodeRedirectURL(LOGIN_PAGE));
+			return;
 		}
 		
-		String pass = request.getParameter("pw");
-		
-		if(pass != null && authenticate(pass))
+		String pass = request.getParameter("password");
+		if(pass != null && authenticate(pass) && !_someoneLoggedIn) //there can only be one person logged in (this application is not parallelity-safe)
 		{
-			String sessionInfo = Integer.toString(SessionManager.getDefault().openNewSession());
+			_someoneLoggedIn = true;
+			Enumeration<String> attributes = request.getSession().getAttributeNames();
+			while(attributes.hasMoreElements())
+			{
+				request.getSession().removeAttribute( attributes.nextElement() );
+			}
 			
-			Cookie c = new Cookie("dixi", sessionInfo);
-			c.setSecure(true);
-			response.addCookie(c);
-			response.sendRedirect(MAIN_SERVLET_URL);
+			request.getSession().setAttribute("runId", CommonData.RUN_ID);
+			request.getSession().setAttribute("loggedIn", true);
+			response.sendRedirect(response.encodeRedirectURL(MAIN_SERVLET_URL));
 		}
 		else
 		{
