@@ -15,7 +15,7 @@ html, body {
 	position: relative;
 }
 #logo {
-	background-image:url(./logo.png);
+	background-image:url(img/logo.png);
 	height: 90px;
 	width: 210px;
 	top: 13px;
@@ -133,4 +133,15 @@ ul {
 .disclosures .feature-title {
 		cursor: pointer;
 		border-bottom: 1px solid #594A3E;
+}
+
+.tooltip {
+	position: absolute;
+	display: none;
+	text-align: left;
+	color: #594A3E;
+	background-color: #F7F8E0;
+	border: 1.5px solid #D5D5D5;
+	padding: 1px;
+	max-width: 300px;
 }

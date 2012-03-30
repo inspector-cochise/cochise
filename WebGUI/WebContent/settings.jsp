@@ -51,25 +51,34 @@
 			<td><%=labels.getString("prologue4")%></td>
 			<td><input type="text" name="<%=CommonData.PARAM_APACHE_EXECUTABLE%>" size="40" value="<%= helper._prologueData._apacheExec%>" />
 				<span class="bad"><%= execErrorMsg %></span></td>
+			<td><a onmouseover="showWMTT('apacheExecTip')" onmouseout="hideWMTT()" href=""><img src="img/help.png" /></a></td>
 		</tr>
 
 		<tr>
 			<td><%= labels.getString("prologue5") %></td>
 			<td><input type="text" name="<%=CommonData.PARAM_APACHE_CONFIG%>" size="40" value="<%= helper._prologueData._apacheConf %>" />
 				<span class="bad"><%= configErrorMsg %></span></td>
+			<td><a onmouseover="showWMTT('apacheConfTip')" onmouseout="hideWMTT()" href=""><img src="img/help.png" /></a></td>
 		</tr>
 		<tr>
 			<td><%= labels.getString("prologue6") %></td>
 			<td><input type="checkbox" name="<%=CommonData.PARAM_HIGH_SECURITY%>" value="val" <%= helper._prologueData._highSec ? "checked=\"checked\"" : "" %> />
 				</td>
+			<td><a onmouseover="showWMTT('highSecTip')" onmouseout="hideWMTT()" href=""><img src="img/help.png" /></a></td>
 		</tr>
 		<tr>
 			<td><%= labels.getString("prologue7") %></td>
 			<td><input type="checkbox" name="<%=CommonData.PARAM_HIGH_PRIVACY%>" value="val" <%= helper._prologueData._highPriv ? "checked=\"checked\"" : "" %> />
 				</td>
+			<td><a onmouseover="showWMTT('highPrivTip')" onmouseout="hideWMTT()" href=""><img src="img/help.png" /></a></td>
 		</tr>
 		<tr>
 			<td></td><td><input type="submit" value="<%= labels.getString("prologue8") %>"></td>
 		</tr>
 	</table>
 </form>
+
+<div id="apacheExecTip" class="tooltip"><%= labels.getString("apacheExecTip") %></div>
+<div id="apacheConfTip" class="tooltip"><%= labels.getString("apacheConfTip") %></div>
+<div id="highSecTip" class="tooltip"><%= labels.getString("highSecTip") %></div>
+<div id="highPrivTip" class="tooltip"><%= labels.getString("highPrivTip") %></div>

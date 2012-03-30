@@ -45,7 +45,7 @@
 
 				<div id="content-top">
 					<div id="content-top-first-column">
-						<img src="tree.png" />
+						<img src="img/tree.png" />
 					</div>
 					<div id="content-top-second-column">
 						<form action="checkLogin">
