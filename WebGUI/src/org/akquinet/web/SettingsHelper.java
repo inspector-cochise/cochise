@@ -17,7 +17,7 @@ public class SettingsHelper
 	private ResourceBundle _labels = ResourceBundle.getBundle("settings", Locale.getDefault());
 	public PrologueData _prologueData;
 	
-	enum OperatingSystem
+	public enum OperatingSystem
 	{
 		Ubuntu,
 		Debian,
@@ -53,7 +53,10 @@ public class SettingsHelper
 			break;
 		}
 		
-		_prologueData = new PrologueData(apacheExec, apacheConf, null, null, null, true, true);
+		File execFile = new File(apacheExec);
+		File confFile = new File(apacheConf);
+		
+		_prologueData = new PrologueData(apacheExec, apacheConf, execFile, null, confFile, true, true);
 	}
 	
 	public SettingsHelper(PrologueData pd)
@@ -146,7 +149,7 @@ public class SettingsHelper
 		}
 	}
 	
-	private static OperatingSystem getOperatingSystem()
+	public static OperatingSystem getOperatingSystem()
 	{
 		try
 		{

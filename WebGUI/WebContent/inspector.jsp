@@ -1,4 +1,6 @@
+<%@page import="java.util.Iterator"%>
 <%@page import="org.akquinet.web.CommonData"%>
+<%@page import="java.util.ResourceBundle"%>
 <%@page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%
@@ -7,7 +9,7 @@
 			|| !session.getAttribute("runId").equals(CommonData.RUN_ID)
 		)
 	{
-		response.sendRedirect(response.encodeRedirectURL("login.jsp"));
+		response.sendRedirect(response.encodeRedirectURL(CommonData.LOGIN_SERVLET));
 		return;
 	}
 %>
@@ -17,10 +19,11 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Inspector-Cochise</title>
 <link rel="stylesheet" href="./style.css" type="text/css" />
-<script language="javascript" src="script.js"></script>
 <script language="javascript" src="jquery-1.7.1.js"></script>
 <script language="javascript" src="hubu.js"></script>
 <script language="javascript" src="disclosure.js"></script>
+<script language="javascript" src="md5.js"></script>
+<script language="javascript" src="script.js"></script>
 <script language="javascript">
 
 	$(document).ready(function() {
@@ -38,6 +41,32 @@
 			containerId : 'body'
 		});
 	});
+	
+	<%
+	{
+		ResourceBundle navLabels = ResourceBundle.getBundle("navigation", Locale.getDefault());
+		%>
+		var pos = '<%= navLabels.getString("pos") %>';
+		var neg = '<%= navLabels.getString("neg") %>';
+		var ope = '<%= navLabels.getString("ope") %>';
+		var questIds =
+			[
+			<%
+			Iterator<YesNoQuestion> it = CommonData.getDefault().getQuestions().values().iterator();
+			while(it.hasNext())
+			{
+				YesNoQuestion current = it.next();
+				out.print("'" + current.getID() + "'");
+				if(it.hasNext())
+				{
+					out.print(", ");
+				}
+			}
+			%>
+			 ];
+		<%
+	}
+	%>
 </script>
 </head>
 <body>
@@ -68,7 +97,7 @@
 				<form>
 					<%-- TODO make button work --%>
 					<input type="button" value="Report generieren"
-						onclick="location='main.html?action=genReport'" />
+						onclick="location='inspector.jsp?action=genReport'" />
 				</form>
 			</div>
 			<div id="lower-left">
@@ -80,30 +109,7 @@
 		</div>
 		<div id="right">
 			<div id="content">
-				<%
-					boolean prologueOk = false;
-					if (session.getAttribute("prologueOk") != null)
-					{
-						prologueOk = session.getAttribute("prologueOk").equals("true");
-					}
-					String action = request.getParameter(CommonData.PARAM_ACTION);
-					String quest = request.getParameter(CommonData.PARAM_REQUESTED_QUEST);
-
-					if (prologueOk == false
-						|| (action != null && action.equals(CommonData.ACTION_SETTINGS))
-						|| (quest != null && quest.equals(CommonData.PROLOGUE_ID)))
-					{
-						%>
-						<%@include file="settings.jsp"%>
-						<%
-					}
-					else
-					{
-						%>
-						<%=CommonData.getDefault().getQuestionsOutput(quest)%>
-						<%
-					}
-				%>
+				<%@include file="mainCont.jsp" %>
 			</div>
 		</div>
 	</div>

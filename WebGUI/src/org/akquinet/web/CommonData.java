@@ -1,7 +1,6 @@
 package org.akquinet.web;
 
 import java.io.File;
-import java.io.IOException;
 import java.rmi.UnexpectedException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -28,11 +27,14 @@ import org.akquinet.httpd.ConfigFile;
 
 public class CommonData
 {
-	public static final String PARAM_REQUESTED_QUEST = "quest";
 	public static final String ACTION_GENERATE_REPORT = "genReport";
 	public static final String ACTION_SETTINGS = "settings";
 	public static final String ACTION_ANSWER = "answer";
 
+	public static final String MAIN_SERVLET = "inspector.jsp";
+	public static final String LOGIN_SERVLET = "login.jsp";
+	
+	public static final String PARAM_REQUESTED_QUEST = "quest";
 	public static final String PARAM_ACTION = "action";
 	public static final String PARAM_APACHE_EXECUTABLE = "apacheExec";
 	public static final String PARAM_APACHE_CONFIG = "apacheConfig";
@@ -51,28 +53,18 @@ public class CommonData
 		OPEN
 	}
 	
-	public enum OperatingSystem
-	{
-		Ubuntu,
-		Debian,
-		SUSE,
-		RedHat,
-		UNKNOWN
-	}
-	
 	private static CommonData _default;
 	
 	private String _mainContentId;
-	private boolean _prologueOk;
 	private PrologueData _prologueData;
 	private HashMap<String, YesNoQuestion> _questionsById;
-	private LinkedHashMap<YesNoQuestion, YesNoQuestionProperties> _questionProperties;
+	private HashMap<YesNoQuestion, YesNoQuestionProperties> _questionProperties;
+	private boolean _configured = false;
 	
 	private CommonData()
 	{
-		//TODO
 		_questionProperties = new LinkedHashMap<YesNoQuestion, YesNoQuestionProperties>();
-		_questionsById = new HashMap<String, YesNoQuestion>();
+		_questionsById = new LinkedHashMap<String, YesNoQuestion>();
 		_mainContentId = PROLOGUE_ID;
 	}
 	
@@ -90,6 +82,21 @@ public class CommonData
 		_default = null;
 	}
 	
+	public PrologueData getPrologueData()
+	{
+		return _prologueData;
+	}
+	
+	public String getMainContentId()
+	{
+		return _mainContentId;
+	}
+	
+	public boolean isConfigured()
+	{
+		return _configured;
+	}
+	
 	public HashMap<String, YesNoQuestion> getQuestions()
 	{
 		return _questionsById;
@@ -102,13 +109,28 @@ public class CommonData
 		String action = request.getParameter(PARAM_ACTION);
 		if(_prologueData == null)
 		{
-			initPrologueData(request);
+			_prologueData = (new SettingsHelper())._prologueData;
+			_configured = false;
 		}
-		else if(action != null && _prologueOk)
+		
+		if(action != null)
 		{
 			if(action.equals(ACTION_SETTINGS) || _mainContentId.equals(PROLOGUE_ID))
 			{
 				initPrologueData(request);
+				
+				SettingsHelper helper = new SettingsHelper(_prologueData);
+				
+				String execErrorMsg = helper.getExecErrorMsg();
+				String configErrorMsg = helper.getConfigErrorMsg();
+				
+				_prologueData = helper._prologueData;
+				
+				if (execErrorMsg.equals("") && configErrorMsg.equals("") && "root".equals(System.getenv("USER")))
+				{
+					addQuestions();
+					_configured = true;
+				}
 			}
 			else if(action.equals(ACTION_GENERATE_REPORT))
 			{
@@ -152,28 +174,14 @@ public class CommonData
 		String apacheExec = request.getParameter(PARAM_APACHE_EXECUTABLE);
 		if(apacheExec == null)
 		{
-			if(_prologueData != null)
-			{
-				apacheExec = _prologueData._apacheExec;
-			}
-			else
-			{
-				apacheExec = getOSDependentApacheExecutable();
-			}
+			apacheExec = _prologueData._apacheExec;
 		}
 		File apacheExecutable = new File(apacheExec);
 		
 		String apacheConf = request.getParameter(PARAM_APACHE_CONFIG);
 		if(apacheConf == null)
 		{
-			if(_prologueData != null)
-			{
-				apacheConf = _prologueData._apacheConf;
-			}
-			else
-			{
-				apacheConf = getOSDependentApacheConfig();
-			}
+			apacheConf = _prologueData._apacheConf;
 		}
 		File configFile = new File(apacheConf);
 		
@@ -187,147 +195,74 @@ public class CommonData
 		}
 		catch (Exception e)
 		{
-			//we will do the checks again later in viewProloge()
+			//we will do the checks again later in settings.jsp
 			_prologueData = new PrologueData(apacheExec, apacheConf, apacheExecutable, null, configFile, highSec, highPriv);
 		}
-		
-		request.setAttribute("prologueData", _prologueData);
 	}
 	
-	public static OperatingSystem getOperatingSystem()
-	{
-		try
-		{
-			Process p = (new ProcessBuilder("./distro.sh")).start();
-			int exitVal = 0;
-			boolean wait = true;
-
-			while(wait)
-			{
-				try
-				{
-					exitVal = p.waitFor();
-					wait = false;
-				}
-				catch (InterruptedException e)
-				{
-					Thread.currentThread().interrupt();
-				}
-			}
-			
-			switch(exitVal)
-			{
-			case 10:
-				return OperatingSystem.Ubuntu;
-			case 20:
-				return OperatingSystem.SUSE;
-			case 30:
-				return OperatingSystem.RedHat;
-			case 40:
-				return OperatingSystem.Debian;
-			case 0:
-			default:
-				return OperatingSystem.UNKNOWN;
-			}
-		}
-		catch (IOException e)
-		{
-			throw new RuntimeException(e); //this means something is not right calling the scripts. Will also cause problems later.
-		}
-	}
-	
-	private String getOSDependentApacheConfig()
-	{
-		switch(getOperatingSystem())
-		{
-		case Debian:
-		case Ubuntu:
-			return "/etc/apache2/apache2.conf";
-		case SUSE:
-			return "/etc/apache2/httpd.conf";
-		case RedHat:
-			return "/etc/httpd/httpd.conf";
-		case UNKNOWN:
-		default:
-			return "/etc/httpd/httpd.conf";
-		}
-	}
-
-	private String getOSDependentApacheExecutable()
-	{
-		switch(getOperatingSystem())
-		{
-		case Debian:
-		case Ubuntu:
-			return "/usr/sbin/apache2";
-		case SUSE:
-			return "/usr/sbin/httpd2";
-		case RedHat:
-			return "/usr/sbin/httpd";
-		case UNKNOWN:
-		default:
-			return "/usr/sbin/httpd";
-		}
-	}
-
 	public void addQuestions()
 	{
-		DelayedHtmlUserCommunicator c1	= new DelayedHtmlUserCommunicator();
+		if(!_questionProperties.isEmpty())
+		{
+			return;
+		}
+		
+		DelayedHtmlUserCommunicator c1	= new DelayedHtmlUserCommunicator(MAIN_SERVLET);
 		YesNoQuestion q1				= new Quest1(_prologueData._highSec, c1);
 		c1.setQuestId(q1.getID());
 		_questionProperties.put(q1, new YesNoQuestionProperties(q1, c1, QuestionStatus.OPEN, new AnsweringThread(q1, this)));
 		
-		DelayedHtmlUserCommunicator c2	= new DelayedHtmlUserCommunicator();
+		DelayedHtmlUserCommunicator c2	= new DelayedHtmlUserCommunicator(MAIN_SERVLET);
 		YesNoQuestion q2				= new Quest2(_prologueData._apacheExecutable, c2);
 		c2.setQuestId(q2.getID());
 		_questionProperties.put(q2, new YesNoQuestionProperties(q2, c2, QuestionStatus.OPEN, new AnsweringThread(q2, this)));
 		
-		DelayedHtmlUserCommunicator c3	= new DelayedHtmlUserCommunicator();
+		DelayedHtmlUserCommunicator c3	= new DelayedHtmlUserCommunicator(MAIN_SERVLET);
 		YesNoQuestion q3				= new Quest3(_prologueData._conf, _prologueData._apacheExecutable, c3);
 		c3.setQuestId(q3.getID());
 		_questionProperties.put(q3, new YesNoQuestionProperties(q3, c3, QuestionStatus.OPEN, new AnsweringThread(q3, this)));
 		
-		DelayedHtmlUserCommunicator c4	= new DelayedHtmlUserCommunicator();
+		DelayedHtmlUserCommunicator c4	= new DelayedHtmlUserCommunicator(MAIN_SERVLET);
 		YesNoQuestion q4				= new Quest4(_prologueData._conf, _prologueData._apacheExecutable, c4);
 		c4.setQuestId(q4.getID());
 		_questionProperties.put(q4, new YesNoQuestionProperties(q4, c4, QuestionStatus.OPEN, new AnsweringThread(q4, this)));
 		
-		DelayedHtmlUserCommunicator c5	= new DelayedHtmlUserCommunicator();
+		DelayedHtmlUserCommunicator c5	= new DelayedHtmlUserCommunicator(MAIN_SERVLET);
 		YesNoQuestion q5				= new Quest5(_prologueData._conf, c5);
 		c5.setQuestId(q5.getID());
 		_questionProperties.put(q5, new YesNoQuestionProperties(q5, c5, QuestionStatus.OPEN, new AnsweringThread(q5, this)));
 		
-		DelayedHtmlUserCommunicator c6	= new DelayedHtmlUserCommunicator();
+		DelayedHtmlUserCommunicator c6	= new DelayedHtmlUserCommunicator(MAIN_SERVLET);
 		YesNoQuestion q6				= new Quest6(_prologueData._apacheExecutable, c6);
 		c6.setQuestId(q6.getID());
 		_questionProperties.put(q6, new YesNoQuestionProperties(q6, c6, QuestionStatus.OPEN, new AnsweringThread(q6, this)));
 
-		DelayedHtmlUserCommunicator c7	= new DelayedHtmlUserCommunicator();
+		DelayedHtmlUserCommunicator c7	= new DelayedHtmlUserCommunicator(MAIN_SERVLET);
 		YesNoQuestion q7				= new Quest7(_prologueData._conf, c7);
 		c7.setQuestId(q7.getID());
 		_questionProperties.put(q7, new YesNoQuestionProperties(q7, c7, QuestionStatus.OPEN, new AnsweringThread(q7, this)));
 		
-		DelayedHtmlUserCommunicator c8	= new DelayedHtmlUserCommunicator();
+		DelayedHtmlUserCommunicator c8	= new DelayedHtmlUserCommunicator(MAIN_SERVLET);
 		YesNoQuestion q8				= new Quest8(_prologueData._configFile, _prologueData._conf, _prologueData._highSec, c8);
 		c8.setQuestId(q8.getID());
 		_questionProperties.put(q8, new YesNoQuestionProperties(q8, c8, QuestionStatus.OPEN, new AnsweringThread(q8, this)));
 		
-		DelayedHtmlUserCommunicator c9	= new DelayedHtmlUserCommunicator();
+		DelayedHtmlUserCommunicator c9	= new DelayedHtmlUserCommunicator(MAIN_SERVLET);
 		YesNoQuestion q9				= new Quest9(_prologueData._conf, _prologueData._apacheExec, _prologueData._highSec, c9);
 		c9.setQuestId(q9.getID());
 		_questionProperties.put(q9, new YesNoQuestionProperties(q9, c9, QuestionStatus.OPEN, new AnsweringThread(q9, this)));
 		
-		DelayedHtmlUserCommunicator c10	= new DelayedHtmlUserCommunicator();
+		DelayedHtmlUserCommunicator c10	= new DelayedHtmlUserCommunicator(MAIN_SERVLET);
 		YesNoQuestion q10				= new Quest10(_prologueData._conf, c10);
 		c10.setQuestId(q10.getID());
 		_questionProperties.put(q10, new YesNoQuestionProperties(q10, c10, QuestionStatus.OPEN, new AnsweringThread(q10, this)));
 		
-		DelayedHtmlUserCommunicator c11	= new DelayedHtmlUserCommunicator();
+		DelayedHtmlUserCommunicator c11	= new DelayedHtmlUserCommunicator(MAIN_SERVLET);
 		YesNoQuestion q11				= new Quest11(_prologueData._conf, c11);
 		c11.setQuestId(q11.getID());
 		_questionProperties.put(q11, new YesNoQuestionProperties(q11, c11, QuestionStatus.OPEN, new AnsweringThread(q11, this)));
 		
-		DelayedHtmlUserCommunicator c12	= new DelayedHtmlUserCommunicator();
+		DelayedHtmlUserCommunicator c12	= new DelayedHtmlUserCommunicator(MAIN_SERVLET);
 		YesNoQuestion q12				= new Quest12(_prologueData._conf, _prologueData._apacheExec, c12);
 		c12.setQuestId(q12.getID());
 		_questionProperties.put(q12, new YesNoQuestionProperties(q12, c12, QuestionStatus.OPEN, new AnsweringThread(q12, this)));

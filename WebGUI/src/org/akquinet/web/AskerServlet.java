@@ -37,11 +37,13 @@ import org.akquinet.httpd.ParserException;
 @WebServlet("/main.html")
 public class AskerServlet extends HttpServlet
 {
-	private static final String PARAM_REQUESTED_QUEST = "quest";
 	private static final String ACTION_GENERATE_REPORT = "genReport";
 	private static final String ACTION_SETTINGS = "settings";
 	private static final Object ACTION_ANSWER = "answer";
 
+	public static final String MAIN_SERVLET = "main.html";
+	
+	private static final String PARAM_REQUESTED_QUEST = "quest";
 	private static final String PARAM_ACTION = "action";
 	private static final String PARAM_APACHE_EXECUTABLE = "apacheExec";
 	private static final String PARAM_APACHE_CONFIG = "apacheConfig";
@@ -417,62 +419,62 @@ public class AskerServlet extends HttpServlet
 
 	private void addQuestions()
 	{
-		DelayedHtmlUserCommunicator c1	= new DelayedHtmlUserCommunicator();
+		DelayedHtmlUserCommunicator c1	= new DelayedHtmlUserCommunicator(MAIN_SERVLET);
 		YesNoQuestion q1				= new Quest1(_prologueData._highSec, c1);
 		c1.setQuestId(q1.getID());
 		_questionProperties.put(q1, new YesNoQuestionProperties(q1, c1, QuestionStatus.OPEN, new AnsweringThread(q1, this)));
 		
-		DelayedHtmlUserCommunicator c2	= new DelayedHtmlUserCommunicator();
+		DelayedHtmlUserCommunicator c2	= new DelayedHtmlUserCommunicator(MAIN_SERVLET);
 		YesNoQuestion q2				= new Quest2(_prologueData._apacheExecutable, c2);
 		c2.setQuestId(q2.getID());
 		_questionProperties.put(q2, new YesNoQuestionProperties(q2, c2, QuestionStatus.OPEN, new AnsweringThread(q2, this)));
 		
-		DelayedHtmlUserCommunicator c3	= new DelayedHtmlUserCommunicator();
+		DelayedHtmlUserCommunicator c3	= new DelayedHtmlUserCommunicator(MAIN_SERVLET);
 		YesNoQuestion q3				= new Quest3(_prologueData._conf, _prologueData._apacheExecutable, c3);
 		c3.setQuestId(q3.getID());
 		_questionProperties.put(q3, new YesNoQuestionProperties(q3, c3, QuestionStatus.OPEN, new AnsweringThread(q3, this)));
 		
-		DelayedHtmlUserCommunicator c4	= new DelayedHtmlUserCommunicator();
+		DelayedHtmlUserCommunicator c4	= new DelayedHtmlUserCommunicator(MAIN_SERVLET);
 		YesNoQuestion q4				= new Quest4(_prologueData._conf, _prologueData._apacheExecutable, c4);
 		c4.setQuestId(q4.getID());
 		_questionProperties.put(q4, new YesNoQuestionProperties(q4, c4, QuestionStatus.OPEN, new AnsweringThread(q4, this)));
 		
-		DelayedHtmlUserCommunicator c5	= new DelayedHtmlUserCommunicator();
+		DelayedHtmlUserCommunicator c5	= new DelayedHtmlUserCommunicator(MAIN_SERVLET);
 		YesNoQuestion q5				= new Quest5(_prologueData._conf, c5);
 		c5.setQuestId(q5.getID());
 		_questionProperties.put(q5, new YesNoQuestionProperties(q5, c5, QuestionStatus.OPEN, new AnsweringThread(q5, this)));
 		
-		DelayedHtmlUserCommunicator c6	= new DelayedHtmlUserCommunicator();
+		DelayedHtmlUserCommunicator c6	= new DelayedHtmlUserCommunicator(MAIN_SERVLET);
 		YesNoQuestion q6				= new Quest6(_prologueData._apacheExecutable, c6);
 		c6.setQuestId(q6.getID());
 		_questionProperties.put(q6, new YesNoQuestionProperties(q6, c6, QuestionStatus.OPEN, new AnsweringThread(q6, this)));
 
-		DelayedHtmlUserCommunicator c7	= new DelayedHtmlUserCommunicator();
+		DelayedHtmlUserCommunicator c7	= new DelayedHtmlUserCommunicator(MAIN_SERVLET);
 		YesNoQuestion q7				= new Quest7(_prologueData._conf, c7);
 		c7.setQuestId(q7.getID());
 		_questionProperties.put(q7, new YesNoQuestionProperties(q7, c7, QuestionStatus.OPEN, new AnsweringThread(q7, this)));
 		
-		DelayedHtmlUserCommunicator c8	= new DelayedHtmlUserCommunicator();
+		DelayedHtmlUserCommunicator c8	= new DelayedHtmlUserCommunicator(MAIN_SERVLET);
 		YesNoQuestion q8				= new Quest8(_prologueData._configFile, _prologueData._conf, _prologueData._highSec, c8);
 		c8.setQuestId(q8.getID());
 		_questionProperties.put(q8, new YesNoQuestionProperties(q8, c8, QuestionStatus.OPEN, new AnsweringThread(q8, this)));
 		
-		DelayedHtmlUserCommunicator c9	= new DelayedHtmlUserCommunicator();
+		DelayedHtmlUserCommunicator c9	= new DelayedHtmlUserCommunicator(MAIN_SERVLET);
 		YesNoQuestion q9				= new Quest9(_prologueData._conf, _prologueData._apacheExec, _prologueData._highSec, c9);
 		c9.setQuestId(q9.getID());
 		_questionProperties.put(q9, new YesNoQuestionProperties(q9, c9, QuestionStatus.OPEN, new AnsweringThread(q9, this)));
 		
-		DelayedHtmlUserCommunicator c10	= new DelayedHtmlUserCommunicator();
+		DelayedHtmlUserCommunicator c10	= new DelayedHtmlUserCommunicator(MAIN_SERVLET);
 		YesNoQuestion q10				= new Quest10(_prologueData._conf, c10);
 		c10.setQuestId(q10.getID());
 		_questionProperties.put(q10, new YesNoQuestionProperties(q10, c10, QuestionStatus.OPEN, new AnsweringThread(q10, this)));
 		
-		DelayedHtmlUserCommunicator c11	= new DelayedHtmlUserCommunicator();
+		DelayedHtmlUserCommunicator c11	= new DelayedHtmlUserCommunicator(MAIN_SERVLET);
 		YesNoQuestion q11				= new Quest11(_prologueData._conf, c11);
 		c11.setQuestId(q11.getID());
 		_questionProperties.put(q11, new YesNoQuestionProperties(q11, c11, QuestionStatus.OPEN, new AnsweringThread(q11, this)));
 		
-		DelayedHtmlUserCommunicator c12	= new DelayedHtmlUserCommunicator();
+		DelayedHtmlUserCommunicator c12	= new DelayedHtmlUserCommunicator(MAIN_SERVLET);
 		YesNoQuestion q12				= new Quest12(_prologueData._conf, _prologueData._apacheExec, c12);
 		c12.setQuestId(q12.getID());
 		_questionProperties.put(q12, new YesNoQuestionProperties(q12, c12, QuestionStatus.OPEN, new AnsweringThread(q12, this)));

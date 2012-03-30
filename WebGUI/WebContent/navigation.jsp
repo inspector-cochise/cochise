@@ -10,47 +10,81 @@
 			|| !session.getAttribute("runId").equals(CommonData.RUN_ID)
 		)
 	{
-		response.sendRedirect( response.encodeRedirectURL("login.jsp") );
+		response.sendRedirect( response.encodeRedirectURL(CommonData.LOGIN_SERVLET) );
 		return;
 	}
 %>
 
 <%
 	ResourceBundle labels = ResourceBundle.getBundle("navigation", Locale.getDefault());
+	String mainContId = CommonData.getDefault().getMainContentId();
 %>
 						<table>
 							<tr>
-								<td><a href="<%= response.encodeURL("inspector.jsp?" + CommonData.PARAM_REQUESTED_QUEST + '=' + CommonData.PROLOGUE_ID) %>"> <%= labels.getString("settings") %></a></td>
+								<td><a href="<%= response.encodeURL(CommonData.MAIN_SERVLET + "?" + CommonData.PARAM_REQUESTED_QUEST + '=' + CommonData.PROLOGUE_ID) %>">
+								<%
+									if(mainContId.equals(CommonData.PROLOGUE_ID))
+									{
+										%><b><%
+									}
+								%>
+								<%= labels.getString("settings") %>
+								<%
+									if(mainContId.equals(CommonData.PROLOGUE_ID))
+									{
+										%></b><%
+									}
+								%>
+								</a></td>
 								<td />
 							</tr>
 							<tr>
 								<td />
 								<td />
 							</tr>
-							<%-- TODO automatically generate this list (don't forget the prologue) --%>
 							<%
 								for(YesNoQuestion quest : CommonData.getDefault().getQuestions().values())
 								{
 							%>
 									<tr>
-										<td><a href="<%= response.encodeURL("inspector.jsp?" + CommonData.PARAM_REQUESTED_QUEST + '=' + quest.getID()) %>">
-										<%= quest.getName() %></a></td>
+										<td><a href="<%= response.encodeURL(CommonData.MAIN_SERVLET + "?" + CommonData.PARAM_REQUESTED_QUEST + '=' + quest.getID()) %>">
+										<%
+											if(mainContId.equals(quest.getID()))
+											{
+												%><b><%
+											}
+										%>
+										<%= quest.getName() %>
+										<%
+											if(mainContId.equals(quest.getID()))
+											{
+												%></b><%
+											}
+										%>
+										</a></td>
+										<td id="<%= quest.getID() %>">
 										<%
 											String statusKey;
 											switch(CommonData.getDefault().getStatus(quest))
 											{
 											case OPEN:
-												statusKey = "ope";
+												%>
+													<span class="open"><%= labels.getString("ope") %></span>
+												<%
 												break;
 											case GOOD:
-												statusKey = "pos";
+												%>
+													<span class="good"><%= labels.getString("pos") %></span>
+												<%
 												break;
 											case BAD:
-												statusKey = "neg";
+												%>
+													<span class="bad"><%= labels.getString("neg") %></span>
+												<%
 												break;
 											}
 										%>
-										<td><span class="good"><%= labels.getString("") %></span></td>
+										</td>
 									</tr>
 							<%
 								}

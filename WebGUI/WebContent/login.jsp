@@ -10,10 +10,10 @@
 <link rel="stylesheet" href="./style.css" type="text/css" />
 <link rel="stylesheet" href="./layout.css" type="text/css" />
 <link rel="stylesheet" href="./overview.css" type="text/css" />
-<script language="javascript" src="script.js"></script>
 <script language="javascript" src="jquery-1.7.1.js"></script>
 <script language="javascript" src="hubu.js"></script>
 <script language="javascript" src="disclosure.js"></script>
+<script language="javascript" src="script.js"></script>
 <script language="javascript">
 	$(document).ready(function() {
 
@@ -69,9 +69,9 @@
 						<%
 							if (!request.isSecure())
 							{
-						%>
-						<p class="bad"><%=labels.getString("noSSL")%></p>
-						<%
+								%>
+								<p class="bad"><%=labels.getString("noSSL")%></p>
+								<%
 							}
 						%>
 					</div>

@@ -60,7 +60,14 @@ public class AuthenticatorServlet extends HttpServlet
 	
 	private boolean authenticate(String pass)
 	{
-		return System.getProperty(COCHISE_PROPERTIES_PASSKEY).equals(pass);
+		if(System.getProperty(COCHISE_PROPERTIES_PASSKEY) == null)
+		{
+			return false;
+		}
+		else
+		{
+			return System.getProperty(COCHISE_PROPERTIES_PASSKEY).equals(pass);
+		}
 	}
 
 	@Override

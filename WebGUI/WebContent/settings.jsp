@@ -13,7 +13,7 @@
 			|| !session.getAttribute("runId").equals(CommonData.RUN_ID)
 		)
 	{
-		response.sendRedirect( response.encodeRedirectURL("login.jsp") );
+		response.sendRedirect( response.encodeRedirectURL(CommonData.LOGIN_SERVLET) );
 		return;
 	}
 %>
@@ -22,23 +22,14 @@
 %>
 <h1><%=labels.getString("prologue2")%></h1>
 <%
-	SettingsHelper helper = null;
-	if(session.getAttribute("prologueData") != null)
-	{
-		helper = new SettingsHelper((PrologueData) session.getAttribute("prologueData"));
-	}
-	else
-	{
-		helper = new SettingsHelper();
-	}
+	SettingsHelper helper = new SettingsHelper(CommonData.getDefault().getPrologueData());
 	
 	String execErrorMsg = helper.getExecErrorMsg();
 	String configErrorMsg = helper.getConfigErrorMsg();
 
-	if (execErrorMsg.equals("") && configErrorMsg.equals("") && "root".equals(System.getenv("USER")))
+	if (execErrorMsg.equals("") && configErrorMsg.equals("") && "root".equals(System.getenv("USER")) && CommonData.getDefault().isConfigured())
 	{
 		session.setAttribute("prologueOk", "true");
-		CommonData.getDefault().addQuestions();
 	}
 	else
 	{
