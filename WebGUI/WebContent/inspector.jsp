@@ -88,11 +88,10 @@
 			</div>
 			<div id="middle-left">
 				<h1>Fortschritt</h1>
-				<%-- TODO calculate these percantages --%>
 				<ul>
-					<li><span class="good">50%</span> positiv beantwortet</li>
-					<li><span class="open">25%</span> noch nicht beantwortet</li>
-					<li><span class="bad">25%</span> negativ beantwortet</li>
+					<li><span class="good">--%</span> positiv beantwortet</li>
+					<li><span class="open">--%</span> noch nicht beantwortet</li>
+					<li><span class="bad">--%</span> negativ beantwortet</li>
 				</ul>
 				<form>
 					<%-- TODO make button work --%>
