@@ -110,6 +110,7 @@ ul {
 }
 .positive {
 	background-color: #cce880;
+	padding: 5px;
 }
 .open {
 	text-size: large;
@@ -123,6 +124,7 @@ ul {
 }
 .negative {
 	background-color: #e88080;
+	padding: 5px;
 }
 
 .disclosures {
@@ -141,7 +143,7 @@ ul {
 	text-align: left;
 	color: #594A3E;
 	background-color: #F7F8E0;
-	border: 1.5px solid #D5D5D5;
-	padding: 1px;
+	border: 1px solid #D5D5D5;
+	padding: 5px;
 	max-width: 300px;
 }

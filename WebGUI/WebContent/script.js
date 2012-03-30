@@ -68,17 +68,18 @@ function updateQuest(questId)
 
 	if (questStatus == 'pos')
 	{
-		$('#upper-left #' + questId).html('<span class="good">' + pos + '</span>');
+		$('#upper-left #' + questId).html('<a onmouseover="showWMTT(\'goodTip\')" onmouseout="hideWMTT()" href=""><img src="img/good.png" />');
+		//$('#upper-left #' + questId).html('<span class="good">' + pos + '</span>');
 		positiveQuestions++;
 	}
 	else if (questStatus == 'neg')
 	{
-		$('#upper-left #' + questId).html('<span class="bad">' + neg + '</span>');
+		$('#upper-left #' + questId).html('<a onmouseover="showWMTT(\'badTip\')" onmouseout="hideWMTT()" href=""><img src="img/bad.png" />');
 		negativeQuestions++;
 	}
 	else if (questStatus == 'ope')
 	{
-		$('#upper-left #' + questId).html('<span class="open">' + ope + '</span>');
+		$('#upper-left #' + questId).html('<a onmouseover="showWMTT(\'openTip\')" onmouseout="hideWMTT()" href=""><img src="img/open.png" />');
 		openQuestions++;
 	}
 }

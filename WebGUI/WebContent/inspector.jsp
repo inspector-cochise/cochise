@@ -112,5 +112,11 @@
 			</div>
 		</div>
 	</div>
+<%
+	ResourceBundle navLabels = ResourceBundle.getBundle("navigation", Locale.getDefault());
+%>
+<div id="openTip" class="tooltip"><%= navLabels.getString("openTip") %></div>
+<div id="goodTip" class="tooltip"><%= navLabels.getString("goodTip") %></div>
+<div id="badTip" class="tooltip"><%= navLabels.getString("badTip") %></div>
 </body>
 </html>
