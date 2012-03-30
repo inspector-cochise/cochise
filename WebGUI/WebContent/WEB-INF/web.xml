@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app>
-  <display-name>Example</display-name>
-
-  <!-- Declare the existence of a servlet. -->
+<web-app xmlns:javaee="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+  <javaee:display-name>Inspector-Cochise</javaee:display-name>
   <servlet>
     <servlet-name>AskerServlet</servlet-name>
     <servlet-class>org.akquinet.web.AskerServlet</servlet-class>
   </servlet>
-
-  <!-- Map URLs to that servlet. -->
   <servlet-mapping>
     <servlet-name>AskerServlet</servlet-name>
     <url-pattern>/main.html</url-pattern>
