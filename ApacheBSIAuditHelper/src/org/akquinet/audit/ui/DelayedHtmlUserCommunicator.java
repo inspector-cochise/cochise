@@ -22,22 +22,24 @@ public class DelayedHtmlUserCommunicator extends UserCommunicator
 	private Boolean _yesNoAnswer = null;
 	private String _stringAnswer = null;
 	private String _questId;
+	private String _target;
 
 	/**
 	 * Don't forget to call setQuestId before using any of the ask* methods.
 	 */
-	public DelayedHtmlUserCommunicator()
+	public DelayedHtmlUserCommunicator(String webTarget)
 	{
-		this(null);
+		this(webTarget, null);
 	}
 	
-	public DelayedHtmlUserCommunicator(String questId)
+	public DelayedHtmlUserCommunicator(String webTarget, String questId)
 	{
 		_questId = questId;
 		_inputState = InputState.NO_INPUT_EXPECTED;
 		_locale = Locale.getDefault();
 		_labels = ResourceBundle.getBundle("global", _locale);
 		_htmlBuilder = new HtmlReportLogger(_locale, false);
+		_target = webTarget;
 	}
 	
 	public void setQuestId(String questId)
@@ -150,9 +152,9 @@ public class DelayedHtmlUserCommunicator extends UserCommunicator
 			HtmlTagPair form = new HtmlTagPair("form");
 			form.addContent(new HtmlText(question + " "));
 			form.addContent(new HtmlText("<input type=\"button\" value=\"" + _labels.getString("S8_yes") +
-					"\" onclick=\"location='main.html?quest=" + _questId + "&action=answer&answer=yes'\"/>"));
+					"\" onclick=\"location='" + _target + "?quest=" + _questId + "&action=answer&answer=yes'\"/>"));
 			form.addContent(new HtmlText("<input type=\"button\" value=\"" + _labels.getString("S8_no") +
-					"\" onclick=\"location='main.html?quest=" + _questId + "&action=answer&answer=no'\"/>"));
+					"\" onclick=\"location='" + _target + "?quest=" + _questId + "&action=answer&answer=no'\"/>"));
 			_htmlBuilder.printParagraph(form.stringify().toString());
 			
 			try
@@ -193,7 +195,7 @@ public class DelayedHtmlUserCommunicator extends UserCommunicator
 			_htmlBuilder.mark();
 			
 			HtmlTagPair form = new HtmlTagPair("form");
-			form.addAttribute("action", "main.html?quest=" + _questId + "&action=answer");
+			form.addAttribute("action", "" + _target + "?quest=" + _questId + "&action=answer");
 			form.addContent(new HtmlText(question + " "));
 			form.addContent(new HtmlText("<input type=\"text\" name=\"answer\" size=\"40\" value=\"" + defaultAnswer + "\"/>"));
 			form.addContent(new HtmlText("<input type=\"submit\" value=\"Absenden\">"));
