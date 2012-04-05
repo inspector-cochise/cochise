@@ -109,7 +109,7 @@ ul {
 	color: #94C01E;
 }
 .positive {
-	background-color: #cce880;
+	border: 3px solid #94C01E;
 	padding: 5px;
 }
 .open {
@@ -123,7 +123,7 @@ ul {
 	color: #c01e1f;
 }
 .negative {
-	background-color: #e88080;
+	border: 3px solid #c01e1f;
 	padding: 5px;
 }
 
@@ -131,6 +131,7 @@ ul {
 		border: 2px dashed #d5d5d5;
 		background-color: #F7F8E0;
 		padding: 1em;
+		margin: 0.5em;
 }
 .disclosures .feature-title {
 		cursor: pointer;
