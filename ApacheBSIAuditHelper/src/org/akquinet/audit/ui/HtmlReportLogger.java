@@ -35,9 +35,9 @@ public class HtmlReportLogger
 
 		if(createOuterTags)
 		{
-			HtmlTagPair html = new HtmlTagPair("html");
+			HtmlTagPair html = new HtmlTagPair("html", _serialCounter++);
 			HtmlTagPair head = createHeadTag();
-			HtmlTagPair body = new HtmlTagPair("body");
+			HtmlTagPair body = new HtmlTagPair("body", _serialCounter++);
 			
 			html.addContent(head);
 			html.addContent(body);
@@ -47,7 +47,7 @@ public class HtmlReportLogger
 		}
 		else
 		{
-			HtmlTagPair div = new HtmlTagPair("div");
+			HtmlTagPair div = new HtmlTagPair("div", _serialCounter++);
 			
 			_openTags.push(div);
 			_root = div;
@@ -155,7 +155,7 @@ public class HtmlReportLogger
 	
 	public void beginHidingParagraph(String descriptionOfParagraph)
 	{
-		HtmlTagPair div = new HtmlTagPair("div");
+		HtmlTagPair div = new HtmlTagPair("div", _serialCounter);
 		
 		HtmlTagPair description = new HtmlTagPair("div");
 		description.addAttribute("class", "feature-title");
