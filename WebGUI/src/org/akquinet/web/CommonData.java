@@ -104,9 +104,14 @@ public class CommonData
 		return _questionsById;
 	}
 
-	public void triggerActions(HttpServletRequest request)
+	public void updateMainContentId(HttpServletRequest request)
 	{
 		_mainContentId = request.getParameter(PARAM_REQUESTED_QUEST) != null ? request.getParameter(PARAM_REQUESTED_QUEST) : _mainContentId;
+	}
+	
+	public void triggerActions(HttpServletRequest request)
+	{
+		updateMainContentId(request);
 		
 		String action = request.getParameter(PARAM_ACTION);
 		if(_prologueData == null)

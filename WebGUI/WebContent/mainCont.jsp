@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@page import="org.akquinet.web.CommonData"%>
 <%
 	if (session.getAttribute("loggedIn") == null
 			|| session.getAttribute("runId") == null 
@@ -11,6 +12,8 @@
 	}
 %>
 <%
+	CommonData.getDefault().updateMainContentId(request);
+
 	boolean prologueOk = false;
 	if (session.getAttribute("prologueOk") != null)
 	{

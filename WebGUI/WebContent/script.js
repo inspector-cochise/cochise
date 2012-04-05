@@ -9,11 +9,20 @@ var openQuestions = 0;
 setInterval(updateMainContent, 3000);
 setInterval(updateQuestions, 1000);
 
-function updateMainContent()
+function updateMainContent(target)
 {
 	var xmlHttpObject = new XMLHttpRequest();
 
-	xmlHttpObject.open('get', mainContentUrl, false);
+	if(target == null || target == '')
+	{
+		xmlHttpObject.open('get', mainContentUrl, false);
+	}
+	else
+	{
+		xmlHttpObject.open('get', mainContentUrl + '?quest=' + target, false);
+		$('[id^="navlink_"]').css("font-weight", "normal");
+		$('#navlink_' + target).css("font-weight", "bold");
+	}
 	xmlHttpObject.send(null);
 
 	var responseHash = str_md5(xmlHttpObject.responseText);
@@ -141,22 +150,21 @@ function updateStatistics()
 	}
 }
 
+document.onmousemove = updateWMTT;
+var wmtt = null;
+
 function showWMTT(id)
 {
 	wmtt = document.getElementById(id);
 	wmtt.style.display = "block";
 }
 
-document.onmousemove = updateWMTT;
-
 function updateWMTT(e)
 {
 	if (wmtt != null && wmtt.style.display == 'block')
 	{
-		x = (e.pageX ? e.pageX : window.event.x) + wmtt.offsetParent.scrollLeft - wmtt.offsetParent.offsetLeft;
-		y = (e.pageY ? e.pageY : window.event.y) + wmtt.offsetParent.scrollTop - wmtt.offsetParent.offsetTop;
-		wmtt.style.left = (x + 20) + "px";
-		wmtt.style.top = (y + 20) + "px";
+		wmtt.style.left = (window.event.x + wmtt.offsetParent.scrollLeft + 20) + "px";
+		wmtt.style.top = (window.event.y + wmtt.offsetParent.scrollTop + 20) + "px";
 	}
 }
 

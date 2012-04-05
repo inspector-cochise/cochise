@@ -21,21 +21,16 @@
 %>
 						<table>
 							<tr>
-								<td><a href="<%= response.encodeURL(CommonData.MAIN_SERVLET + "?" + CommonData.PARAM_REQUESTED_QUEST + '=' + CommonData.PROLOGUE_ID) %>">
-								<%
-									if(mainContId.equals(CommonData.PROLOGUE_ID))
-									{
-										%><b><%
-									}
-								%>
+								<td><span id="navlink_<%= CommonData.PROLOGUE_ID %>" onclick="updateMainContent('<%= CommonData.PROLOGUE_ID %>')" class="navigationLink"
+									<%
+										if(CommonData.getDefault().getMainContentId().equals(CommonData.PROLOGUE_ID))
+										{
+											out.println("style=\"font-weight: bold;\"");
+										}
+									%>
+								>
 								<%= labels.getString("settings") %>
-								<%
-									if(mainContId.equals(CommonData.PROLOGUE_ID))
-									{
-										%></b><%
-									}
-								%>
-								</a></td>
+								</span></td>
 								<td />
 							</tr>
 							<tr>
@@ -47,21 +42,16 @@
 								{
 							%>
 									<tr>
-										<td><a href="<%= response.encodeURL(CommonData.MAIN_SERVLET + "?" + CommonData.PARAM_REQUESTED_QUEST + '=' + quest.getID()) %>">
-										<%
-											if(mainContId.equals(quest.getID()))
-											{
-												%><b><%
-											}
-										%>
+										<td><span id="navlink_<%= quest.getID() %>" onclick="updateMainContent('<%= quest.getID() %>')" class="navigationLink"
+											<%
+												if(CommonData.getDefault().getMainContentId().equals(quest.getID()))
+												{
+													out.println("style=\"font-weight: bold;\"");
+												}
+											%>
+										>
 										<%= quest.getName() %>
-										<%
-											if(mainContId.equals(quest.getID()))
-											{
-												%></b><%
-											}
-										%>
-										</a></td>
+										</span></td>
 										<td id="<%= quest.getID() %>">
 										<%
 											String statusKey;

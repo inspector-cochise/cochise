@@ -157,3 +157,11 @@ ul {
 	position: relative;
 	left: 2em;
 }
+
+.navigationLink {
+	cursor: pointer;
+}
+.navigationLink:HOVER {
+	cursor: pointer;
+	text-decoration: underline;
+}
