@@ -25,23 +25,6 @@
 <script language="javascript" src="md5.js"></script>
 <script language="javascript" src="script.js"></script>
 <script language="javascript">
-
-	$(document).ready(function() {
-
-		var title = $.trim($("#container").find('title').remove().text());
-		if (title)
-			document.title = title;
-		var discl = disclosure();
-		hub.registerComponent(discl, {
-			disclosureId : '.disclosures .feature-title',
-			component_name : 'disclosure'
-		}).start();
-
-		hub.publish(true, "/container/load", {
-			containerId : 'body'
-		});
-	});
-	
 	<%
 	{
 		ResourceBundle navLabels = ResourceBundle.getBundle("navigation", Locale.getDefault());
@@ -67,6 +50,24 @@
 		<%
 	}
 	%>
+
+	$(document).ready(function() {
+
+		var title = $.trim($("#container").find('title').remove().text());
+		if (title)
+			document.title = title;
+		var discl = disclosure();
+		hub.registerComponent(discl, {
+			disclosureId : '.disclosures .feature-title',
+			component_name : 'disclosure'
+		}).start();
+
+		hub.publish(true, "/container/load", {
+			containerId : 'body'
+		});
+		
+		updateQuestions();
+	});
 </script>
 </head>
 <body>
