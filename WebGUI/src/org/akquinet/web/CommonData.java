@@ -23,10 +23,12 @@ import org.akquinet.audit.bsi.httpd.usersNrights.Quest12;
 import org.akquinet.audit.bsi.httpd.usersNrights.Quest8;
 import org.akquinet.audit.bsi.httpd.usersNrights.Quest9;
 import org.akquinet.audit.ui.DelayedHtmlUserCommunicator;
+import org.akquinet.audit.ui.DelayedHtmlUserCommunicator.InputState;
 import org.akquinet.httpd.ConfigFile;
 
 public class CommonData
 {
+	private static final String LOADER_ANIMATION = "<div class=\"loader\"></div>";
 	public static final String ACTION_GENERATE_REPORT = "genReport";
 	public static final String ACTION_SETTINGS = "settings";
 	public static final String ACTION_ANSWER = "answer";
@@ -285,7 +287,14 @@ public class CommonData
 		{
 			questId = _mainContentId;
 		}
-		return _questionProperties.get( _questionsById.get(questId) ).communicator.stringifyCurrentState();
+		YesNoQuestionProperties questProps = _questionProperties.get( _questionsById.get(questId) );
+		StringBuilder questOutput = new StringBuilder(questProps.communicator.stringifyCurrentState());
+		
+		if(questProps.askingThread.isAlive() && questProps.communicator.getInputState() == InputState.NO_INPUT_EXPECTED)
+		{
+			questOutput.append(LOADER_ANIMATION);
+		}
+		return questOutput.toString();
 	}
 	
 	private void updateStatus(YesNoQuestion quest, QuestionStatus status)

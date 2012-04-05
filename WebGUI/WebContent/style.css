@@ -148,3 +148,12 @@ ul {
 	padding: 5px;
 	max-width: 300px;
 }
+
+.loader {
+	text-align: center;
+	background-image: url(img/loading.gif);
+	height: 20px;
+	width: 50px;
+	position: relative;
+	left: 2em;
+}
