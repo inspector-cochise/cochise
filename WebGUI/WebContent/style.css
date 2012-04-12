@@ -125,6 +125,7 @@ ul {
 .negative {
 	border: 3px solid #c01e1f;
 	padding: 5px;
+	margin-bottom: .3em;
 }
 
 .disclosures {
@@ -164,4 +165,8 @@ ul {
 .navigationLink:HOVER {
 	cursor: pointer;
 	text-decoration: underline;
+}
+
+.indented {
+	margin-left: 2em;
 }
