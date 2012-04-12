@@ -10,14 +10,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.akquinet.audit.YesNoQuestion;
-
 /**
  * Servlet implementation class QuestStatusServlet
  */
 @WebServlet("/qStat.jsp")
 public class QuestStatusServlet extends HttpServlet
 {
+	private static final String ACTION_IS_AVAILABLE = "isAvailable";
+	private static final String ACTION_QUEST_STATUS = "questStatus";
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -34,58 +34,74 @@ public class QuestStatusServlet extends HttpServlet
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
+		String requestedId = request.getParameter(CommonData.PARAM_REQUESTED_QUEST);
+		String action = request.getParameter(CommonData.PARAM_ACTION);
+		
 		HttpSession session = request.getSession();
 		if (session.getAttribute("loggedIn") == null
 				|| session.getAttribute("runId") == null 
 				|| !session.getAttribute("runId").equals(CommonData.RUN_ID)
 			)
 		{
-			response.sendRedirect( response.encodeRedirectURL(CommonData.LOGIN_SERVLET_URL) );
+			if(action != null && action.equals(ACTION_IS_AVAILABLE))
+			{
+				response.getWriter().print("false");
+			}
+			else
+			{
+				response.sendRedirect( response.encodeRedirectURL(CommonData.LOGIN_SERVLET_URL) );
+			}
 			return;
 		}
 		
-		String requestedId = request.getParameter(CommonData.PARAM_REQUESTED_QUEST);
-		if(requestedId == null)
+		if(action == null || action.equals(ACTION_QUEST_STATUS))
 		{
-			//in this case we will return a list of all available questions
-			StringBuilder answer = new StringBuilder();
-			
-			Iterator<String> it = CommonData.getDefault().getQuestionIds().iterator();
-			while(it.hasNext())
+			if(requestedId == null)
 			{
-				String current = it.next();
-				answer.append(current);
-				if(it.hasNext())
+				//in this case we will return a list of all available questions
+				StringBuilder answer = new StringBuilder();
+				
+				Iterator<String> it = CommonData.getDefault().getQuestionIds().iterator();
+				while(it.hasNext())
 				{
-					answer.append(',');
+					String current = it.next();
+					answer.append(current);
+					if(it.hasNext())
+					{
+						answer.append(',');
+					}
 				}
-			}
-			
-			response.getWriter().print(answer.toString());
-			return;
-		}
-		else
-		{
-			try
-			{
-				switch(CommonData.getDefault().getStatus(requestedId))
-				{
-				case BAD:
-					response.getWriter().print("neg");
-					return;
-				case GOOD:
-					response.getWriter().print("pos");
-					return;
-				case OPEN:
-					response.getWriter().print("ope");
-					return;
-				}
-			}
-			catch(NullPointerException e)
-			{
-				response.getWriter().print("requested question unknown");
+				
+				response.getWriter().print(answer.toString());
 				return;
 			}
+			else
+			{
+				try
+				{
+					switch(CommonData.getDefault().getStatus(requestedId))
+					{
+					case BAD:
+						response.getWriter().print("neg");
+						return;
+					case GOOD:
+						response.getWriter().print("pos");
+						return;
+					case OPEN:
+						response.getWriter().print("ope");
+						return;
+					}
+				}
+				catch(NullPointerException e)
+				{
+					response.getWriter().print("requested question unknown");
+					return;
+				}
+			}
+		}
+		if(action.equals(ACTION_IS_AVAILABLE))
+		{
+			response.getWriter().print("true");
 		}
 	}
 

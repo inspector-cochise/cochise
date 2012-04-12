@@ -96,7 +96,7 @@
 				</ul>
 				<form>
 					<%-- TODO make button work --%>
-					<input type="button" value="Report generieren"
+					<input type="button" value="<%= ResourceBundle.getBundle("site", Locale.getDefault()).getString("reportButton") %>"
 						onclick="location='inspector.jsp?action=genReport'" />
 				</form>
 			</div>

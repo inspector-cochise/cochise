@@ -170,3 +170,8 @@ ul {
 .indented {
 	margin-left: 2em;
 }
+
+.flush-right {
+	text-align: right;
+}
+

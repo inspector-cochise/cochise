@@ -36,7 +36,10 @@ import org.akquinet.httpd.ConfigFile;
 public class CommonData
 {
 	private static final String LOADER_ANIMATION = "<div class=\"loader\"></div>";
+	
 	public static final String ACTION_GENERATE_REPORT = "genReport";
+	public static final String ACTION_RESTART_QUESTION = "restartQuestion";
+	public static final String ACTION_RESTART_ALL_QUESTIONS = "restartAllQuestions";
 	public static final String ACTION_SETTINGS = "settings";
 	public static final String ACTION_ANSWER = "answer";
 
@@ -52,6 +55,7 @@ public class CommonData
 	public static final String PARAM_ANSWER = "answer";
 
 	public static final String PROLOGUE_ID = "settings";
+	public static final String PROLOGUE_OK = "prologueOk";
 
 	public static final long RUN_ID = (new Random(System.nanoTime())).nextInt();
 
@@ -163,6 +167,7 @@ public class CommonData
 
 				if (execErrorMsg.equals("") && configErrorMsg.equals("") && "root".equals(System.getenv("USER")))
 				{
+					removeQuestions();
 					addQuestions();
 					_configured = true;
 				}
@@ -170,6 +175,25 @@ public class CommonData
 			else if (action.equals(ACTION_GENERATE_REPORT))
 			{
 				// TODO
+			}
+			else if (action.equals(ACTION_RESTART_QUESTION))
+			{
+				Class<? extends YesNoQuestion> questClass = _questionsById.get(_mainContentId).getClass();
+				removeQuestion(_mainContentId);
+				try
+				{
+					createQuestion(questClass);
+				}
+				catch (InvalidQuestionClassException e)
+				{
+					throw new RuntimeException(e);
+				}
+			}
+			else if (action.equals(ACTION_RESTART_ALL_QUESTIONS))
+			{
+				_mainContentId = PROLOGUE_ID;
+				removeQuestions();
+				addQuestions();
 			}
 			else if (action.equals(ACTION_ANSWER))
 			{
@@ -261,6 +285,15 @@ public class CommonData
 		catch (InvalidQuestionClassException e)
 		{
 			throw new RuntimeException(e);
+		}
+	}
+	
+	public void removeQuestions()
+	{
+		HashSet<String> questIds = new HashSet<String>(_questionsById.keySet());
+		for(String questId : questIds)
+		{
+			removeQuestion(questId);
 		}
 	}
 

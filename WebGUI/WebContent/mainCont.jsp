@@ -15,9 +15,9 @@
 	CommonData.getDefault().updateMainContentId(request);
 
 	boolean prologueOk = false;
-	if (session.getAttribute("prologueOk") != null)
+	if (session.getAttribute(CommonData.PROLOGUE_OK) != null)
 	{
-		prologueOk = session.getAttribute("prologueOk").equals("true");
+		prologueOk = session.getAttribute(CommonData.PROLOGUE_OK).equals("true");
 	}
 	String action = request.getParameter(CommonData.PARAM_ACTION);
 	String quest = request.getParameter(CommonData.PARAM_REQUESTED_QUEST);
@@ -38,6 +38,10 @@
 	else
 	{
 		%>
+		<div class="flush-right">
+			<input type="button" value="<%= ResourceBundle.getBundle("site", Locale.getDefault()).getString("restartQuestionButton") %>" onclick="restartQuestion();" />
+			<input type="button" value="<%= ResourceBundle.getBundle("site", Locale.getDefault()).getString("restartAllQuestionsButton") %>" onclick="restartAllQuestions();" />
+		</div>
 		<%=CommonData.getDefault().getQuestionsOutput(quest)%>
 		<%
 	}

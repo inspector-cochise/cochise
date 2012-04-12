@@ -1,4 +1,5 @@
 var mainContentUrl = 'mainCont.jsp';
+var completeSiteUrl = 'inspector.jsp';
 var questionStatusUrl = 'qStat.jsp';
 var mainContHash = '';
 
@@ -9,8 +10,44 @@ var openQuestions = 0;
 setInterval(updateMainContent, 3000);
 setInterval(updateQuestions, 1000);
 
+function restartQuestion()
+{
+	var xmlHttpObject = new XMLHttpRequest();
+
+	xmlHttpObject.open('get', completeSiteUrl + '?action=restartQuestion', false);
+	xmlHttpObject.send(null);
+	
+	updateMainContent();
+}
+
+function restartAllQuestions()
+{
+	location = completeSiteUrl + '?action=restartAllQuestions';
+}
+
+function isAvailable()
+{
+	var xmlHttpObject = new XMLHttpRequest();
+
+	xmlHttpObject.open('get', questionStatusUrl + '?action=isAvailable', false);
+	xmlHttpObject.send(null);
+	
+	if(xmlHttpObject.responseText == 'true')
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
 function updateMainContent(target)
 {
+	if(!isAvailable())
+	{
+		return;
+	}
 	var xmlHttpObject = new XMLHttpRequest();
 
 	if(target == null || target == '')
@@ -47,6 +84,11 @@ function updateMainContent(target)
 
 function updateQuestions()
 {
+	if(!isAvailable())
+	{
+		return;
+	}
+	
 	positiveQuestions = 0;
 	negativeQuestions = 0;
 	openQuestions = 0;
@@ -70,7 +112,7 @@ function updateQuest(questId)
 {
 	var xmlHttpObject = new XMLHttpRequest();
 
-	xmlHttpObject.open('get', questionStatusUrl + '?quest=' + questId, false);
+	xmlHttpObject.open('get', questionStatusUrl + '?action=questStatus&quest=' + questId, false);
 	xmlHttpObject.send(null);
 
 	var questStatus = xmlHttpObject.responseText;
