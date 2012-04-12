@@ -18,12 +18,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Inspector-Cochise</title>
-<link rel="stylesheet" href="./style.css" type="text/css" />
-<script language="javascript" src="jquery-1.7.1.js"></script>
-<script language="javascript" src="hubu.js"></script>
-<script language="javascript" src="disclosure.js"></script>
-<script language="javascript" src="md5.js"></script>
-<script language="javascript" src="script.js"></script>
+<link rel="stylesheet" href="style/style.css" type="text/css" />
+<script language="javascript" src="script/jquery-1.7.1.js"></script>
+<script language="javascript" src="script/hubu.js"></script>
+<script language="javascript" src="script/disclosure.js"></script>
+<script language="javascript" src="script/md5.js"></script>
+<script language="javascript" src="script/script.js"></script>
 <script language="javascript">
 	<%
 	{
