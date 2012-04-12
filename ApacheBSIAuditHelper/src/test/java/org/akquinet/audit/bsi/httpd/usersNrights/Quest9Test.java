@@ -98,7 +98,7 @@ public class Quest9Test
 	@Test
 	public final void test_a1b0() throws Throwable
 	{
-		testDriver("exampleuser\nNo\nNo\n", _htdocsConf, _emptyExec, false, false);
+		testDriver("exampleuser\nNo\nNo\n", _htdocsConf, _emptyExec, true, false);
 	}
 	
 	@Test
