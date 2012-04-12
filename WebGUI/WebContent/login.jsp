@@ -10,27 +10,6 @@
 <link rel="stylesheet" href="style/style.css" type="text/css" />
 <link rel="stylesheet" href="style/layout.css" type="text/css" />
 <link rel="stylesheet" href="style/overview.css" type="text/css" />
-<script language="javascript" src="script/jquery-1.7.1.js"></script>
-<!--<script language="javascript" src="script/hubu.js"></script>
-<script language="javascript" src="script/disclosure.js"></script>
-<script language="javascript" src="script/script.js"></script>
-<script language="javascript">
-	$(document).ready(function() {
-
-		var title = $.trim($("#container").find('title').remove().text());
-		if (title)
-			document.title = title;
-		var discl = disclosure();
-		hub.registerComponent(discl, {
-			disclosureId : '.disclosures .feature-title',
-			component_name : 'disclosure'
-		}).start();
-
-		hub.publish(true, "/container/load", {
-			containerId : 'body'
-		});
-	});
-</script>-->
 </head>
 <body>
 	<%

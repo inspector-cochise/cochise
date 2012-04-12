@@ -15,7 +15,7 @@ html, body {
 	position: relative;
 }
 #logo {
-	background-image:url(img/logo.png);
+	background-image:url(../img/logo.png);
 	height: 90px;
 	width: 210px;
 	top: 13px;
