@@ -1,1 +1,0 @@
-echo www-data www-data
