@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 
 import org.akquinet.audit.Interactive;
 import org.akquinet.audit.YesNoQuestion;
+import org.akquinet.audit.bsi.httpd.PrologueData;
 import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
 import org.akquinet.httpd.syntax.Directive;
@@ -27,6 +28,16 @@ public class Quest7 implements YesNoQuestion
 	private List<String> _problems;
 
 	private boolean _isSetGlobal;
+	
+	public Quest7(PrologueData pd)
+	{
+		this(pd._conf);
+	}
+	
+	public Quest7(PrologueData pd, UserCommunicator uc)
+	{
+		this(pd._conf, uc);
+	}
 	
 	public Quest7(ConfigFile conf)
 	{

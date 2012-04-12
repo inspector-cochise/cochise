@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 
 import org.akquinet.audit.Automated;
 import org.akquinet.audit.YesNoQuestion;
+import org.akquinet.audit.bsi.httpd.PrologueData;
 import org.akquinet.audit.ui.UserCommunicator;
 
 @Automated
@@ -22,6 +23,17 @@ public class Quest2 implements YesNoQuestion
 	private transient ProcessBuilder _getCurrent;
 	private transient ProcessBuilder _getRunning;
 	private transient ResourceBundle _labels;
+	
+	
+	public Quest2(PrologueData pd)
+	{
+		this(pd._apacheExecutable);
+	}
+	
+	public Quest2(PrologueData pd, UserCommunicator uc)
+	{
+		this(pd._apacheExecutable, uc);
+	}
 	
 	public Quest2(File apacheExecutable)
 	{

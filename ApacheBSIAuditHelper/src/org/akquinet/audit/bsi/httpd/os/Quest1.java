@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 import org.akquinet.audit.Automated;
 import org.akquinet.audit.ShellAnsweredQuestion;
 import org.akquinet.audit.YesNoQuestion;
+import org.akquinet.audit.bsi.httpd.PrologueData;
 import org.akquinet.audit.ui.UserCommunicator;
 
 @Automated
@@ -20,6 +21,16 @@ public class Quest1 implements YesNoQuestion
 	private String _command;
 	private transient ResourceBundle _labels;
 
+	public Quest1(PrologueData pd)
+	{
+		this(pd._highSec);
+	}
+	
+	public Quest1(PrologueData pd, UserCommunicator uc)
+	{
+		this(pd._highSec, uc);
+	}
+	
 	public Quest1(boolean highSecurityRequired)
 	{
 		this(highSecurityRequired, UserCommunicator.getDefault());

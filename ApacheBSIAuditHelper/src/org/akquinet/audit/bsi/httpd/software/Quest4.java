@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import org.akquinet.audit.Interactive;
 import org.akquinet.audit.ModuleHelper;
 import org.akquinet.audit.YesNoQuestion;
+import org.akquinet.audit.bsi.httpd.PrologueData;
 import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
 import org.akquinet.httpd.ParserException;
@@ -25,6 +26,16 @@ public class Quest4 extends ModuleHelper implements YesNoQuestion
 	private String[] _loadModules;
 	
 	private boolean _lastAnswer;
+	
+	public Quest4(PrologueData pd)
+	{
+		this(pd._conf, pd._apacheExecutable);
+	}
+	
+	public Quest4(PrologueData pd, UserCommunicator uc)
+	{
+		this(pd._conf, pd._apacheExecutable, uc);
+	}
 	
 	public Quest4(ConfigFile conf, File apacheExecutable)
 	{

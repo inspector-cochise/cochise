@@ -10,6 +10,7 @@ import java.util.Set;
 import org.akquinet.audit.Automated;
 import org.akquinet.audit.ShellAnsweredQuestion;
 import org.akquinet.audit.YesNoQuestion;
+import org.akquinet.audit.bsi.httpd.PrologueData;
 import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
 import org.akquinet.httpd.ParserException;
@@ -33,6 +34,16 @@ public class Quest8 implements YesNoQuestion
 	private ConfigFile _conf;
 	private boolean _highSec;
 
+	public Quest8(PrologueData pd)
+	{
+		this(pd._configFile, pd._conf, pd._highSec);
+	}
+	
+	public Quest8(PrologueData pd, UserCommunicator uc)
+	{
+		this(pd._configFile, pd._conf, pd._highSec, uc);
+	}
+	
 	public Quest8(File configFile, ConfigFile conf, boolean highSec)
 	{
 		this(configFile, conf, "./", "QfileSafe.sh", highSec);

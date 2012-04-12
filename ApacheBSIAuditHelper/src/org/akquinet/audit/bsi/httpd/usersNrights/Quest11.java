@@ -5,6 +5,7 @@ import java.util.ResourceBundle;
 
 import org.akquinet.audit.Interactive;
 import org.akquinet.audit.YesNoQuestion;
+import org.akquinet.audit.bsi.httpd.PrologueData;
 import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
 
@@ -19,6 +20,16 @@ public class Quest11 implements YesNoQuestion
 	private Quest11a _q11a;
 	private Quest11b _q11b;
 	private transient ResourceBundle _labels;
+	
+	public Quest11(PrologueData pd)
+	{
+		this(pd._conf);
+	}
+	
+	public Quest11(PrologueData pd, UserCommunicator uc)
+	{
+		this(pd._conf, uc);
+	}
 	
 	public Quest11(ConfigFile conf)
 	{

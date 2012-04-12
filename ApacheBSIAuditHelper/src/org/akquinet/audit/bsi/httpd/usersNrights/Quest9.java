@@ -8,6 +8,7 @@ import java.util.ResourceBundle;
 
 import org.akquinet.audit.Interactive;
 import org.akquinet.audit.YesNoQuestion;
+import org.akquinet.audit.bsi.httpd.PrologueData;
 import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
 import org.akquinet.httpd.syntax.Directive;
@@ -31,6 +32,16 @@ public class Quest9 implements YesNoQuestion
 	private boolean _highSec;
 	private String _user;
 
+	public Quest9(PrologueData pd)
+	{
+		this(pd._conf, pd._apacheExec, pd._highSec);
+	}
+	
+	public Quest9(PrologueData pd, UserCommunicator uc)
+	{
+		this(pd._conf, pd._apacheExec, pd._highSec, uc);
+	}
+	
 	public Quest9(ConfigFile conf, String apacheExecutable, boolean highSec)
 	{
 		this(conf, "./", "quest9.sh", "getApacheStartingUser.sh", apacheExecutable, highSec);

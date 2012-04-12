@@ -8,6 +8,7 @@ import java.util.ResourceBundle;
 import org.akquinet.audit.Automated;
 import org.akquinet.audit.ModuleHelper;
 import org.akquinet.audit.YesNoQuestion;
+import org.akquinet.audit.bsi.httpd.PrologueData;
 import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
 import org.akquinet.httpd.syntax.Directive;
@@ -20,6 +21,16 @@ public class Quest3 extends ModuleHelper implements YesNoQuestion
 	private static final String _id = "Quest3";
 	private transient UserCommunicator _uc = UserCommunicator.getDefault();
 	private transient ResourceBundle _labels;
+	
+	public Quest3(PrologueData pd)
+	{
+		this(pd._conf, pd._apacheExecutable);
+	}
+	
+	public Quest3(PrologueData pd, UserCommunicator uc)
+	{
+		this(pd._conf, pd._apacheExecutable, uc);
+	}
 	
 	public Quest3(ConfigFile conf, File apacheExecutable)
 	{

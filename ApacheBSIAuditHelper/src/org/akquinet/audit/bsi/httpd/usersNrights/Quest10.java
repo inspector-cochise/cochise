@@ -12,6 +12,7 @@ import org.akquinet.audit.Automated;
 import org.akquinet.audit.ModuleHelper;
 import org.akquinet.audit.ShellAnsweredQuestion;
 import org.akquinet.audit.YesNoQuestion;
+import org.akquinet.audit.bsi.httpd.PrologueData;
 import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
 import org.akquinet.httpd.syntax.Directive;
@@ -28,6 +29,16 @@ public class Quest10 extends ModuleHelper implements YesNoQuestion
 	private String _command;
 	private transient ResourceBundle _labels;
 
+	public Quest10(PrologueData pd)
+	{
+		this(pd._conf);
+	}
+	
+	public Quest10(PrologueData pd, UserCommunicator uc)
+	{
+		this(pd._conf, uc);
+	}
+	
 	public Quest10(ConfigFile conf)
 	{
 		this(conf, "./", "QfileSafe.sh");
