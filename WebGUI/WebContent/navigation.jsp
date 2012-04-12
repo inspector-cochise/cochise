@@ -10,7 +10,7 @@
 			|| !session.getAttribute("runId").equals(CommonData.RUN_ID)
 		)
 	{
-		response.sendRedirect( response.encodeRedirectURL(CommonData.LOGIN_SERVLET) );
+		response.sendRedirect( response.encodeRedirectURL(CommonData.LOGIN_SERVLET_URL) );
 		return;
 	}
 %>
@@ -38,13 +38,14 @@
 								<td />
 							</tr>
 							<%
-								for(YesNoQuestion quest : CommonData.getDefault().getQuestions().values())
+								for(String questId : CommonData.getDefault().getQuestionIds())
 								{
+									YesNoQuestion quest = CommonData.getDefault().getQuestion(questId);
 							%>
 									<tr>
-										<td><span id="navlink_<%= quest.getID() %>" onclick="updateMainContent('<%= quest.getID() %>')" class="navigationLink"
+										<td><span id="navlink_<%= questId %>" onclick="updateMainContent('<%= questId %>')" class="navigationLink"
 											<%
-												if(CommonData.getDefault().getMainContentId().equals(quest.getID()))
+												if(CommonData.getDefault().getMainContentId().equals(questId))
 												{
 													out.println("style=\"font-weight: bold;\"");
 												}
@@ -52,7 +53,7 @@
 										>
 										<%= quest.getName() %>
 										</span></td>
-										<td id="<%= quest.getID() %>">
+										<td id="<%= questId %>">
 										<%
 											String statusKey;
 											switch(CommonData.getDefault().getStatus(quest))

@@ -163,7 +163,8 @@ public class DelayedHtmlUserCommunicator extends UserCommunicator
 			}
 			catch (InterruptedException e)
 			{
-				throw new RuntimeException(e);	//this should not happen
+				Thread.currentThread().interrupt();
+				return false;
 			}
 			
 			_inputState = InputState.NO_INPUT_EXPECTED;
@@ -207,7 +208,8 @@ public class DelayedHtmlUserCommunicator extends UserCommunicator
 			}
 			catch (InterruptedException e)
 			{
-				throw new RuntimeException(e);	//this should not happen
+				Thread.currentThread().interrupt();
+				return "";
 			}
 			
 			_inputState = InputState.NO_INPUT_EXPECTED;

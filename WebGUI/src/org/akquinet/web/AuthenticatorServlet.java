@@ -14,9 +14,7 @@ public class AuthenticatorServlet extends HttpServlet
 {
 	private static final long serialVersionUID = 2690042938888465169L;
 	
-	private static final String MAIN_SERVLET_URL = "inspector.jsp";
 	private static final String COCHISE_PROPERTIES_PASSKEY = "cochisePass";
-	private static final String LOGIN_PAGE = "login.jsp";
 	
 	private static boolean _someoneLoggedIn = false;
 
@@ -34,7 +32,7 @@ public class AuthenticatorServlet extends HttpServlet
 			_someoneLoggedIn = false;
 			request.getSession().removeAttribute("loggedIn");
 			request.getSession().invalidate();
-			response.sendRedirect(response.encodeRedirectURL(LOGIN_PAGE));
+			response.sendRedirect(response.encodeRedirectURL(CommonData.LOGIN_SERVLET_URL));
 			return;
 		}
 		
@@ -50,7 +48,7 @@ public class AuthenticatorServlet extends HttpServlet
 			
 			request.getSession().setAttribute("runId", CommonData.RUN_ID);
 			request.getSession().setAttribute("loggedIn", true);
-			response.sendRedirect(response.encodeRedirectURL(MAIN_SERVLET_URL));
+			response.sendRedirect(response.encodeRedirectURL(CommonData.MAIN_SERVLET_URL));
 		}
 		else
 		{

@@ -40,7 +40,7 @@ public class QuestStatusServlet extends HttpServlet
 				|| !session.getAttribute("runId").equals(CommonData.RUN_ID)
 			)
 		{
-			response.sendRedirect( response.encodeRedirectURL(CommonData.LOGIN_SERVLET) );
+			response.sendRedirect( response.encodeRedirectURL(CommonData.LOGIN_SERVLET_URL) );
 			return;
 		}
 		
@@ -50,11 +50,11 @@ public class QuestStatusServlet extends HttpServlet
 			//in this case we will return a list of all available questions
 			StringBuilder answer = new StringBuilder();
 			
-			Iterator<YesNoQuestion> it = CommonData.getDefault().getQuestions().values().iterator();
+			Iterator<String> it = CommonData.getDefault().getQuestionIds().iterator();
 			while(it.hasNext())
 			{
-				YesNoQuestion current = it.next();
-				answer.append(current.getID());
+				String current = it.next();
+				answer.append(current);
 				if(it.hasNext())
 				{
 					answer.append(',');

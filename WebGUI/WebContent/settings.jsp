@@ -13,7 +13,7 @@
 			|| !session.getAttribute("runId").equals(CommonData.RUN_ID)
 		)
 	{
-		response.sendRedirect( response.encodeRedirectURL(CommonData.LOGIN_SERVLET) );
+		response.sendRedirect( response.encodeRedirectURL(CommonData.LOGIN_SERVLET_URL) );
 		return;
 	}
 %>

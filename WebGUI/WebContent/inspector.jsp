@@ -9,7 +9,7 @@
 			|| !session.getAttribute("runId").equals(CommonData.RUN_ID)
 		)
 	{
-		response.sendRedirect(response.encodeRedirectURL(CommonData.LOGIN_SERVLET));
+		response.sendRedirect(response.encodeRedirectURL(CommonData.LOGIN_SERVLET_URL));
 		return;
 	}
 %>
@@ -35,11 +35,11 @@
 		var questIds =
 			[
 			<%
-			Iterator<YesNoQuestion> it = CommonData.getDefault().getQuestions().values().iterator();
+			Iterator<String> it = CommonData.getDefault().getQuestionIds().iterator();
 			while(it.hasNext())
 			{
-				YesNoQuestion current = it.next();
-				out.print("'" + current.getID() + "'");
+				String currentId = it.next();
+				out.print("'" + currentId + "'");
 				if(it.hasNext())
 				{
 					out.print(", ");
