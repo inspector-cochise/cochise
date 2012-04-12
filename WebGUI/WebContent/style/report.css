@@ -1,0 +1,88 @@
+@CHARSET "UTF-8";
+html, body {
+	height: 100%;
+	float: none;
+	margin: 0px;
+	padding: 0px;
+	background-color: #FFF;
+	font-family: Helvetica, Arial, sans-serif;
+}
+#header {
+	color: #B3937D;
+	background-color: #594A3E;
+	height: 106px;
+	width: 100%;
+	position: relative;
+}
+#logo {
+	background-image:url(../img/logo.png);
+	height: 90px;
+	width: 210px;
+	top: 13px;
+	left: 13px;
+}
+#header-right {
+	position:absolute;
+	bottom:10px;
+	right:20px;
+}
+
+#footer {
+	color: #B3937D;
+	background-color: #594A3E;
+	text-align: right;
+	clear: both;
+	width: 100%;
+	height: 25px;
+}
+#content {
+	margin: 5px;
+}
+
+table {
+	color: #594A3E;
+}
+
+.good {
+	text-size: large;
+	font-weight: bold;
+	color: #94C01E;
+}
+.positive {
+	border: 3px solid #94C01E;
+	padding: 5px;
+}
+.open {
+	text-size: large;
+	font-weight: bold;
+	color: #c0711e;
+}
+.bad {
+	text-size: large;
+	font-weight: bold;
+	color: #c01e1f;
+}
+.negative {
+	border: 3px solid #c01e1f;
+	padding: 5px;
+	margin-bottom: .3em;
+}
+
+.disclosures {
+	border: 2px dashed #d5d5d5;
+	background-color: #F7F8E0;
+	padding: 1em;
+	margin: 0.5em;
+}
+.disclosures .feature-title {
+	cursor: pointer;
+	border-bottom: 1px solid #594A3E;
+}
+
+.indented {
+	margin-left: 2em;
+}
+
+.flush-right {
+	text-align: right;
+}

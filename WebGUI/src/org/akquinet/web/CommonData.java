@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
@@ -37,7 +38,6 @@ public class CommonData
 {
 	private static final String LOADER_ANIMATION = "<div class=\"loader\"></div>";
 	
-	public static final String ACTION_GENERATE_REPORT = "genReport";
 	public static final String ACTION_RESTART_QUESTION = "restartQuestion";
 	public static final String ACTION_RESTART_ALL_QUESTIONS = "restartAllQuestions";
 	public static final String ACTION_SETTINGS = "settings";
@@ -45,6 +45,7 @@ public class CommonData
 
 	public static final String MAIN_SERVLET_URL = "inspector.jsp";
 	public static final String LOGIN_SERVLET_URL = "login.jsp";
+	public static final String REPORT_SERVLET_URL = "report.jsp";
 
 	public static final String PARAM_REQUESTED_QUEST = "quest";
 	public static final String PARAM_ACTION = "action";
@@ -171,10 +172,6 @@ public class CommonData
 					addQuestions();
 					_configured = true;
 				}
-			}
-			else if (action.equals(ACTION_GENERATE_REPORT))
-			{
-				// TODO
 			}
 			else if (action.equals(ACTION_RESTART_QUESTION))
 			{
@@ -459,5 +456,34 @@ public class CommonData
 		{
 			super(cause);
 		}
+	}
+
+	public boolean allGood()
+	{
+		for(YesNoQuestionProperties props : _questionProperties.values())
+		{
+			if(props.status != QuestionStatus.GOOD)
+			{
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	public List<YesNoQuestion> getProblems()
+	{
+		List<YesNoQuestion> ret = new LinkedList<YesNoQuestion>();
+		
+		for(String questId : getQuestionIds())
+		{
+			YesNoQuestionProperties prop = _questionProperties.get(_questionsById.get(questId));
+			if( prop.status != QuestionStatus.GOOD)
+			{
+				ret.add(prop.quest);
+			}
+		}
+		
+		return ret;
 	}
 }
