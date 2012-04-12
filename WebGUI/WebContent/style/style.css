@@ -152,7 +152,7 @@ ul {
 
 .loader {
 	text-align: center;
-	background-image: url(img/loading.gif);
+	background-image: url(../img/loading.gif);
 	height: 20px;
 	width: 50px;
 	position: relative;
