@@ -60,13 +60,13 @@
 											{
 											case OPEN:
 												%>
-													<a onmouseover="showWMTT('openTip')" onmouseout="hideWMTT()" href=""><img src="img/open.png" />
+													<a onmouseover="showWMTT('openTip')" onmouseout="hideWMTT()" href=""><img src="img/open.png" /></a>
 													<%--<span class="open"><%= labels.getString("ope") %></span>--%>
 												<%
 												break;
 											case GOOD:
 												%>
-													<a onmouseover="showWMTT('goodTip')" onmouseout="hideWMTT()" href=""><img src="img/good.png" />
+													<a onmouseover="showWMTT('goodTip')" onmouseout="hideWMTT()" href=""><img src="img/good.png" /></a>
 													<%--<span class="good"><%= labels.getString("pos") %></span>--%>
 												<%
 												break;
