@@ -1,6 +1,7 @@
 var mainContentUrl = 'mainCont.jsp';
 var completeSiteUrl = 'inspector.jsp';
 var questionStatusUrl = 'qStat.jsp';
+var reportUrl = 'report.jsp';
 var mainContHash = '';
 
 var positiveQuestions = 0;
@@ -213,4 +214,22 @@ function updateWMTT(e)
 function hideWMTT()
 {
 	wmtt.style.display = "none";
+}
+
+function showReport()
+{
+	var questionCount = positiveQuestions + negativeQuestions + openQuestions;
+	
+	if(questionCount == 0)
+	{
+		alert(noQuestions);
+	}
+	else if(openQuestions != 0)
+	{
+		alert(stillOpenQuestions);
+	}
+	else
+	{
+		location = reportUrl;
+	}
 }

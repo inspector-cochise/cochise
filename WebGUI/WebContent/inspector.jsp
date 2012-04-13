@@ -29,6 +29,8 @@
 	{
 		ResourceBundle navLabels = ResourceBundle.getBundle("navigation", Locale.getDefault());
 		%>
+		var noQuestions = '<%= navLabels.getString("noQuestions") %>';
+		var stillOpenQuestions = '<%= navLabels.getString("stillOpenQuestions") %>';
 		var pos = '<%= navLabels.getString("pos") %>';
 		var neg = '<%= navLabels.getString("neg") %>';
 		var ope = '<%= navLabels.getString("ope") %>';
@@ -95,9 +97,8 @@
 					<li><span class="bad">--%</span> negativ beantwortet</li>
 				</ul>
 				<form>
-					<%-- TODO make button work --%>
 					<input type="button" value="<%= ResourceBundle.getBundle("site", Locale.getDefault()).getString("reportButton") %>"
-						onclick="location='inspector.jsp?action=genReport'" />
+						onclick="showReport();" />
 				</form>
 			</div>
 			<div id="lower-left">
