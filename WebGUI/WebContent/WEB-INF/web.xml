@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:javaee="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
-  <javaee:display-name>Inspector-Cochise</javaee:display-name>
-  <servlet>
-    <servlet-name>AskerServlet</servlet-name>
-    <servlet-class>org.akquinet.web.AskerServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>AskerServlet</servlet-name>
-    <url-pattern>/main.html</url-pattern>
-  </servlet-mapping>
+<web-app xmlns:javaee="http://java.sun.com/xml/ns/javaee"
+	xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+	<display-name>Inspector-Cochise</display-name>
+	<welcome-file-list>
+		<welcome-file>login.jsp</welcome-file>
+	</welcome-file-list>
 </web-app>
