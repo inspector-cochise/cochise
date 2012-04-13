@@ -1,12 +1,12 @@
-Cochise 0.1 (2011)
+Cochise 0.3-RC1 (2012)
 
 Cochise is a tool which will assist you performing a security audit on our apache web-server. The special audit performed was specified by the BSI (A german government institute for computer-security), you can find it here: https://www.bsi.bund.de/cae/servlet/contentblob/478398/publicationFile/30917/isi_web_server_checkliste_apache_pdf.pdf
 
+Not that in Cochise 0.3 only a part of the mentioned audit is implemented.
+
 You will need to run this tool as root. Don't be scared, it will not make any changes to the configuration of your server. Cochise is designed to run on unix-like systems, you may try to run it on other systems with POSIX emulation but don't expect too much.
 
-Cochise is started through the main script "startAudit.sh".
-
-As the version number 0.1 may let's you guess this software is still in a very early state of development. So it is very likely that it may shows some unexpected or buggy behaviour.
+See RUNNING on how to start Cochise.
 
 If you have any questions or found a bug, feel free to contact us.
 
@@ -14,6 +14,8 @@ If you have any questions or found a bug, feel free to contact us.
 Contact information:
 Email:    Immanuel.Sims (at) akquinet.de
 Website:  http://www.inspector-cochise.de
+          or
+          http://github.com/inspector-cochise/cochise
 
 Address:  Akquinet tech@spree GmbH
           Bülowstraße 66
