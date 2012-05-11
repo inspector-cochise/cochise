@@ -61,7 +61,7 @@
 	else
 	{%>
 		<ul style="list-style-image: url('img/bad.png');">
-			<li><%= labels.getString("good") %> (<%= labels.getString("see") %>
+			<li><%= labels.getString("bad") %> (<%= labels.getString("see") %>
 			<%
 				Iterator<YesNoQuestion> it = CommonData.getDefault().getProblems().iterator();
 				while(it.hasNext())
