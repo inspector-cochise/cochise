@@ -2,7 +2,7 @@
 To execute Cochise you will need root privileges.
 1. go into the directory where this file is located
 2. execute "startCochise.sh"
-3. now You can reach Cochise via https://IP_Of_Your_Server:12080/WebGUI-0.1.0-RC1/ with your web-browser (note your browser will consider this site as insecure due to the generated self-signed certificate Cochise uses, use "keytool" of your jdk on conf/.keystore to change the certificate for "tomcat" (with password "changeit"))
+3. now You can reach Cochise via https://IP_Of_Your_Server:13443/WebGUI-0.1.0-RC1/ with your web-browser (note your browser will consider this site as insecure due to the generated self-signed certificate Cochise uses, use "keytool" of your jdk on conf/.keystore to change the certificate for "tomcat" (with password "changeit"))
 4. if you are done execute "stopCochise.sh"
 
 WARNING:
