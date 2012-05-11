@@ -190,4 +190,50 @@ public class Context extends Statement
 	{
 		return _containedStatementList.getAllDirectivesIgnoreCase(name);
 	}
+	
+	@Override
+	public boolean equals(Object o)
+	{
+		if(this == o)
+		{
+			return true;
+		}
+		
+		if(!(o instanceof Context))
+		{
+			return false;
+		}
+		else
+		{
+			Context rhs = (Context) o;
+			if(    !(_containedStatementList == null ? rhs._containedStatementList == null : _containedStatementList.equals(rhs._containedStatementList))
+				|| !(_name == null ? rhs._name == null : _name.equals(rhs._name))
+				|| !(_value == null ? rhs._value == null : _value.equals(rhs._value))
+				|| !(_beginLineNumber == rhs._beginLineNumber)
+				|| !(_endLineNumber == rhs._endLineNumber)
+			   )
+			{
+				return false;
+			}
+			else
+			{
+				return super.equals(o);
+			}
+		}
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		int hashCode = 1;
+
+		hashCode = 31 * hashCode + (_containedStatementList == null ? 0 : _containedStatementList.hashCode());
+		hashCode += 31 * hashCode + (_name == null ? 0 : _name.hashCode());
+		hashCode += 31 * hashCode + (_value == null ? 0 : _value.hashCode());
+		hashCode += 31 * hashCode + (new Integer(_beginLineNumber)).hashCode();
+		hashCode += 31 * hashCode + (new Integer(_endLineNumber)).hashCode();
+		hashCode += super.hashCode();
+		
+		return hashCode;
+	}
 }

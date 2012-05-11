@@ -11,7 +11,7 @@ import org.akquinet.httpd.syntax.Head;
 
 public class ConfigFile implements Serializable
 {
-	private static final long serialVersionUID = -487133373233062784L;
+	private static final long serialVersionUID = 5420286817428032218L;
 	
 	private transient Head _head;
 	private File _file;
@@ -132,5 +132,46 @@ public class ConfigFile implements Serializable
 		s.defaultReadObject();
 		FileInputStream input = new FileInputStream(_file);
 		_head = new Head(null, new MultipleMarkerInputStream(input), _serverRoot, _file.getCanonicalPath());
+	}
+	
+	@Override
+	public boolean equals(Object o)
+	{
+		if(this == o)
+		{
+			return true;
+		}
+		
+		if(!(o instanceof ConfigFile))
+		{
+			return false;
+		}
+		else
+		{
+			ConfigFile rhs = (ConfigFile) o;
+			if(    !(_head == null ? rhs._head == null : _head.equals(rhs._head))
+				|| !(_file == null ? rhs._file == null : _file.equals(rhs._file))
+				|| !(_serverRoot == null ? rhs._serverRoot == null : _serverRoot.equals(rhs._serverRoot))
+			   )
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		int hashCode = 1;
+
+		hashCode += 31 * hashCode + (_head == null ? 0 : _head.hashCode());
+		hashCode += 31 * hashCode + (_file == null ? 0 : _file.hashCode());
+		hashCode += 31 * hashCode + (_serverRoot == null ? 0 : _serverRoot.hashCode());
+		
+		return hashCode;
 	}
 }

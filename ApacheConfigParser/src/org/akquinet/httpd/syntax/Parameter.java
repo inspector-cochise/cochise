@@ -60,4 +60,30 @@ public class Parameter extends SyntaxElement
 	{
 		return _content;
 	}
+	
+	@Override
+	public boolean equals(Object o)
+	{
+		if(this == o)
+		{
+			return true;
+		}
+		
+		if(!(o instanceof Parameter))
+		{
+			return false;
+		}
+		else
+		{
+			Parameter rhs = (Parameter) o;
+			return (_content == null ? rhs._content == null : _content.equals(rhs._content))
+					&& super.equals(rhs);
+		}
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		return 31 * super.hashCode() + (_content == null ? 0 : _content.hashCode());
+	}
 }

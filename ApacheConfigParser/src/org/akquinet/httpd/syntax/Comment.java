@@ -57,4 +57,28 @@ public class Comment extends Statement
 	{
 		return new LinkedList<Directive>();
 	}
+	
+	@Override
+	public boolean equals(Object o)
+	{
+		if(this == o)
+		{
+			return true;
+		}
+		
+		if(!(o instanceof Comment))
+		{
+			return false;
+		}
+		else
+		{
+			return true;	//the content or position of comments doesn't matter
+		}
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		return 1;	//the content or position of comments doesn't matter
+	}
 }

@@ -68,4 +68,30 @@ public class Name extends SyntaxElement
 	{
 		return _content;
 	}
+	
+	@Override
+	public boolean equals(Object o)
+	{
+		if(this == o)
+		{
+			return true;
+		}
+		
+		if(!(o instanceof Name))
+		{
+			return false;
+		}
+		else
+		{
+			Name rhs = (Name) o;
+			return (_content == null ? rhs._content == null : _content.equals(rhs._content))
+					&& super.equals(rhs);
+		}
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		return 31 * super.hashCode() + (_content == null ? 0 : _content.hashCode());
+	}
 }

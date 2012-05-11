@@ -320,4 +320,30 @@ public class StatementList extends SyntaxElement
 		}
 		return ret;
 	}
+	
+	@Override
+	public boolean equals(Object o)
+	{
+		if(this == o)
+		{
+			return true;
+		}
+		
+		if(!(o instanceof StatementList))
+		{
+			return false;
+		}
+		else
+		{
+			StatementList rhs = (StatementList) o;
+			return (_statements == null ? rhs._statements == null : _statements.equals(rhs._statements))
+					&& super.equals(rhs);
+		}
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		return 31 * super.hashCode() + (_statements == null ? 0 : _statements.hashCode());
+	}
 }

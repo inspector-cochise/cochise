@@ -40,4 +40,28 @@ abstract public class Statement extends SyntaxElement
 		ret.add(null);
 		return ret;
 	}
+	
+	@Override
+	public boolean equals(Object o)
+	{
+		if(this == o)
+		{
+			return true;
+		}
+		
+		if(!(o instanceof Statement))
+		{
+			return false;
+		}
+		else
+		{
+			return super.equals(o);
+		}
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		return super.hashCode();
+	}
 }

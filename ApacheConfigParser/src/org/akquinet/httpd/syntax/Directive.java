@@ -175,5 +175,45 @@ public class Directive extends Statement
 		return getDirectiveIgnoreCase(name);
 	}
 	
+	@Override
+	public boolean equals(Object o)
+	{
+		if(this == o)
+		{
+			return true;
+		}
+		
+		if(!(o instanceof Directive))
+		{
+			return false;
+		}
+		else
+		{
+			Directive rhs = (Directive) o;
+			if(    !(_name == null ? rhs._name == null : _name.equals(rhs._name))
+				|| !(_value == null ? rhs._value == null : _value.equals(rhs._value))
+				|| !(_linenumber == rhs._linenumber)
+			   )
+			{
+				return false;
+			}
+			else
+			{
+				return super.equals(o);
+			}
+		}
+	}
 	
+	@Override
+	public int hashCode()
+	{
+		int hashCode = 1;
+
+		hashCode += 31 * hashCode + (_name == null ? 0 : _name.hashCode());
+		hashCode += 31 * hashCode + (_value == null ? 0 : _value.hashCode());
+		hashCode += 31 * hashCode + (new Integer(_linenumber)).hashCode();
+		hashCode += super.hashCode();
+		
+		return hashCode;
+	}
 }

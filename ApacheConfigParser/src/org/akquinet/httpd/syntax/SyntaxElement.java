@@ -353,4 +353,45 @@ abstract public class SyntaxElement
 	}
 	
 	abstract protected void parse() throws ParserException;
+	
+	@Override
+	public boolean equals(Object o)
+	{
+		if(this == o)
+		{
+			return true;
+		}
+		
+		if(!(o instanceof SyntaxElement))
+		{
+			return false;
+		}
+		else
+		{
+			SyntaxElement rhs = (SyntaxElement) o;
+			if(    !(_parent == null ? rhs._parent == null : _parent.equals(rhs._parent))
+				|| !(_containingFile == null ? rhs._containingFile == null : _containingFile.equals(rhs._containingFile))
+				|| !(_serverRoot == null ? rhs._serverRoot == null : _serverRoot.equals(rhs._serverRoot))
+			   )
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		int hashCode = 1;
+
+		hashCode = 31 * hashCode + (_parent == null ? 0 : _parent.hashCode());
+		hashCode += 31 * hashCode + (_containingFile == null ? 0 : _containingFile.hashCode());
+		hashCode += 31 * hashCode + (_serverRoot == null ? 0 : _serverRoot.hashCode());
+		
+		return hashCode;
+	}
 }
