@@ -35,9 +35,6 @@
     </plugins>
     <resources>
       <resource>
-        <directory>bin</directory>
-      </resource>
-      <resource>
         <directory>properties</directory>
       </resource>
     </resources>
