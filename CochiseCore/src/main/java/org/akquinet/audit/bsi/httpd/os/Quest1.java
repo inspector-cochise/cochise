@@ -8,13 +8,12 @@ import org.akquinet.audit.ShellAnsweredQuestion;
 import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.bsi.httpd.PrologueData;
 import org.akquinet.audit.ui.UserCommunicator;
-import org.akquinet.util.ClockWatcher;
-import org.akquinet.util.IResourceChangedListener;
-import org.akquinet.util.ResourceChangedNotifierThread;
 
 @Automated
-public class Quest1 implements YesNoQuestion, IResourceChangedListener
+public class Quest1 implements YesNoQuestion
 {
+	private static final long serialVersionUID = 9074291296326017374L;
+	
 	private static final String _id = "Quest1";
 	private boolean _highSecReq;
 	private transient UserCommunicator _uc;
@@ -54,8 +53,6 @@ public class Quest1 implements YesNoQuestion, IResourceChangedListener
 		_commandPath = commandPath;
 		_command = command;
 		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
-		
-		ResourceChangedNotifierThread.getDefault().addResourceChangedListener(this, new ClockWatcher());
 	}
 
 	@Override
@@ -142,12 +139,5 @@ public class Quest1 implements YesNoQuestion, IResourceChangedListener
 	public void setUserCommunicator(UserCommunicator uc)
 	{
 		_uc = uc;
-	}
-
-	@Override
-	public void resourceChanged(String resourceId)
-	{
-		// TODO all
-		// reask question
 	}
 }
