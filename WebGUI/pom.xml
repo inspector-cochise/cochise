@@ -8,7 +8,7 @@
   <dependencies>
     <dependency>
       <groupId>Cochise</groupId>
-	  <artifactId>ApacheBSIAuditHelper</artifactId>
+	  <artifactId>CochiseCore</artifactId>
 	  <version>0.3.0-RC1</version>
 	  <scope>compile</scope>
     </dependency>
