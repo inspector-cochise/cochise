@@ -23,7 +23,10 @@ public abstract class UserCommunicator
 	abstract public void beginIndent();
 	abstract public void endIndent();
 	
+	
+	@Deprecated
 	abstract public boolean askYesNoQuestion(String question);
+	@Deprecated
 	abstract public boolean askYesNoQuestion(String question, Boolean defaultAnswer);
 	abstract public String askStringQuestion(String question);
 	abstract public String askStringQuestion(String question, String defaultAnswer);
