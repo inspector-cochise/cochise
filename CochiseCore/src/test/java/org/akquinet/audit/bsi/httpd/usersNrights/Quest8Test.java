@@ -6,9 +6,12 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.IOException;
 
+import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
 import org.akquinet.httpd.ParserException;
+import org.akquinet.test.util.ConsoleUserCommunicator;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class Quest8Test
@@ -20,6 +23,22 @@ public class Quest8Test
 	
 	private static final File _someFile = new File(_userDir + "/testFiles/emptyScript.bat");
 	private static ConfigFile _conf = null;
+	
+	@BeforeClass
+	public static final void setUpClass()
+	{
+		if(UserCommunicator.getDefault() == null)
+		{
+			try
+			{
+				UserCommunicator.setDefault(new ConsoleUserCommunicator());
+			}
+			catch (Exception e)
+			{
+				throw new RuntimeException(e);
+			}
+		}
+	}
 	
 	@Before
 	public final void setUp() throws IOException, ParserException

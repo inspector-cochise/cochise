@@ -10,9 +10,12 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
 import org.akquinet.httpd.ParserException;
+import org.akquinet.test.util.ConsoleUserCommunicator;
 import org.akquinet.test.util.RethrowingThread;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class Quest9Test
@@ -34,6 +37,22 @@ public class Quest9Test
 	private static final String _apacheExecutable = "apache2";
 	
 
+	@BeforeClass
+	public static final void setUp()
+	{
+		if(UserCommunicator.getDefault() == null)
+		{
+			try
+			{
+				UserCommunicator.setDefault(new ConsoleUserCommunicator());
+			}
+			catch (Exception e)
+			{
+				throw new RuntimeException(e);
+			}
+		}
+	}
+	
 	public final void testDriver(final String stdIn, final File malformedFile, final File executable, final boolean assertVal, final boolean serverRootNotSet) throws Throwable
 	{
 		RethrowingThread th = new RethrowingThread()

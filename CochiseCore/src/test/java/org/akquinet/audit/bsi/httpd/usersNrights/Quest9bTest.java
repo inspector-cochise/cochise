@@ -9,7 +9,10 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.akquinet.audit.ui.UserCommunicator;
+import org.akquinet.test.util.ConsoleUserCommunicator;
 import org.akquinet.test.util.RethrowingThread;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class Quest9bTest
@@ -21,6 +24,22 @@ public class Quest9bTest
 	
 	private static final String _someDir = _srvRootNoHtdocs;
 	
+	
+	@BeforeClass
+	public static final void setUp()
+	{
+		if(UserCommunicator.getDefault() == null)
+		{
+			try
+			{
+				UserCommunicator.setDefault(new ConsoleUserCommunicator());
+			}
+			catch (Exception e)
+			{
+				throw new RuntimeException(e);
+			}
+		}
+	}
 	
 	public final void htdocs(final String answer1, final String answer2, final boolean assertVal) throws Throwable
 	{

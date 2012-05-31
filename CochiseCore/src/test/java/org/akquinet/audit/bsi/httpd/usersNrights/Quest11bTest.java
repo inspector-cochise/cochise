@@ -3,7 +3,10 @@ package org.akquinet.audit.bsi.httpd.usersNrights;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
+import org.akquinet.test.util.ConsoleUserCommunicator;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class Quest11bTest
@@ -27,6 +30,22 @@ public class Quest11bTest
 	private static final String _someConfig = _negTrivial;
 	
 
+	@BeforeClass
+	public static final void setUp()
+	{
+		if(UserCommunicator.getDefault() == null)
+		{
+			try
+			{
+				UserCommunicator.setDefault(new ConsoleUserCommunicator());
+			}
+			catch (Exception e)
+			{
+				throw new RuntimeException(e);
+			}
+		}
+	}
+	
 	@Test
 	public final void testNegativeContained1() throws Exception
 	{

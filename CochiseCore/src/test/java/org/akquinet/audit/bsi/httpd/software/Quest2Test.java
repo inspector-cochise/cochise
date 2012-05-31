@@ -11,7 +11,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 
+import org.akquinet.audit.ui.UserCommunicator;
+import org.akquinet.test.util.ConsoleUserCommunicator;
 import org.akquinet.test.util.RethrowingThread;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class Quest2Test
@@ -23,6 +26,22 @@ public class Quest2Test
 	private static final String _1_1_2 = "1.1.2.bat";
 	private static final String _1_2_1 = "1.2.1.bat";
 	private static final String _2_1_1 = "2.1.1.bat";
+	
+	@BeforeClass
+	public static final void setUp()
+	{
+		if(UserCommunicator.getDefault() == null)
+		{
+			try
+			{
+				UserCommunicator.setDefault(new ConsoleUserCommunicator());
+			}
+			catch (Exception e)
+			{
+				throw new RuntimeException(e);
+			}
+		}
+	}
 	
 	@Test
 	public final void testNegative() throws Throwable

@@ -7,11 +7,30 @@ import static org.junit.Assert.fail;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
+import org.akquinet.audit.ui.UserCommunicator;
+import org.akquinet.test.util.ConsoleUserCommunicator;
 import org.akquinet.test.util.RethrowingThread;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class Quest11aTest
 {
+	@BeforeClass
+	public static final void setUp()
+	{
+		if(UserCommunicator.getDefault() == null)
+		{
+			try
+			{
+				UserCommunicator.setDefault(new ConsoleUserCommunicator());
+			}
+			catch (Exception e)
+			{
+				throw new RuntimeException(e);
+			}
+		}
+	}
+	
 	@Test
 	public final void testNegativeTrivial() throws Throwable
 	{

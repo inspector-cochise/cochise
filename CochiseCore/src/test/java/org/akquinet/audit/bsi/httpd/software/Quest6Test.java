@@ -6,6 +6,9 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.IOException;
 
+import org.akquinet.audit.ui.UserCommunicator;
+import org.akquinet.test.util.ConsoleUserCommunicator;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class Quest6Test
@@ -14,6 +17,22 @@ public class Quest6Test
 	
 	private static final File _emptyExec = new File(_userDir + "/testFiles/emptyScript.bat");
 	private static final File _failExec = new File(_userDir + "/testFiles/failScript.bat");
+	
+	@BeforeClass
+	public static final void setUp()
+	{
+		if(UserCommunicator.getDefault() == null)
+		{
+			try
+			{
+				UserCommunicator.setDefault(new ConsoleUserCommunicator());
+			}
+			catch (Exception e)
+			{
+				throw new RuntimeException(e);
+			}
+		}
+	}
 	
 	@Test
 	public final void testNegative()

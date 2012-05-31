@@ -6,6 +6,9 @@ import static org.junit.Assert.assertTrue;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
+import org.akquinet.audit.ui.UserCommunicator;
+import org.akquinet.test.util.ConsoleUserCommunicator;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class Quest9aTest
@@ -17,6 +20,22 @@ public class Quest9aTest
 	public static final String _emptyExecutable = "emptyScript.bat";
 	public static final String _failExecutable = "failScript.bat";
 	public static final String _listExecutable = "Quest9a/list.bat";
+	
+	@BeforeClass
+	public static final void setUp()
+	{
+		if(UserCommunicator.getDefault() == null)
+		{
+			try
+			{
+				UserCommunicator.setDefault(new ConsoleUserCommunicator());
+			}
+			catch (Exception e)
+			{
+				throw new RuntimeException(e);
+			}
+		}
+	}
 	
 	@Test
 	public final void testNegative()

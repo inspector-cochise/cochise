@@ -6,8 +6,11 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.IOException;
 
+import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
 import org.akquinet.httpd.ParserException;
+import org.akquinet.test.util.ConsoleUserCommunicator;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class Quest10Test
@@ -21,6 +24,22 @@ public class Quest10Test
 	
 	private static final String _emptyScript =  "emptyScript.bat";
 	private static final String _failScript =  "failScript.bat";
+	
+	@BeforeClass
+	public static final void setUp()
+	{
+		if(UserCommunicator.getDefault() == null)
+		{
+			try
+			{
+				UserCommunicator.setDefault(new ConsoleUserCommunicator());
+			}
+			catch (Exception e)
+			{
+				throw new RuntimeException(e);
+			}
+		}
+	}
 	
 	@Test
 	public final void testNegativeTrivial() throws Exception

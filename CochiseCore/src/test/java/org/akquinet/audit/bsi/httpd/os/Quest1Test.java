@@ -3,6 +3,9 @@ package org.akquinet.audit.bsi.httpd.os;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.akquinet.audit.ui.UserCommunicator;
+import org.akquinet.test.util.ConsoleUserCommunicator;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class Quest1Test
@@ -11,6 +14,22 @@ public class Quest1Test
 	private static final String _commandPath = _userDir + "/testFiles/";
 	private static final String _posExecutable = "emptyScript.bat";
 	private static final String _negExecutable = "failScript.bat";
+	
+	@BeforeClass
+	public static final void setUp()
+	{
+		if(UserCommunicator.getDefault() == null)
+		{
+			try
+			{
+				UserCommunicator.setDefault(new ConsoleUserCommunicator());
+			}
+			catch (Exception e)
+			{
+				throw new RuntimeException(e);
+			}
+		}
+	}
 	
 	@Test
 	public final void testNoHighSecurityLevel()
