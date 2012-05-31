@@ -33,11 +33,6 @@ public abstract class UserCommunicator
 
 	public static UserCommunicator getDefault()
 	{
-		if(_default == null)
-		{
-			_default = new ConsoleUserCommunicator();
-		}
-		
 		return _default;
 	}
 	
