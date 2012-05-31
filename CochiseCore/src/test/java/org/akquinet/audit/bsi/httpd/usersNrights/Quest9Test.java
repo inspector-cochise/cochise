@@ -67,7 +67,7 @@ public class Quest9Test
 					SUT.initialize();
 					System.setIn(new ByteArrayInputStream(stdIn.getBytes()));
 					
-					assertEquals(SUT.answer(), assertVal);
+					assertEquals(assertVal, SUT.answer());
 					
 					System.setIn(stdInStream);
 				}
