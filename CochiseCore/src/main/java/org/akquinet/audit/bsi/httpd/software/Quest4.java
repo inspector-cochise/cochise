@@ -16,7 +16,7 @@ import org.akquinet.httpd.syntax.Directive;
 @Interactive
 public class Quest4 extends ModuleHelper implements YesNoQuestion
 {
-	private static final long serialVersionUID = -9165261597918536614L;
+	private static final long serialVersionUID = 7964851911984677797L;
 	
 	private static final String _id = "Quest4";
 	private transient UserCommunicator _uc = UserCommunicator.getDefault();
@@ -24,6 +24,8 @@ public class Quest4 extends ModuleHelper implements YesNoQuestion
 	
 	private String[] _compiledIntoModules;
 	private String[] _loadModules;
+	@SuppressWarnings("unused")		//maybe will be used later, having it here now so that it get's serialized
+	private String _explanation = "";
 	
 	private boolean _lastAnswer;
 	
@@ -94,6 +96,12 @@ public class Quest4 extends ModuleHelper implements YesNoQuestion
 		
 		_uc.println( _labels.getString("L6") );
 		boolean ret = _uc.askYesNoQuestion( _labels.getString("Q1") );
+		
+		if(ret)
+		{
+			_explanation = _uc.askTextQuestion( _labels.getString("REASON") );
+		}
+		
 		_uc.printAnswer(ret, ret ?  _labels.getString("S1_good") 
 				: _labels.getString("S1_bad") );
 		
