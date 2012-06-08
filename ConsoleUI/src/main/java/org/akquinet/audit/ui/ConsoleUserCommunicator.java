@@ -315,4 +315,10 @@ public class ConsoleUserCommunicator extends UserCommunicator
 		_console.setLocale(locale);
 		_htmlLogger.setLocale(locale);
 	}
+
+	@Override
+	public String askTextQuestion(String question)
+	{
+		return askStringQuestion(question);
+	}
 }

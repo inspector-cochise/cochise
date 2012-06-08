@@ -29,6 +29,13 @@ public abstract class UserCommunicator
 	abstract public String askStringQuestion(String question);
 	abstract public String askStringQuestion(String question, String defaultAnswer);
 	
+	/**
+	 * for bigger answers
+	 * @param question
+	 * @return
+	 */
+	abstract public String askTextQuestion(String question);
+	
 	public void finishCommunication() {}
 
 	public static UserCommunicator getDefault()

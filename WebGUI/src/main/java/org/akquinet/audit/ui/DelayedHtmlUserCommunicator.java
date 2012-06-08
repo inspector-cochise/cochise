@@ -225,6 +225,43 @@ public class DelayedHtmlUserCommunicator extends UserCommunicator
 	}
 
 	@Override
+	public String askTextQuestion(String question)
+	{
+		synchronized (_inputWaiter)
+		{
+			_inputState = InputState.STRING_EXPECTED;
+			_htmlBuilder.mark();
+			
+			HtmlTagPair form = new HtmlTagPair("form");
+			form.addAttribute("action", "" + _target + "?quest=" + _questId + "&action=answer");
+			form.addContent(new HtmlText(question + " "));
+			form.addContent(new HtmlText("<textarea name=\"answer\" cols=\"80\" rows=\"10\" value=\"\"></textarea>"));
+			form.addContent(new HtmlText("<input type=\"submit\" value=\"Absenden\">"));
+			_htmlBuilder.printParagraph(form.stringify().toString());
+			
+			try
+			{
+				_inputWaiter.wait();
+			}
+			catch (InterruptedException e)
+			{
+				Thread.currentThread().interrupt();
+				return "";
+			}
+			
+			_inputState = InputState.NO_INPUT_EXPECTED;
+			
+			String ret = _stringAnswer;
+			_stringAnswer = null;
+			
+			_htmlBuilder.reset();
+			_htmlBuilder.printParagraph(question + " <i>" + ret + "<i/>");
+			
+			return ret;
+		}
+	}
+
+	@Override
 	public Locale getLocale()
 	{
 		return _locale;
