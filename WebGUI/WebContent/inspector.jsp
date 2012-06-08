@@ -1,3 +1,4 @@
+<%@page import="org.akquinet.audit.QuestionManager"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="org.akquinet.web.CommonData"%>
 <%@page import="java.util.ResourceBundle"%>
@@ -37,7 +38,7 @@
 		var questIds =
 			[
 			<%
-			Iterator<String> it = CommonData.getDefault().getQuestionIds().iterator();
+			Iterator<String> it = QuestionManager.getDefault().getQuestionIds().iterator();
 			while(it.hasNext())
 			{
 				String currentId = it.next();
@@ -73,7 +74,7 @@
 </script>
 </head>
 <body>
-	<%CommonData.getDefault().triggerActions(request);%>
+	<%QuestionManager.getDefault().triggerActions(request.getParameterMap());%>
 	<div id="header">
 		<div id="logo"></div>
 		<div id="header-right">

@@ -1,3 +1,4 @@
+<%@page import="org.akquinet.audit.QuestionManager"%>
 <%@page import="java.util.ResourceBundle"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="org.akquinet.audit.YesNoQuestion"%>
@@ -52,7 +53,7 @@
 <h2><%= labels.getString("evaluation") %></h2>
 
 <%
-	if(CommonData.getDefault().allGood())
+	if(QuestionManager.getDefault().allGood())
 	{%>
 		<ul style="list-style-image: url('img/good.png');">
 			<li><%= labels.getString("good") %></li>
@@ -63,7 +64,7 @@
 		<ul style="list-style-image: url('img/bad.png');">
 			<li><%= labels.getString("bad") %> (<%= labels.getString("see") %>
 			<%
-				Iterator<YesNoQuestion> it = CommonData.getDefault().getProblems().iterator();
+				Iterator<YesNoQuestion> it = QuestionManager.getDefault().getProblems().iterator();
 				while(it.hasNext())
 				{
 					YesNoQuestion currentQuest = it.next();
@@ -81,10 +82,10 @@
 <h2><%= labels.getString("recording") %></h2>
 <body>
 <%
-	List<String> questIds = CommonData.getDefault().getQuestionIds();
+	List<String> questIds = QuestionManager.getDefault().getQuestionIds();
 	for(String questId : questIds)
 	{
-		out.println( CommonData.getDefault().getQuestionsOutput(questId) );
+		out.println( QuestionManager.getDefault().getQuestionsOutput(questId) );
 		out.println("<hr /><hr />");
 	}
 %>

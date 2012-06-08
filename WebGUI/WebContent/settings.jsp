@@ -1,4 +1,5 @@
 
+<%@page import="org.akquinet.audit.QuestionManager"%>
 <%@page import="org.akquinet.audit.bsi.httpd.PrologueData"%>
 <%@page import="org.akquinet.web.CommonData"%>
 <%@page import="org.akquinet.web.SettingsHelper"%>
@@ -22,12 +23,12 @@
 %>
 <h1><%=labels.getString("prologue2")%></h1>
 <%
-	SettingsHelper helper = new SettingsHelper(CommonData.getDefault().getPrologueData());
+	SettingsHelper helper = new SettingsHelper(QuestionManager.getDefault().getPrologueData());
 	
 	String execErrorMsg = helper.getExecErrorMsg();
 	String configErrorMsg = helper.getConfigErrorMsg();
 
-	if (execErrorMsg.equals("") && configErrorMsg.equals("") && "root".equals(System.getenv("USER")) && CommonData.getDefault().isConfigured())
+	if (execErrorMsg.equals("") && configErrorMsg.equals("") && "root".equals(System.getenv("USER")) && QuestionManager.getDefault().isConfigured())
 	{
 		session.setAttribute("prologueOk", "true");
 	}

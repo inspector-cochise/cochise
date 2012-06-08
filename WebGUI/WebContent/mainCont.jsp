@@ -1,3 +1,4 @@
+<%@page import="org.akquinet.audit.QuestionManager"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@page import="org.akquinet.web.CommonData"%>
@@ -12,7 +13,7 @@
 	}
 %>
 <%
-	CommonData.getDefault().updateMainContentId(request);
+	QuestionManager.getDefault().updateMainContentId(request.getParameter(CommonData.PARAM_REQUESTED_QUEST));
 
 	boolean prologueOk = false;
 	if (session.getAttribute(CommonData.PROLOGUE_OK) != null)
@@ -24,7 +25,7 @@
 	
 	if(quest == null)
 	{
-		quest = CommonData.getDefault().getMainContentId();
+		quest = QuestionManager.getDefault().getMainContentId();
 	}
 
 	if (prologueOk == false
@@ -42,7 +43,7 @@
 			<input type="button" value="<%= ResourceBundle.getBundle("site", Locale.getDefault()).getString("restartQuestionButton") %>" onclick="restartQuestion();" />
 			<input type="button" value="<%= ResourceBundle.getBundle("site", Locale.getDefault()).getString("restartAllQuestionsButton") %>" onclick="restartAllQuestions();" />
 		</div>
-		<%=CommonData.getDefault().getQuestionsOutput(quest)%>
+		<%=QuestionManager.getDefault().getQuestionsOutput(quest)%>
 		<%
 	}
 %>

@@ -1,3 +1,4 @@
+<%@page import="org.akquinet.audit.QuestionManager"%>
 <%@page import="org.akquinet.audit.YesNoQuestion"%>
 <%@page import="java.util.Locale"%>
 <%@page import="java.util.ResourceBundle"%>
@@ -17,13 +18,13 @@
 
 <%
 	ResourceBundle labels = ResourceBundle.getBundle("navigation", Locale.getDefault());
-	String mainContId = CommonData.getDefault().getMainContentId();
+	String mainContId = QuestionManager.getDefault().getMainContentId();
 %>
 						<table>
 							<tr>
 								<td><span id="navlink_<%= CommonData.PROLOGUE_ID %>" onclick="updateMainContent('<%= CommonData.PROLOGUE_ID %>')" class="navigationLink"
 									<%
-										if(CommonData.getDefault().getMainContentId().equals(CommonData.PROLOGUE_ID))
+										if(QuestionManager.getDefault().getMainContentId().equals(CommonData.PROLOGUE_ID))
 										{
 											out.println("style=\"font-weight: bold;\"");
 										}
@@ -38,14 +39,14 @@
 								<td />
 							</tr>
 							<%
-								for(String questId : CommonData.getDefault().getQuestionIds())
+								for(String questId : QuestionManager.getDefault().getQuestionIds())
 								{
-									YesNoQuestion quest = CommonData.getDefault().getQuestion(questId);
+									YesNoQuestion quest = QuestionManager.getDefault().getQuestion(questId);
 							%>
 									<tr>
 										<td><span id="navlink_<%= questId %>" onclick="updateMainContent('<%= questId %>')" class="navigationLink"
 											<%
-												if(CommonData.getDefault().getMainContentId().equals(questId))
+												if(QuestionManager.getDefault().getMainContentId().equals(questId))
 												{
 													out.println("style=\"font-weight: bold;\"");
 												}
@@ -56,7 +57,7 @@
 										<td id="<%= questId %>">
 										<%
 											String statusKey;
-											switch(CommonData.getDefault().getStatus(quest))
+											switch(QuestionManager.getDefault().getStatus(quest))
 											{
 											case OPEN:
 												%>

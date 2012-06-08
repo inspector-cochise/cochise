@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.akquinet.audit.QuestionManager;
+
 /**
  * Servlet implementation class QuestStatusServlet
  */
@@ -61,7 +63,7 @@ public class QuestStatusServlet extends HttpServlet
 				//in this case we will return a list of all available questions
 				StringBuilder answer = new StringBuilder();
 				
-				Iterator<String> it = CommonData.getDefault().getQuestionIds().iterator();
+				Iterator<String> it = QuestionManager.getDefault().getQuestionIds().iterator();
 				while(it.hasNext())
 				{
 					String current = it.next();
@@ -79,7 +81,7 @@ public class QuestStatusServlet extends HttpServlet
 			{
 				try
 				{
-					switch(CommonData.getDefault().getStatus(requestedId))
+					switch(QuestionManager.getDefault().getStatus(requestedId))
 					{
 					case BAD:
 						response.getWriter().print("neg");
