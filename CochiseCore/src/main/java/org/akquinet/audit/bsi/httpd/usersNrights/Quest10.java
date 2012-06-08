@@ -78,10 +78,13 @@ public class Quest10 extends ModuleHelper implements YesNoQuestion
 		if(!ret)
 		{
 			_uc.println( _labels.getString("L2") );
+			
+			StringBuilder problemList = new StringBuilder();
 			for (String str : probs)
 			{
-				_uc.println(str);
+				problemList = problemList.append(str).append('\n');
 			}
+			_uc.printExample(problemList.toString());
 		}
 		
 		_uc.printAnswer(ret, ret ?  _labels.getString("S1_good") 
