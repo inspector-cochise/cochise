@@ -17,13 +17,15 @@ import org.akquinet.httpd.syntax.Directive;
 @Interactive
 public class Quest7 implements YesNoQuestion
 {
-	private static final long serialVersionUID = 439781147472427459L;
+	private static final long serialVersionUID = -2846870338232644565L;
 	
 	private static final String _id = "Quest7";
 	private ConfigFile _conf;
 	private transient ResourceBundle _labels;
 	private transient UserCommunicator _uc = UserCommunicator.getDefault();
 	
+	@SuppressWarnings("unused")		//maybe will be used later, having it here now so that it get's serialized
+	private String _explanation = "";
 	private boolean _lastAnswer;
 	private List<String> _problems;
 
@@ -81,6 +83,10 @@ public class Quest7 implements YesNoQuestion
 				_uc.printExample(problem);
 			}
 			allOk = _uc.askYesNoQuestion( _labels.getString("Q1") );
+			if(allOk)
+			{
+				_explanation = _uc.askTextQuestion( _labels.getString("REASON") );
+			}
 		}
 		
 		boolean ret = _isSetGlobal && allOk;
