@@ -11,18 +11,37 @@ import org.akquinet.httpd.ConfigFile;
 import org.akquinet.httpd.ParserException;
 import org.akquinet.httpd.syntax.Directive;
 
+/**
+ * This class will help you to find apache modules that are loaded dynamically and modules that have statically 
+ * been compiled into the apache.
+ * 
+ * This class is intended to be subclassed.
+ *  
+ * @author immanuel
+ *
+ */
 public class ModuleHelper implements Serializable
 {
 	private static final long serialVersionUID = -6541226395865237818L;
 	private ConfigFile _conf;
 	private ProcessBuilder _httpd;
 	
+	/**
+	 * Using this constructor you won't get access to modules compiled into the apache. getCompiledIntoModulesList() will always return an empty array.
+	 * @param conf the configuration
+	 * @see getCompiledIntoModulesList()
+	 */
 	public ModuleHelper(ConfigFile conf)
 	{
 		_conf = conf;
 		_httpd = null;
 	}
-	
+
+	/**
+	 * Constructor for this class to build an object that can use all capabilities of this class (@see getCompiledIntoModulesList()).
+	 * @param conf the configuration
+	 * @param apacheExecutable the apache executable (often something like /usr/sbin/httpd or /usr/sbin/apache2)
+	 */
 	public ModuleHelper(ConfigFile conf, File apacheExecutable)
 	{
 		_conf = conf;
@@ -37,18 +56,35 @@ public class ModuleHelper implements Serializable
 		}
 	}
 	
+	/**
+	 * This method looks for all LoadModule-directives in the configuration and returns a list of them.
+	 * @return List of all LoadModule-directives in the configuration.
+	 */
 	protected List<Directive> getLoadModuleList()
 	{
 		return _conf.getDirectiveIgnoreCase("LoadModule");
 	}
 	
+	/**
+	 * This method looks for all LoadFile-directives in the configuration and returns a list of them.
+	 * @return List of all LoadFile-directives in the configuration.
+	 */
 	protected List<Directive> getLoadFileList()
 	{
 		return _conf.getDirectiveIgnoreCase("LoadFile");
 	}
 
+	/**
+	 * This method will use the apache executable to determine which modules have been compiled into it.
+	 * @return An array with the names of all modules compiled into your apache executable.
+	 */
 	protected String[] getCompiledIntoModulesList()
 	{
+		if(_httpd == null)
+		{
+			return new String[0];
+		}
+		
 		try
 		{
 			Process p = _httpd.start();
@@ -78,11 +114,21 @@ public class ModuleHelper implements Serializable
 		}
 	}
 	
+	/**
+	 * Reparse the config-file. Useful if the config-file has been changed.
+	 * @throws ParserException
+	 * @throws IOException
+	 */
 	protected void reparse() throws ParserException, IOException
 	{
 		_conf.reparse();
 	}
 	
+	/**
+	 * serialization write-method
+	 * @param s
+	 * @throws IOException
+	 */
 	private synchronized void writeObject( java.io.ObjectOutputStream s ) throws IOException
 	{
 		s.writeLong(serialVersionUID);
@@ -94,6 +140,12 @@ public class ModuleHelper implements Serializable
 		}
 	}
 
+	/**
+	 * serialization read-method
+	 * @param s
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
 	@SuppressWarnings("unchecked")
 	private synchronized void readObject( java.io.ObjectInputStream s ) throws IOException, ClassNotFoundException
 	{
