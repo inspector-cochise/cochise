@@ -24,6 +24,7 @@ public class Quest9 implements YesNoQuestion
 	private String _serverRoot;
 	private String _commandPath;
 	private String _command9a;
+	private String _command9b;
 	private String _getUserNGroupCommand;
 	private String _apacheExecutable;
 	private Quest9a _q9a;
@@ -31,6 +32,7 @@ public class Quest9 implements YesNoQuestion
 	private transient ResourceBundle _labels;
 	private boolean _highSec;
 	private String _user;
+
 
 	public Quest9(PrologueData pd)
 	{
@@ -44,25 +46,26 @@ public class Quest9 implements YesNoQuestion
 	
 	public Quest9(ConfigFile conf, String apacheExecutable, boolean highSec)
 	{
-		this(conf, "./", "quest9.sh", "getApacheStartingUser.sh", apacheExecutable, highSec);
+		this(conf, "./", "quest9.sh", "listUsersWhoHaveAccess.sh", "getApacheStartingUser.sh", apacheExecutable, highSec);
 	}
 	
 	public Quest9(ConfigFile conf, String apacheExecutable, boolean highSec, UserCommunicator uc)
 	{
-		this(conf, "./", "quest9.sh", "getApacheStartingUser.sh", apacheExecutable, highSec, uc);
+		this(conf, "./", "quest9.sh", "listUsersWhoHaveAccess.sh", "getApacheStartingUser.sh", apacheExecutable, highSec, uc);
 	}
 
-	public Quest9(ConfigFile conf, String command9aPath, String command9a, String getUserNGroupCommand, String apacheExecutable, boolean highSec)
+	public Quest9(ConfigFile conf, String command9aPath, String command9a, String command9b, String getUserNGroupCommand, String apacheExecutable, boolean highSec)
 	{
-		this(conf, command9aPath, command9a, getUserNGroupCommand, apacheExecutable, highSec, UserCommunicator.getDefault());
+		this(conf, command9aPath, command9a, command9b, getUserNGroupCommand, apacheExecutable, highSec, UserCommunicator.getDefault());
 	}
 	
-	public Quest9(ConfigFile conf, String command9aPath, String command9a, String getUserNGroupCommand, String apacheExecutable, boolean highSec, UserCommunicator uc)
+	public Quest9(ConfigFile conf, String command9aPath, String command9a, String command9b, String getUserNGroupCommand, String apacheExecutable, boolean highSec, UserCommunicator uc)
 	{
 		_uc = uc;
 		_conf = conf;
 		_commandPath = command9aPath;
 		_command9a = command9a;
+		_command9b = command9b;
 		_getUserNGroupCommand = getUserNGroupCommand;
 		_apacheExecutable = apacheExecutable;
 		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
@@ -74,8 +77,13 @@ public class Quest9 implements YesNoQuestion
 	{
 		_uc.printHeading3( _labels.getString("name") );
 		_uc.printParagraph( _labels.getString("Q0") );
-
 		
+		_uc.beginHidingParagraph( _labels.getString("S5") );
+			_uc.println( _labels.getString("S6") );
+			_uc.printExample("ServerRoot /path/to/some/directory/");
+			_uc.printParagraph( _labels.getString("S7") );
+		_uc.endHidingParagraph();
+
 		_uc.println( _labels.getString("L1") );
 		
 		if(_serverRoot == null || _serverRoot == "")
@@ -105,12 +113,6 @@ public class Quest9 implements YesNoQuestion
 			_uc.printAnswer(false,  _labels.getString("S4") );
 			ret = false;
 		}
-		
-		_uc.beginHidingParagraph( _labels.getString("S5") );
-			_uc.println( _labels.getString("S6") );
-			_uc.printExample("ServerRoot /path/to/some/directory/");
-			_uc.printParagraph( _labels.getString("S7") );
-		_uc.endHidingParagraph();
 		
 		return ret;
 	}
@@ -204,7 +206,15 @@ public class Quest9 implements YesNoQuestion
 		{
 			_q9a = new Quest9a(_serverRoot, _user, _highSec, _uc);
 		}
-		_q9b = new Quest9b(_serverRoot, _uc);
+		
+		if(_command9b != null && _commandPath != null)
+		{
+			_q9b = new Quest9b(_serverRoot, _commandPath, _command9b, _uc);
+		}
+		else
+		{
+			_q9b = new Quest9b(_serverRoot, _uc);
+		}
 		
 		_q9a.initialize();
 		_q9b.initialize();

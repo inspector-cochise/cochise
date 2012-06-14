@@ -2,9 +2,11 @@ package org.akquinet.audit.bsi.httpd.usersNrights;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ResourceBundle;
 
 import org.akquinet.audit.Interactive;
+import org.akquinet.audit.ShellAnsweredQuestion;
 import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.ui.UserCommunicator;
 
@@ -19,6 +21,11 @@ public class Quest9b implements YesNoQuestion
 	private transient ResourceBundle _labels;
 	private long _htdocsLastModified;
 	private boolean _lastUserAnswer;
+	@SuppressWarnings("unused")		//maybe will be used later, having it here now so that it get's serialized
+	private String _explanation = "";
+
+	private String _commandPath;
+	private String _command;
 
 	public Quest9b(String serverRoot)
 	{
@@ -27,8 +34,20 @@ public class Quest9b implements YesNoQuestion
 	
 	public Quest9b(String serverRoot, UserCommunicator uc)
 	{
+		this(serverRoot, "./", "listUsersWhoHaveAccess.sh", uc);
+	}
+
+	public Quest9b(String serverRoot, String commandPath, String command)
+	{
+		this(serverRoot, commandPath, command, UserCommunicator.getDefault());
+	}
+	
+	public Quest9b(String serverRoot, String commandPath, String command, UserCommunicator uc)
+	{
 		_uc = uc;
 		_serverRoot = serverRoot;
+		_commandPath = commandPath;
+		_command = command;
 		_htdocsLastModified = -1;
 		_lastUserAnswer = false;
 		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
@@ -62,12 +81,49 @@ public class Quest9b implements YesNoQuestion
 			{
 				_htdocsLastModified = htdocs.lastModified();
 				isDoc = _uc.askYesNoQuestion( _labels.getString("Q1") );
+				listAccessUsers(htdocs);
 				access = _uc.askYesNoQuestion( _labels.getString("Q2") );
+				if(access)
+				{
+					_explanation = _uc.askTextQuestion( _labels.getString("REASON") );
+				}
+				
 				_lastUserAnswer = isDoc && access;
 			}
 			_uc.printAnswer(_lastUserAnswer, _lastUserAnswer ?
 									_labels.getString("S3") : _labels.getString("S4") );
 			return _lastUserAnswer;
+		}
+	}
+
+	private void listAccessUsers(File htdocs)
+	{
+		_uc.printParagraph( _labels.getString("S2_1") );
+		ShellAnsweredQuestion script = new ShellAnsweredQuestion(_commandPath + _command, htdocs.getAbsolutePath());
+		if(script.answer())
+		{
+			InputStream stdOut = script.getStdOut();
+			StringBuilder sb = new StringBuilder();
+			
+			try
+			{
+				int c = stdOut.read();
+				while(c >= 0)
+				{
+					sb = sb.append((char)c);
+					c = stdOut.read();
+				}
+			}
+			catch (IOException e)
+			{
+				throw new RuntimeException(e);
+			}
+			
+			_uc.printExample(sb.toString());
+		}
+		else
+		{
+			_uc.printExample( _labels.getString("EVERYBODY") );
 		}
 	}
 

@@ -21,6 +21,8 @@ public class Quest9bTest
 	
 	private static final String _srvRootNoHtdocs = _userDir + "/testFiles/Quest9b/srvRootNoHtdocs";
 	private static final String _srvRootHtdocs = _userDir + "/testFiles/Quest9b/srvRootHtdocs";
+	private static final String _commandPath = _userDir + "/testFiles/";
+	private static final String _command = "emptyScript.bat";
 	
 	private static final String _someDir = _srvRootNoHtdocs;
 	
@@ -49,7 +51,7 @@ public class Quest9bTest
 			public void run()
 			{
 				InputStream stdin = System.in;
-				Quest9b SUT = new Quest9b(_srvRootHtdocs);
+				Quest9b SUT = new Quest9b(_srvRootHtdocs, _commandPath, _command);
 				SUT.initialize();
 				System.setIn(new ByteArrayInputStream((answer1 + "\n" + answer2 + "\n").getBytes()));
 
@@ -102,7 +104,7 @@ public class Quest9bTest
 			@Override
 			public void run()
 			{
-				Quest9b SUT = new Quest9b(_srvRootNoHtdocs);
+				Quest9b SUT = new Quest9b(_srvRootNoHtdocs, _commandPath, _command);
 				SUT.initialize();
 				assertTrue(SUT.answer());
 			}
@@ -123,14 +125,14 @@ public class Quest9bTest
 	@Test
 	public final void testGetID() throws IOException
 	{
-		Quest9b SUT = new Quest9b(_someDir);
+		Quest9b SUT = new Quest9b(_someDir, _commandPath, _command);
 		assertTrue(SUT.getID().equals("Quest9b"));
 	}
 	
 	@Test
 	public final void testIsCritical() throws IOException
 	{
-		Quest9b SUT = new Quest9b(_someDir);
+		Quest9b SUT = new Quest9b(_someDir, _commandPath, _command);
 		assertFalse(SUT.isCritical());
 	}
 }

@@ -4,6 +4,8 @@ import java.rmi.UnexpectedException;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import org.akquinet.web.CommonData;
+
 public class DelayedHtmlUserCommunicator extends UserCommunicator
 {
 	private HtmlReportLogger _htmlBuilder;
@@ -152,9 +154,9 @@ public class DelayedHtmlUserCommunicator extends UserCommunicator
 			HtmlTagPair form = new HtmlTagPair("form");
 			form.addContent(new HtmlText(question + " "));
 			form.addContent(new HtmlText("<input type=\"button\" value=\"" + _labels.getString("S8_yes") +
-					"\" onclick=\"location='" + _target + "?quest=" + _questId + "&action=answer&answer=yes'\"/>"));
+					"\" onclick=\"location='" + _target + "?quest=" + _questId + "&action=" + CommonData.ACTION_ANSWER + "&answer=yes'\"/>"));
 			form.addContent(new HtmlText("<input type=\"button\" value=\"" + _labels.getString("S8_no") +
-					"\" onclick=\"location='" + _target + "?quest=" + _questId + "&action=answer&answer=no'\"/>"));
+					"\" onclick=\"location='" + _target + "?quest=" + _questId + "&action=" + CommonData.ACTION_ANSWER + "&answer=no'\"/>"));
 			_htmlBuilder.printParagraph(form.stringify().toString());
 			
 			try
@@ -196,7 +198,10 @@ public class DelayedHtmlUserCommunicator extends UserCommunicator
 			_htmlBuilder.mark();
 			
 			HtmlTagPair form = new HtmlTagPair("form");
-			form.addAttribute("action", "" + _target + "?quest=" + _questId + "&action=answer");
+			form.addAttribute("action", _target);
+			form.addAttribute("method", "post");
+			form.addContent(new HtmlText("<input type=\"hidden\" name=\"quest\" value=\"" + _questId + "\"/>"));
+			form.addContent(new HtmlText("<input type=\"hidden\" name=\"action\" value=\"" + CommonData.ACTION_ANSWER + "\"/>"));
 			form.addContent(new HtmlText(question + " "));
 			form.addContent(new HtmlText("<input type=\"text\" name=\"answer\" size=\"40\" value=\"" + defaultAnswer + "\"/>"));
 			form.addContent(new HtmlText("<input type=\"submit\" value=\"Absenden\">"));
@@ -218,7 +223,7 @@ public class DelayedHtmlUserCommunicator extends UserCommunicator
 			_stringAnswer = null;
 			
 			_htmlBuilder.reset();
-			_htmlBuilder.printParagraph(question + " <i>" + ret + "<i/>");
+			_htmlBuilder.printParagraph(question + " <i>" + ret + "</i>");
 			
 			return ret;
 		}		
@@ -233,10 +238,13 @@ public class DelayedHtmlUserCommunicator extends UserCommunicator
 			_htmlBuilder.mark();
 			
 			HtmlTagPair form = new HtmlTagPair("form");
-			form.addAttribute("action", "" + _target + "?quest=" + _questId + "&action=answer");
+			form.addAttribute("action", _target);
+			form.addAttribute("method", "post");
+			form.addContent(new HtmlText("<input type=\"hidden\" name=\"quest\" value=\"" + _questId + "\"/>"));
+			form.addContent(new HtmlText("<input type=\"hidden\" name=\"action\" value=\"" + CommonData.ACTION_ANSWER + "\"/>"));
 			form.addContent(new HtmlText(question + " "));
-			form.addContent(new HtmlText("<textarea name=\"answer\" cols=\"80\" rows=\"10\" value=\"\"></textarea>"));
-			form.addContent(new HtmlText("<input type=\"submit\" value=\"Absenden\">"));
+			form.addContent(new HtmlText("<p><textarea name=\"answer\" cols=\"80\" rows=\"10\" value=\"\"></textarea>"));
+			form.addContent(new HtmlText("<input type=\"submit\" value=\"Absenden\"></p>"));
 			_htmlBuilder.printParagraph(form.stringify().toString());
 			
 			try
@@ -255,7 +263,7 @@ public class DelayedHtmlUserCommunicator extends UserCommunicator
 			_stringAnswer = null;
 			
 			_htmlBuilder.reset();
-			_htmlBuilder.printParagraph(question + " <i>" + ret + "<i/>");
+			_htmlBuilder.printParagraph(question + "\n<p><i>" + ret + "</i></p>");
 			
 			return ret;
 		}
@@ -338,6 +346,7 @@ public class DelayedHtmlUserCommunicator extends UserCommunicator
 			break;
 		case STRING_EXPECTED:
 			setStringAnswer(answer);
+			break;
 		case NO_INPUT_EXPECTED:
 			throw new UnexpectedException("Internal Error: No Input expected.");
 		}
