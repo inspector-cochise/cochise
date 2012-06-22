@@ -30,6 +30,10 @@ import org.akquinet.audit.ui.DelayedHtmlUserCommunicator;
 import org.akquinet.audit.ui.DelayedHtmlUserCommunicator.InputState;
 import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
+import org.akquinet.util.ClockWatcher;
+import org.akquinet.util.IResourceChangedListener;
+import org.akquinet.util.IResourceWatcher;
+import org.akquinet.util.ResourceChangedNotifierThread;
 import org.akquinet.web.CommonData;
 import org.akquinet.web.SettingsHelper;
 
@@ -143,16 +147,7 @@ public class QuestionManager
 			}
 			else if (action.equals(CommonData.ACTION_RESTART_QUESTION))
 			{
-				Class<? extends YesNoQuestion> questClass = _questionsById.get(_mainContentId).getClass();
-				removeQuestion(_mainContentId);
-				try
-				{
-					createQuestion(questClass);
-				}
-				catch (InvalidQuestionClassException e)
-				{
-					throw new RuntimeException(e);
-				}
+				restartQuestion(_mainContentId);
 			}
 			else if (action.equals(CommonData.ACTION_RESTART_ALL_QUESTIONS))
 			{
@@ -191,6 +186,20 @@ public class QuestionManager
 			{
 				// unknown action, just ignore this
 			}
+		}
+	}
+
+	private void restartQuestion(String id)
+	{
+		Class<? extends YesNoQuestion> questClass = _questionsById.get(id).getClass();
+		removeQuestion(id);
+		try
+		{
+			createQuestion(questClass);
+		}
+		catch (InvalidQuestionClassException e)
+		{
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -312,11 +321,7 @@ public class QuestionManager
 
 	public QuestionStatus getStatus(String questId)
 	{
-		YesNoQuestion quest = _questionsById.get(questId);
-		synchronized (_questionProperties)
-		{
-			return _questionProperties.get(quest).status;
-		}
+		return getStatus(_questionsById.get(questId));
 	}
 
 	public QuestionStatus getStatus(YesNoQuestion quest)
@@ -386,12 +391,38 @@ public class QuestionManager
 			Constructor<? extends YesNoQuestion> ctr = questClass.getConstructor(PrologueData.class, UserCommunicator.class);
 			
 			DelayedHtmlUserCommunicator comm = new DelayedHtmlUserCommunicator(CommonData.MAIN_SERVLET_URL);
-			YesNoQuestion quest = ctr.newInstance(_prologueData, comm);
-			comm.setQuestId(quest.getID());
+			final YesNoQuestion quest = ctr.newInstance(_prologueData, comm);
+			final String questId = quest.getID();
+			comm.setQuestId(questId);
 			
 			_questionProperties.put(quest, new YesNoQuestionProperties(quest, comm, QuestionStatus.OPEN, new AnsweringThread(quest, this)));
-			_questionsById.put(quest.getID(), quest);
+			_questionsById.put(questId, quest);
 			_questionProperties.get(quest).askingThread.start();
+			
+			if(IResourceWatcher.class.isAssignableFrom(questClass))
+			{
+				ResourceChangedNotifierThread.getDefault().addResourceChangedListener(new IResourceChangedListener()
+					{
+						@Override
+						public void resourceChanged(String resourceId)
+						{
+							ResourceChangedNotifierThread.getDefault().removeResourceChangedListener(this, (IResourceWatcher) quest);
+							restartQuestion(questId);
+						}
+					}, (IResourceWatcher) quest);
+			}
+			else if(questClass.isAnnotationPresent(Automated.class))
+			{
+				ResourceChangedNotifierThread.getDefault().addResourceChangedListener(new IResourceChangedListener()
+					{
+						@Override
+						public void resourceChanged(String resourceId)
+						{
+							ResourceChangedNotifierThread.getDefault().removeResourceChangedListener(this);
+							restartQuestion(questId);
+						}
+					}, new ClockWatcher(1000));
+			}
 		}
 		catch (NoSuchMethodException e)		//if no constructor with Parameters PrologueData, UserCommunicator exists
 		{

@@ -8,9 +8,11 @@ import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.bsi.httpd.PrologueData;
 import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
+import org.akquinet.util.ClockWatcher;
+import org.akquinet.util.ResourceWatcher;
 
 @Interactive
-public class Quest11 implements YesNoQuestion
+public class Quest11 extends ResourceWatcher implements YesNoQuestion
 {
 	private static final long serialVersionUID = -5859273882152739768L;
 	
@@ -20,6 +22,9 @@ public class Quest11 implements YesNoQuestion
 	private Quest11a _q11a;
 	private Quest11b _q11b;
 	private transient ResourceBundle _labels;
+	private boolean _last11aAnswer = false;
+	private ClockWatcher _clockWatcher = new ClockWatcher(1000);
+	private boolean _firstRun = true;
 	
 	public Quest11(PrologueData pd)
 	{
@@ -51,6 +56,9 @@ public class Quest11 implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
+		_firstRun = false;
+		_clockWatcher.resourceChanged();
+		
 		_uc.printHeading3( _labels.getString("name") );
 		_uc.printParagraph( _labels.getString("Q0") );
 
@@ -66,7 +74,8 @@ public class Quest11 implements YesNoQuestion
 		{
 			_uc.println( _labels.getString("L2") );
 			_uc.beginIndent();
-			 	ret = _q11a.answer();
+				_last11aAnswer = _q11a.answer();
+			 	ret = _last11aAnswer;
 			_uc.endIndent();
 		}
 		
@@ -131,5 +140,24 @@ public class Quest11 implements YesNoQuestion
 	public void setUserCommunicator(UserCommunicator uc)
 	{
 		_uc = uc;
+	}
+
+	@Override
+	public String getResourceId()
+	{
+		return "quest." + _id;
+	}
+
+	@Override
+	public boolean resourceChanged()
+	{
+		if(_firstRun)
+		{
+			return false;
+		}
+		else
+		{
+			return _clockWatcher.resourceChanged() && !_last11aAnswer;
+		}
 	}
 }

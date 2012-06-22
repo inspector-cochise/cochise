@@ -1,17 +1,9 @@
 package org.akquinet.util;
 
-public abstract class ResourceWatcher
+public abstract class ResourceWatcher implements IResourceWatcher
 {
-	abstract public String getResourceId();
-
 	/**
-	 * Determines whether the watched resource has changed since the last call of this method or the creation of the watcher if this method has never been called before on this watcher.
-	 * @return true if the watched resource has changed and false otherwise. 
-	 */
-	abstract public boolean resourceChanged();
-	
-	/**
-	 * Two ResourceWatchers are equal if they have the same resourceId.
+	 * Two IResourceWatchers are equal if they have the same resourceId.
 	 */
 	@Override
 	public boolean equals(Object o)
@@ -21,14 +13,14 @@ public abstract class ResourceWatcher
 			return true;
 		}
 		
-		if(!(o instanceof ResourceWatcher))
+		if(o instanceof IResourceWatcher)
 		{
-			return false;
+			IResourceWatcher rhs = (IResourceWatcher) o;
+			return getResourceId().equals(rhs.getResourceId());
 		}
 		else
 		{
-			ResourceWatcher rhs = (ResourceWatcher) o;
-			return getResourceId().equals(rhs.getResourceId());
+			return super.equals(o);
 		}
 	}
 	

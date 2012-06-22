@@ -15,6 +15,7 @@ import org.akquinet.httpd.ConfigFile;
 import org.akquinet.httpd.ParserException;
 import org.akquinet.test.util.ConsoleUserCommunicator;
 import org.akquinet.test.util.RethrowingThread;
+import org.akquinet.util.FileWatcher;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -51,6 +52,8 @@ public class Quest9Test
 				throw new RuntimeException(e);
 			}
 		}
+		
+		FileWatcher.setScriptPath(_userDir + "/testFiles/Quest9/");
 	}
 	
 	public final void testDriver(final String stdIn, final File malformedFile, final File executable, final boolean assertVal, final boolean serverRootNotSet) throws Throwable

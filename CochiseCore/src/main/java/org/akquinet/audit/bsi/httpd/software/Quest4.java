@@ -12,11 +12,12 @@ import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
 import org.akquinet.httpd.ParserException;
 import org.akquinet.httpd.syntax.Directive;
+import org.akquinet.util.IResourceWatcher;
 
 @Interactive
-public class Quest4 extends ModuleHelper implements YesNoQuestion
+public class Quest4 extends ModuleHelper implements YesNoQuestion, IResourceWatcher
 {
-	private static final long serialVersionUID = 7964851911984677797L;
+	private static final long serialVersionUID = 4569945626872848354L;
 	
 	private static final String _id = "Quest4";
 	private transient UserCommunicator _uc = UserCommunicator.getDefault();
@@ -26,6 +27,9 @@ public class Quest4 extends ModuleHelper implements YesNoQuestion
 	private String[] _loadModules;
 	@SuppressWarnings("unused")		//maybe will be used later, having it here now so that it get's serialized
 	private String _explanation = "";
+	private boolean _firstRun = true;
+	
+	private Object _monitor = new Object();
 	
 	private boolean _lastAnswer;
 	
@@ -50,20 +54,29 @@ public class Quest4 extends ModuleHelper implements YesNoQuestion
 		_uc = uc;
 		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 		_lastAnswer = false;
+		
+		_compiledIntoModules = getCompiledIntoModulesList();
+		_loadModules = getLoadModules();
 	}
 
 	@Override
-	public boolean answer()
+	public synchronized boolean answer()
 	{
+		_firstRun = false;
 		_uc.printHeading3( _labels.getString("name") );
 		_uc.printParagraph( _labels.getString("Q0") );
 		
-		if(!reevaluationRequired())
+		if(!reevaluationRequired() && _lastAnswer)
 		{
 			_uc.printAnswer(true, _labels.getString("S1_good"));
 			return true;
 		}
 		
+		synchronized (_monitor)
+		{
+			_compiledIntoModules = getCompiledIntoModulesList();
+			_loadModules = getLoadModules();
+		}
 		
 		_uc.println( _labels.getString("L1") );
 		_uc.println( _labels.getString("L2") );
@@ -123,35 +136,36 @@ public class Quest4 extends ModuleHelper implements YesNoQuestion
 	
 	private boolean reevaluationRequired()
 	{
-		String[] compModulesOld = _compiledIntoModules;
-		String[] loadModulesOld = _loadModules;
-		_compiledIntoModules = getCompiledIntoModulesList();
-		_loadModules = getLoadModules();
+		String[] compModulesOld;
+		String[] loadModulesOld;
 		
-		if(!_lastAnswer)
+		synchronized (_monitor)
 		{
-			return true;
+			compModulesOld = _compiledIntoModules.clone();
+			loadModulesOld = _loadModules.clone();
 		}
+		String[] compiledIntoModules = getCompiledIntoModulesList();
+		String[] loadModules = getLoadModules();
 		
-		if(compModulesOld.length != _compiledIntoModules.length)
+		if(compModulesOld.length !=	compiledIntoModules.length)
 		{
 			return true;
 		}
 		for(int i = 0; i < compModulesOld.length; ++i)
 		{
-			if(!compModulesOld[i].equals( _compiledIntoModules[i]))
+			if(!compModulesOld[i].equals( compiledIntoModules[i]))
 			{
 				return true;
 			}
 		}
 		
-		if(loadModulesOld.length != _loadModules.length)
+		if(loadModulesOld.length != loadModules.length)
 		{
 			return true;
 		}
 		for(int i = 0; i < loadModulesOld.length; ++i)
 		{
-			if(!loadModulesOld[i].equals( _loadModules[i]))
+			if(!loadModulesOld[i].equals( loadModules[i]))
 			{
 				return true;
 			}
@@ -215,5 +229,49 @@ public class Quest4 extends ModuleHelper implements YesNoQuestion
 	public void setUserCommunicator(UserCommunicator uc)
 	{
 		_uc = uc;
+	}
+	
+	@Override
+	public boolean equals(Object o)
+	{
+		if(this == o)
+		{
+			return true;
+		}
+		
+		if(o instanceof IResourceWatcher)
+		{
+			IResourceWatcher rhs = (IResourceWatcher) o;
+			return getResourceId().equals(rhs.getResourceId());
+		}
+		else
+		{
+			return super.equals(o);
+		}
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		return getResourceId().hashCode();
+	}
+
+	@Override
+	public String getResourceId()
+	{
+		return "quest." + _id;
+	}
+
+	@Override
+	public boolean resourceChanged()
+	{
+		if(_firstRun)
+		{
+			return false;
+		}
+		else
+		{
+			return reevaluationRequired();
+		}
 	}
 }

@@ -12,16 +12,18 @@ import org.akquinet.audit.bsi.httpd.PrologueData;
 import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
 import org.akquinet.httpd.syntax.Directive;
+import org.akquinet.util.FileWatcher;
+import org.akquinet.util.ResourceWatcher;
 
 @Interactive
-public class Quest9 implements YesNoQuestion
+public class Quest9 extends ResourceWatcher implements YesNoQuestion
 {
 	private static final long serialVersionUID = -4428911855077358238L;
 	
 	private static final String _id = "Quest9";
 	private transient UserCommunicator _uc = UserCommunicator.getDefault();
 	private ConfigFile _conf;
-	private String _serverRoot;
+	private String _serverRoot = null;
 	private String _commandPath;
 	private String _command9a;
 	private String _command9b;
@@ -32,6 +34,9 @@ public class Quest9 implements YesNoQuestion
 	private transient ResourceBundle _labels;
 	private boolean _highSec;
 	private String _user;
+	private FileWatcher _srvRootWatcher = null;
+	private boolean _resourceChanged = false;
+	private boolean _firstRun = true;
 
 
 	public Quest9(PrologueData pd)
@@ -75,6 +80,13 @@ public class Quest9 implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
+		_firstRun = false;
+		_resourceChanged = false;
+		if(_srvRootWatcher != null)
+		{
+			_srvRootWatcher.resourceChanged();
+		}
+		
 		_uc.printHeading3( _labels.getString("name") );
 		_uc.printParagraph( _labels.getString("Q0") );
 		
@@ -195,7 +207,14 @@ public class Quest9 implements YesNoQuestion
 	public void initialize() throws Exception
 	{
 		_conf.reparse();
-		_serverRoot = getServerRoot();
+		
+		String serverRoot = getServerRoot();
+		if(serverRoot != null && !serverRoot.equals(_serverRoot))
+		{
+			_serverRoot = serverRoot;
+			_srvRootWatcher = new FileWatcher(_serverRoot);
+			_resourceChanged = true;
+		}
 		
 		_user = getApacheStartingUser();
 		if(_command9a != null && _commandPath  != null)
@@ -237,5 +256,26 @@ public class Quest9 implements YesNoQuestion
 	public void setUserCommunicator(UserCommunicator uc)
 	{
 		_uc = uc;
+	}
+
+	@Override
+	public String getResourceId()
+	{
+		return "quest." + _id;
+	}
+
+	@Override
+	public boolean resourceChanged()
+	{
+		if(_firstRun)
+		{
+			return false;
+		}
+		else
+		{
+			boolean ret = _srvRootWatcher.resourceChanged() || _resourceChanged;
+			_resourceChanged = false;
+			return ret;
+		}
 	}
 }

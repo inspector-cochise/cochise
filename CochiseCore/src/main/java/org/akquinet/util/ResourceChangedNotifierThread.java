@@ -1,5 +1,6 @@
 package org.akquinet.util;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -8,11 +9,11 @@ import java.util.Set;
 public class ResourceChangedNotifierThread extends Thread
 {
 	private static ResourceChangedNotifierThread _default = null;
-	private Map<ResourceWatcher, Set<IResourceChangedListener>> _watchersToListeners;
+	private Map<IResourceWatcher, Set<IResourceChangedListener>> _watchersToListeners;
 	
 	private ResourceChangedNotifierThread()
 	{
-		_watchersToListeners = new HashMap<ResourceWatcher, Set<IResourceChangedListener>>();
+		_watchersToListeners = Collections.synchronizedMap(new HashMap<IResourceWatcher, Set<IResourceChangedListener>>());
 		start();
 	}
 	
@@ -23,16 +24,24 @@ public class ResourceChangedNotifierThread extends Thread
 		{
 			while(true)
 			{
+				// clone _watchersToListeners to avoid blocking threads
+				Map<IResourceWatcher, Set<IResourceChangedListener>> watchersToListeners;
 				synchronized (_watchersToListeners)
 				{
-					for(ResourceWatcher watcher : _watchersToListeners.keySet())
+					watchersToListeners = new HashMap<IResourceWatcher, Set<IResourceChangedListener>>();
+					for(IResourceWatcher watcher : _watchersToListeners.keySet())
 					{
-						if(watcher.resourceChanged())
+						watchersToListeners.put(watcher, new HashSet<IResourceChangedListener>(_watchersToListeners.get(watcher)));
+					}
+				}
+				
+				for(IResourceWatcher watcher : watchersToListeners.keySet())
+				{
+					if(watcher.resourceChanged())
+					{
+						for(IResourceChangedListener listener : watchersToListeners.get(watcher))
 						{
-							for(IResourceChangedListener listener : _watchersToListeners.get(watcher))
-							{
-								listener.resourceChanged(watcher.getResourceId());
-							}
+							listener.resourceChanged(watcher.getResourceId());
 						}
 					}
 				}
@@ -60,7 +69,7 @@ public class ResourceChangedNotifierThread extends Thread
 	 * @param listener
 	 * @param watcher
 	 */
-	public void addResourceChangedListener(IResourceChangedListener listener, ResourceWatcher watcher)
+	public void addResourceChangedListener(IResourceChangedListener listener, IResourceWatcher watcher)
 	{
 		synchronized (_watchersToListeners)
 		{
@@ -80,7 +89,7 @@ public class ResourceChangedNotifierThread extends Thread
 	 * @param listener
 	 * @param watcher
 	 */
-	public void removeResourceChangedListener(IResourceChangedListener listener, ResourceWatcher watcher)
+	public void removeResourceChangedListener(IResourceChangedListener listener, IResourceWatcher watcher)
 	{
 		synchronized (_watchersToListeners)
 		{
@@ -100,9 +109,9 @@ public class ResourceChangedNotifierThread extends Thread
 	{
 		synchronized (_watchersToListeners)
 		{
-			Set<ResourceWatcher> toRemove = new HashSet<ResourceWatcher>();
+			Set<IResourceWatcher> toRemove = new HashSet<IResourceWatcher>();
 			
-			for(ResourceWatcher watcher : _watchersToListeners.keySet())
+			for(IResourceWatcher watcher : _watchersToListeners.keySet())
 			{
 				Set<IResourceChangedListener> listeners = _watchersToListeners.get(watcher);
 				if(listeners != null)
@@ -115,18 +124,18 @@ public class ResourceChangedNotifierThread extends Thread
 				}
 			}
 			
-			for(ResourceWatcher watcher : toRemove)
+			for(IResourceWatcher watcher : toRemove)
 			{
 				_watchersToListeners.remove(watcher);
 			}
 		}
 	}
 	
-	public Set<ResourceWatcher> getResourceWatchers()
+	public Set<IResourceWatcher> getResourceWatchers()
 	{
 		synchronized (_watchersToListeners)
 		{
-			return _watchersToListeners.keySet();
+			return new HashSet<IResourceWatcher>(_watchersToListeners.keySet());
 		}
 	}
 	

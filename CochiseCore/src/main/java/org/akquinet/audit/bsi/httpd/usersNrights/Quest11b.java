@@ -37,7 +37,7 @@ public class Quest11b implements YesNoQuestion
 	}
 
 	@Override
-	public boolean answer()
+	public synchronized boolean answer()
 	{
 		_uc.printHeading3( _labels.getString("name") );
 		_uc.printParagraph( _labels.getString("Q0") );

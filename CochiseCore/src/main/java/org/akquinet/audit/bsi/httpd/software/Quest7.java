@@ -13,11 +13,12 @@ import org.akquinet.audit.bsi.httpd.PrologueData;
 import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
 import org.akquinet.httpd.syntax.Directive;
+import org.akquinet.util.ResourceWatcher;
 
 @Interactive
-public class Quest7 implements YesNoQuestion
+public class Quest7 extends ResourceWatcher implements YesNoQuestion
 {
-	private static final long serialVersionUID = -2846870338232644565L;
+	private static final long serialVersionUID = -3971445301087141388L;
 	
 	private static final String _id = "Quest7";
 	private ConfigFile _conf;
@@ -28,8 +29,11 @@ public class Quest7 implements YesNoQuestion
 	private String _explanation = "";
 	private boolean _lastAnswer;
 	private List<String> _problems;
+	private Object _monitor = new Object();
 
 	private boolean _isSetGlobal;
+
+	private boolean _firstRun = true;
 	
 	public Quest7(PrologueData pd)
 	{
@@ -55,8 +59,9 @@ public class Quest7 implements YesNoQuestion
 	}
 
 	@Override
-	public boolean answer()
+	public synchronized boolean answer()
 	{
+		_firstRun = false;
 		_uc.printHeading3( _labels.getString("name") );
 		_uc.printParagraph( _labels.getString("Q0") );
 		
@@ -64,10 +69,32 @@ public class Quest7 implements YesNoQuestion
 		_uc.println( _labels.getString("L1") );
 		_uc.println( _labels.getString("L2") );
 		
-		if(!reevaluationRequired())
+		if(!reevaluationRequired() && _lastAnswer)
 		{
 			_uc.printAnswer(true, _labels.getString("S2_good"));
 			return true;
+		}
+		
+		synchronized (_monitor)
+		{
+			_isSetGlobal = false;
+			List<Directive> dirList = _conf.getAllDirectives("Options");
+			_problems = new LinkedList<String>();
+			
+			for (Directive directive : dirList)
+			{
+				if(!directive.getValue().matches("[ \t]*[Nn]one[ \t]*"))
+				{
+					if(!directive.getValue().matches("[ \t]*-(\\S)*[ \t]*"))	//maybe an option is deactivated
+					{
+						_problems.add(directive.getContainingFile() + ":" + directive.getLinenumber() + ": " + directive.getName() + " " + directive.getValue());
+					}
+				}
+				else if(directive.getSurroundingContexts().get(0) == null)
+				{
+					_isSetGlobal = true;
+				}
+			}
 		}
 		
 		_uc.println(_isSetGlobal ?
@@ -99,12 +126,16 @@ public class Quest7 implements YesNoQuestion
 	
 	private boolean reevaluationRequired()
 	{
-		
-		boolean isSetGlobalOld = _isSetGlobal;
-		_isSetGlobal = false;
-		List<String> problemsOld = _problems;
+		boolean isSetGlobalOld;
+		List<String> problemsOld;
+		synchronized (_monitor)
+		{
+			isSetGlobalOld = _isSetGlobal;
+			problemsOld = _problems == null ? new LinkedList<String>() : _problems;
+		}
+		boolean isSetGlobal = false;
 		List<Directive> dirList = _conf.getAllDirectives("Options");
-		_problems = new LinkedList<String>();
+		List<String> problems = new LinkedList<String>();
 		
 		for (Directive directive : dirList)
 		{
@@ -112,28 +143,23 @@ public class Quest7 implements YesNoQuestion
 			{
 				if(!directive.getValue().matches("[ \t]*-(\\S)*[ \t]*"))	//maybe an option is deactivated
 				{
-					_problems.add(directive.getContainingFile() + ":" + directive.getLinenumber() + ": " + directive.getName() + " " + directive.getValue());
+					problems.add(directive.getContainingFile() + ":" + directive.getLinenumber() + ": " + directive.getName() + " " + directive.getValue());
 				}
 			}
 			else if(directive.getSurroundingContexts().get(0) == null)
 			{
-				_isSetGlobal = true;
+				isSetGlobal = true;
 			}
 		}
 		
-		if(!_lastAnswer)
+		if(isSetGlobalOld != isSetGlobal || problemsOld.size() != problems.size())
 		{
 			return true;
 		}
 		
-		if(isSetGlobalOld != _isSetGlobal || problemsOld.size() != _problems.size())
+		for(int i = 0; i < problems.size(); ++i)
 		{
-			return true;
-		}
-		
-		for(int i = 0; i < _problems.size(); ++i)
-		{
-			if(!_problems.get(i).equals( problemsOld.get(i) ))
+			if(!problems.get(i).equals( problemsOld.get(i) ))
 			{
 				return true;
 			}
@@ -231,5 +257,24 @@ public class Quest7 implements YesNoQuestion
 	public void setUserCommunicator(UserCommunicator uc)
 	{
 		_uc = uc;
+	}
+
+	@Override
+	public String getResourceId()
+	{
+		return "quest." + _id;
+	}
+
+	@Override
+	public boolean resourceChanged()
+	{
+		if(_firstRun)
+		{
+			return false;
+		}
+		else
+		{
+			return reevaluationRequired();
+		}
 	}
 }

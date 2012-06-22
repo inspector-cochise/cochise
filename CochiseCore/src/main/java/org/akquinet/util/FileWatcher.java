@@ -4,17 +4,26 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 
 /**
  * Watches a file (or directory) for changes. Any change of content or permissions are treated as change.
  * For a directory adding data into it will be treated as change. 
  * @author immanuel
  */
-public class FileWatcher extends ResourceWatcher
+public class FileWatcher extends ResourceWatcher implements Serializable
 {
+	private static final long serialVersionUID = -8293181465534551233L;
+	
 	private static final String GETCTIME_SCRIPT = "getCTime.sh";
+	private static String SCRIPT_PATH = "./";
 	private File _watchedFile;
 	private long _ctime;
+	
+	public FileWatcher(String fileToWatch) throws FileNotFoundException
+	{
+		this(new File(fileToWatch));
+	}
 	
 	public FileWatcher(File fileToWatch) throws FileNotFoundException
 	{
@@ -61,7 +70,7 @@ public class FileWatcher extends ResourceWatcher
 	{
 		try
 		{
-			Process p = (new ProcessBuilder(GETCTIME_SCRIPT, file.getAbsolutePath())).start();
+			Process p = (new ProcessBuilder(SCRIPT_PATH + GETCTIME_SCRIPT, file.getAbsolutePath())).start();
 			InputStream stdOut = p.getInputStream();
 
 			boolean wait = true;
@@ -86,11 +95,16 @@ public class FileWatcher extends ResourceWatcher
 				c = stdOut.read();
 			}
 			
-			return Long.parseLong(builder.toString());
+			return Long.parseLong(builder.toString().replaceAll("\n", "").replaceAll("\r", ""));
 		}
 		catch (IOException e)
 		{
 			throw new RuntimeException(e);
 		}
+	}
+	
+	public static void setScriptPath(String scriptPath)
+	{
+		SCRIPT_PATH = scriptPath;
 	}
 }
