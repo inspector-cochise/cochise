@@ -7,12 +7,12 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import org.akquinet.audit.Automated;
+import org.akquinet.audit.Interactive;
 import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.bsi.httpd.PrologueData;
 import org.akquinet.audit.ui.UserCommunicator;
 
-@Automated
+@Interactive
 public class Quest2 implements YesNoQuestion
 {
 	private static final long serialVersionUID = 8204295563575476314L;
