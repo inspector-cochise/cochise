@@ -105,6 +105,13 @@ public class QuestStatusServlet extends HttpServlet
 		{
 			response.getWriter().print("true");
 		}
+		else if (action.equals("isStale"))
+		{
+			if(QuestionManager.getDefault().isStale(request.getParameter("quest")))
+			{
+				response.getWriter().print("true");
+			}
+		}
 	}
 
 	/**

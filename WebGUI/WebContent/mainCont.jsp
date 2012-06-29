@@ -39,6 +39,7 @@
 	else
 	{
 		%>
+		<div id="messages" class="bad"></div>
 		<div class="flush-right">
 			<input type="button" value="<%= ResourceBundle.getBundle("site", Locale.getDefault()).getString("restartQuestionButton") %>" onclick="restartQuestion();" />
 			<input type="button" value="<%= ResourceBundle.getBundle("site", Locale.getDefault()).getString("restartAllQuestionsButton") %>" onclick="restartAllQuestions();" />

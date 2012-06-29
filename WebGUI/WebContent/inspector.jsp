@@ -20,6 +20,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Inspector-Cochise</title>
 <link rel="stylesheet" href="style/style.css" type="text/css" />
+<script language="javascript" src="script/i18n_de.js"></script>
 <script language="javascript" src="script/jquery-1.7.1.js"></script>
 <script language="javascript" src="script/hubu.js"></script>
 <script language="javascript" src="script/disclosure.js"></script>

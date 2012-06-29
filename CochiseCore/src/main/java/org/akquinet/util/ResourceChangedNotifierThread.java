@@ -85,6 +85,18 @@ public class ResourceChangedNotifierThread extends Thread
 	}
 	
 	/**
+	 * Don't evaluate that watcher anymore. All it's listeners will be removed too.
+	 * @param watcher
+	 */
+	public void removeResourceWatcher(IResourceWatcher watcher)
+	{
+		synchronized (_watchersToListeners)
+		{
+			_watchersToListeners.remove(watcher);
+		}
+	}
+	
+	/**
 	 * Remove listener from being invoked when watcher detects a change on it's resource.
 	 * @param listener
 	 * @param watcher
@@ -130,6 +142,7 @@ public class ResourceChangedNotifierThread extends Thread
 			}
 		}
 	}
+	
 	
 	public Set<IResourceWatcher> getResourceWatchers()
 	{

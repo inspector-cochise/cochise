@@ -52,6 +52,7 @@ public class QuestionManager
 	private PrologueData _prologueData;
 	private HashMap<String, YesNoQuestion> _questionsById;
 	private HashMap<YesNoQuestion, YesNoQuestionProperties> _questionProperties;
+	private HashSet<String> _isStale;
 	private boolean _configured = false;
 
 	private QuestionManager()
@@ -59,6 +60,7 @@ public class QuestionManager
 		_questionProperties = new HashMap<YesNoQuestion, YesNoQuestionProperties>();
 		_questionsById = new HashMap<String, YesNoQuestion>();
 		_mainContentId = CommonData.PROLOGUE_ID;
+		_isStale = new HashSet<String>();
 	}
 
 	public static QuestionManager getDefault()
@@ -386,6 +388,53 @@ public class QuestionManager
 	 */
 	private void createQuestion(Class<? extends YesNoQuestion> questClass) throws InvalidQuestionClassException
 	{
+		YesNoQuestionProperties questProperties = createProperties(questClass);
+		
+		final YesNoQuestion quest = questProperties.quest;
+		final String questId = quest.getID();
+		
+		_questionProperties.put(quest, questProperties);
+		_questionsById.put(questId, quest);
+		questProperties.askingThread.start();
+		
+		synchronized (_isStale)
+		{
+			_isStale.remove(questId);
+		}
+		
+		if(IResourceWatcher.class.isAssignableFrom(questClass))
+		{
+			ResourceChangedNotifierThread.getDefault().addResourceChangedListener(new IResourceChangedListener()
+			{
+				@Override
+				public void resourceChanged(String resourceId)
+				{
+					synchronized(_isStale)
+					{
+						_isStale.add(questId);
+					}
+				}
+			}, (IResourceWatcher) quest);
+		}
+		//TODO automated questions
+		else if(questClass.isAnnotationPresent(Automated.class))
+		{
+			ResourceChangedNotifierThread.getDefault().addResourceChangedListener(new IResourceChangedListener()
+			{
+				@Override
+				public void resourceChanged(String resourceId)
+				{
+					synchronized(_isStale)
+					{
+						_isStale.add(questId);
+					}
+				}
+			}, new ClockWatcher(1000));
+		}
+	}
+	
+	private YesNoQuestionProperties createProperties(Class<? extends YesNoQuestion> questClass) throws InvalidQuestionClassException
+	{
 		try
 		{
 			Constructor<? extends YesNoQuestion> ctr = questClass.getConstructor(PrologueData.class, UserCommunicator.class);
@@ -395,34 +444,9 @@ public class QuestionManager
 			final String questId = quest.getID();
 			comm.setQuestId(questId);
 			
-			_questionProperties.put(quest, new YesNoQuestionProperties(quest, comm, QuestionStatus.OPEN, new AnsweringThread(quest, this)));
-			_questionsById.put(questId, quest);
-			_questionProperties.get(quest).askingThread.start();
+			YesNoQuestionProperties questProperties = new YesNoQuestionProperties(quest, comm, QuestionStatus.OPEN, new AnsweringThread(quest, this));
 			
-			if(IResourceWatcher.class.isAssignableFrom(questClass))
-			{
-				ResourceChangedNotifierThread.getDefault().addResourceChangedListener(new IResourceChangedListener()
-					{
-						@Override
-						public void resourceChanged(String resourceId)
-						{
-							ResourceChangedNotifierThread.getDefault().removeResourceChangedListener(this, (IResourceWatcher) quest);
-							restartQuestion(questId);
-						}
-					}, (IResourceWatcher) quest);
-			}
-			else if(questClass.isAnnotationPresent(Automated.class))
-			{
-				ResourceChangedNotifierThread.getDefault().addResourceChangedListener(new IResourceChangedListener()
-					{
-						@Override
-						public void resourceChanged(String resourceId)
-						{
-							ResourceChangedNotifierThread.getDefault().removeResourceChangedListener(this);
-							restartQuestion(questId);
-						}
-					}, new ClockWatcher(1000));
-			}
+			return questProperties;
 		}
 		catch (NoSuchMethodException e)		//if no constructor with Parameters PrologueData, UserCommunicator exists
 		{
@@ -452,6 +476,11 @@ public class QuestionManager
 		if(quest == null)
 		{
 			return;
+		}
+		
+		if(IResourceWatcher.class.isAssignableFrom(quest.getClass()))
+		{
+			ResourceChangedNotifierThread.getDefault().removeResourceWatcher((IResourceWatcher) quest);
 		}
 		
 		_questionsById.remove(questId);
@@ -510,5 +539,13 @@ public class QuestionManager
 		}
 		
 		return ret;
+	}
+
+	public boolean isStale(String questId)
+	{
+		synchronized(_isStale)
+		{
+			return _isStale.contains(questId == null ? _mainContentId : questId);
+		}
 	}
 }
