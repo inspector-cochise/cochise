@@ -126,6 +126,15 @@ public class Quest7 extends ResourceWatcher implements YesNoQuestion
 	
 	private boolean reevaluationRequired()
 	{
+		try
+		{
+			initialize();
+		}
+		catch (Exception e)
+		{
+			throw new RuntimeException(e);
+		}
+		
 		boolean isSetGlobalOld;
 		List<String> problemsOld;
 		synchronized (_monitor)

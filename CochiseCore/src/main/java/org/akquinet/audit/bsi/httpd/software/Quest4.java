@@ -136,6 +136,15 @@ public class Quest4 extends ModuleHelper implements YesNoQuestion, IResourceWatc
 	
 	private boolean reevaluationRequired()
 	{
+		try
+		{
+			initialize();
+		}
+		catch (Exception e)
+		{
+			throw new RuntimeException(e);
+		}
+		
 		String[] compModulesOld;
 		String[] loadModulesOld;
 		

@@ -7,12 +7,14 @@ import org.akquinet.audit.Automated;
 import org.akquinet.audit.ShellAnsweredQuestion;
 import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.bsi.httpd.PrologueData;
+import org.akquinet.audit.ui.DevNullUserCommunicator;
 import org.akquinet.audit.ui.UserCommunicator;
+import org.akquinet.util.ResourceWatcher;
 
 @Automated
-public class Quest1 implements YesNoQuestion
+public class Quest1 extends ResourceWatcher implements YesNoQuestion
 {
-	private static final long serialVersionUID = 9074291296326017374L;
+	private static final long serialVersionUID = -1576174569449307817L;
 	
 	private static final String _id = "Quest1";
 	private boolean _highSecReq;
@@ -20,6 +22,7 @@ public class Quest1 implements YesNoQuestion
 	private String _commandPath;
 	private String _command;
 	private transient ResourceBundle _labels;
+	private boolean _lastAnswer = false;
 
 	public Quest1(PrologueData pd)
 	{
@@ -77,11 +80,13 @@ public class Quest1 implements YesNoQuestion
 			_uc.printExample( _labels.getString("S4") );
 			_uc.endHidingParagraph();
 			
+			_lastAnswer = ret;
 			return ret;
 		}
 		else
 		{
 			_uc.println( _labels.getString("S5") );
+			_lastAnswer = true;
 			return true;
 		}
 	}
@@ -139,5 +144,31 @@ public class Quest1 implements YesNoQuestion
 	public void setUserCommunicator(UserCommunicator uc)
 	{
 		_uc = uc;
+	}
+
+	@Override
+	public String getResourceId()
+	{
+		return "quest." + _id;
+	}
+
+	@Override
+	public boolean resourceChanged()
+	{
+		UserCommunicator backupUC = _uc;
+		_uc = new DevNullUserCommunicator();
+		
+		boolean answer = answer();
+		
+		_uc = backupUC;
+		
+		if(!answer && answer != _lastAnswer)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 }
