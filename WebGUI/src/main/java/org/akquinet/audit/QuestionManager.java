@@ -416,21 +416,6 @@ public class QuestionManager
 				}
 			}, (IResourceWatcher) quest);
 		}
-		//TODO automated questions
-		else if(questClass.isAnnotationPresent(Automated.class))
-		{
-			ResourceChangedNotifierThread.getDefault().addResourceChangedListener(new IResourceChangedListener()
-			{
-				@Override
-				public void resourceChanged(String resourceId)
-				{
-					synchronized(_isStale)
-					{
-						_isStale.add(questId);
-					}
-				}
-			}, new ClockWatcher(1000));
-		}
 	}
 	
 	private YesNoQuestionProperties createProperties(Class<? extends YesNoQuestion> questClass) throws InvalidQuestionClassException
