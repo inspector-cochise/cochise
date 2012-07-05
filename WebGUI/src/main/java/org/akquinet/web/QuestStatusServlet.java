@@ -18,8 +18,6 @@ import org.akquinet.audit.QuestionManager;
 @WebServlet("/qStat.jsp")
 public class QuestStatusServlet extends HttpServlet
 {
-	private static final String ACTION_IS_AVAILABLE = "isAvailable";
-	private static final String ACTION_QUEST_STATUS = "questStatus";
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -45,7 +43,7 @@ public class QuestStatusServlet extends HttpServlet
 				|| !session.getAttribute("runId").equals(CommonData.RUN_ID)
 			)
 		{
-			if(action != null && action.equals(ACTION_IS_AVAILABLE))
+			if(action != null && action.equals(CommonData.ACTION_IS_AVAILABLE))
 			{
 				response.getWriter().print("false");
 			}
@@ -56,7 +54,7 @@ public class QuestStatusServlet extends HttpServlet
 			return;
 		}
 		
-		if(action == null || action.equals(ACTION_QUEST_STATUS))
+		if(action == null || action.equals(CommonData.ACTION_QUEST_STATUS))
 		{
 			if(requestedId == null)
 			{
@@ -101,15 +99,19 @@ public class QuestStatusServlet extends HttpServlet
 				}
 			}
 		}
-		if(action.equals(ACTION_IS_AVAILABLE))
+		if(action.equals(CommonData.ACTION_IS_AVAILABLE))
 		{
 			response.getWriter().print("true");
 		}
-		else if (action.equals("isStale"))
+		else if (action.equals(CommonData.ACTION_IS_STALE))
 		{
 			if(QuestionManager.getDefault().isStale(request.getParameter("quest")))
 			{
 				response.getWriter().print("true");
+			}
+			else
+			{
+				response.getWriter().print("false");
 			}
 		}
 	}

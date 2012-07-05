@@ -8,6 +8,9 @@ public class CommonData
 	public static final String ACTION_RESTART_ALL_QUESTIONS = "restartAllQuestions";
 	public static final String ACTION_SETTINGS = "settings";
 	public static final String ACTION_ANSWER = "answer";
+	public static final String ACTION_IS_STALE = "isStale";
+	public static final String ACTION_IS_AVAILABLE = "isAvailable";
+	public static final String ACTION_QUEST_STATUS = "questStatus";
 
 	public static final String MAIN_SERVLET_URL = "inspector.jsp";
 	public static final String LOGIN_SERVLET_URL = "login.jsp";
