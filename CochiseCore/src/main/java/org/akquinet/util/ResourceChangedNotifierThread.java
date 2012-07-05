@@ -10,6 +10,7 @@ public class ResourceChangedNotifierThread extends Thread
 {
 	private static ResourceChangedNotifierThread _default = null;
 	private Map<IResourceWatcher, Set<IResourceChangedListener>> _watchersToListeners;
+	private boolean _watchersSetShrinked = false;
 	
 	private ResourceChangedNotifierThread()
 	{
@@ -24,26 +25,38 @@ public class ResourceChangedNotifierThread extends Thread
 		{
 			while(true)
 			{
-				// clone _watchersToListeners to avoid blocking threads
-				Map<IResourceWatcher, Set<IResourceChangedListener>> watchersToListeners;
-				synchronized (_watchersToListeners)
+				try
 				{
-					watchersToListeners = new HashMap<IResourceWatcher, Set<IResourceChangedListener>>();
-					for(IResourceWatcher watcher : _watchersToListeners.keySet())
+					// clone _watchersToListeners to avoid blocking threads
+					Map<IResourceWatcher, Set<IResourceChangedListener>> watchersToListeners;
+					synchronized (_watchersToListeners)
 					{
-						watchersToListeners.put(watcher, new HashSet<IResourceChangedListener>(_watchersToListeners.get(watcher)));
-					}
-				}
-				
-				for(IResourceWatcher watcher : watchersToListeners.keySet())
-				{
-					if(watcher.resourceChanged())
-					{
-						for(IResourceChangedListener listener : watchersToListeners.get(watcher))
+						watchersToListeners = new HashMap<IResourceWatcher, Set<IResourceChangedListener>>();
+						for(IResourceWatcher watcher : _watchersToListeners.keySet())
 						{
-							listener.resourceChanged(watcher.getResourceId());
+							watchersToListeners.put(watcher, new HashSet<IResourceChangedListener>(_watchersToListeners.get(watcher)));
+						}
+						_watchersSetShrinked = false;
+					}
+					
+					for(IResourceWatcher watcher : watchersToListeners.keySet())
+					{
+						if(_watchersSetShrinked)
+						{
+							break;
+						}
+						if(watcher.resourceChanged())
+						{
+							for(IResourceChangedListener listener : watchersToListeners.get(watcher))
+							{
+								listener.resourceChanged(watcher.getResourceId());
+							}
 						}
 					}
+				}
+				catch(RuntimeException e)
+				{
+					//TODO maybe log this exception
 				}
 				Thread.sleep(500);
 			}
@@ -92,6 +105,7 @@ public class ResourceChangedNotifierThread extends Thread
 	{
 		synchronized (_watchersToListeners)
 		{
+			_watchersSetShrinked = true;
 			_watchersToListeners.remove(watcher);
 		}
 	}
@@ -105,6 +119,7 @@ public class ResourceChangedNotifierThread extends Thread
 	{
 		synchronized (_watchersToListeners)
 		{
+			_watchersSetShrinked = true;
 			Set<IResourceChangedListener> listeners = _watchersToListeners.get(watcher);
 			if(listeners != null)
 			{
@@ -121,6 +136,7 @@ public class ResourceChangedNotifierThread extends Thread
 	{
 		synchronized (_watchersToListeners)
 		{
+			_watchersSetShrinked = true;
 			Set<IResourceWatcher> toRemove = new HashSet<IResourceWatcher>();
 			
 			for(IResourceWatcher watcher : _watchersToListeners.keySet())
