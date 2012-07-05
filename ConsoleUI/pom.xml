@@ -2,18 +2,18 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>Cochise</groupId>
   <artifactId>ConsoleUI</artifactId>
-  <version>0.3.0-RC1</version>
+  <version>0.3.1</version>
   
   <dependencies>
     <dependency>
       <groupId>ApacheConfigParser</groupId>
       <artifactId>ApacheConfigParser</artifactId>
-      <version>0.2.0</version>
+      <version>0.2.1</version>
     </dependency>
     <dependency>
       <groupId>Cochise</groupId>
       <artifactId>CochiseCore</artifactId>
-      <version>0.3.0-RC1</version>
+      <version>0.3.1</version>
     </dependency>
     <dependency>
     	<groupId>junit</groupId>
