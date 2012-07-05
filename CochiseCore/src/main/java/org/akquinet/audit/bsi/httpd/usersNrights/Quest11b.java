@@ -63,10 +63,10 @@ public class Quest11b extends ResourceWatcher implements YesNoQuestion
 			{
 				for(String s : new String[] {"order", "allow", "deny"})
 				{
-					boolean r = checkForConditionallyActives(s);
+					boolean r = checkForConditionallyActives(s, uc);
 					if(!r)
 					{
-						printHidingParagraph();
+						printHidingParagraph(uc);
 						return r;
 					}
 				}
@@ -101,7 +101,7 @@ public class Quest11b extends ResourceWatcher implements YesNoQuestion
 				Directive deny = denyList.get(0);
 				// fast evaluation ensures, that only one of these methods can
 				// output an answer-message
-				if (orderIsOK(order) && denyIsOK(deny))
+				if (orderIsOK(order, uc) && denyIsOK(deny, uc))
 				{
 					uc.printAnswer(true, _labels.getString("S2"));
 					ret = true;
@@ -140,15 +140,15 @@ public class Quest11b extends ResourceWatcher implements YesNoQuestion
 			}
 		}
 
-		printHidingParagraph();
+		printHidingParagraph(uc);
 		return ret;
 	}
 
-	private void printHidingParagraph()
+	private void printHidingParagraph(UserCommunicator uc)
 	{
-		_uc.beginHidingParagraph(_labels.getString("S7"));
-			_uc.printParagraph(_labels.getString("P1"));
-			_uc.printExample("<VirtualHost *:80>\n" +
+		uc.beginHidingParagraph(_labels.getString("S7"));
+			uc.printParagraph(_labels.getString("P1"));
+			uc.printExample("<VirtualHost *:80>\n" +
 								"\t<some_other_context>\n" +
 									"\t\t<Directory />\n" +
 										"\t\t\tOrder Deny,Allow\n" +
@@ -156,11 +156,11 @@ public class Quest11b extends ResourceWatcher implements YesNoQuestion
 									"\t\t</Directory>\n" +
 								"\t</some_other_context>\n" +
 							  "</VirtualHost>");
-			_uc.printParagraph(_labels.getString("P2"));
-		_uc.endHidingParagraph();
+			uc.printParagraph(_labels.getString("P2"));
+		uc.endHidingParagraph();
 	}
 
-	private boolean checkForConditionallyActives(String directiveType)
+	private boolean checkForConditionallyActives(String directiveType, UserCommunicator uc)
 	{
 		List<Directive> dirList = _conf.getAllDirectivesIgnoreCase(directiveType);
 		for (Directive dir : dirList)
@@ -171,14 +171,14 @@ public class Quest11b extends ResourceWatcher implements YesNoQuestion
 			   dir.getSurroundingContexts().get(1) != null
 			   )
 			{
-				_uc.printAnswer(false, MessageFormat.format(_labels.getString("S4"), dir.getLinenumber(), dir.getContainingFile()) );
+				uc.printAnswer(false, MessageFormat.format(_labels.getString("S4"), dir.getLinenumber(), dir.getContainingFile()) );
 				return false;
 			}
 		}
 		return true;
 	}
 
-	private boolean denyIsOK(Directive deny)
+	private boolean denyIsOK(Directive deny, UserCommunicator uc)
 	{
 		if( ! deny.getSurroundingContexts().get(0).getName().equalsIgnoreCase("Directory") ||
 			! deny.getSurroundingContexts().get(0).getValue().trim().equals("/")
@@ -193,13 +193,13 @@ public class Quest11b extends ResourceWatcher implements YesNoQuestion
 		}
 		else
 		{
-			_uc.printAnswer(false, _labels.getString("S5"));
-			_uc.println(deny.getContainingFile() + ":" + deny.getLinenumber() + ": " + deny.getName() + " " + deny.getValue());
+			uc.printAnswer(false, _labels.getString("S5"));
+			uc.println(deny.getContainingFile() + ":" + deny.getLinenumber() + ": " + deny.getName() + " " + deny.getValue());
 			return false;
 		}
 	}
 
-	private boolean orderIsOK(Directive order)
+	private boolean orderIsOK(Directive order, UserCommunicator uc)
 	{
 		if( ! order.getSurroundingContexts().get(0).getName().equalsIgnoreCase("Directory") ||
 			! order.getSurroundingContexts().get(0).getValue().trim().equals("/")
@@ -214,8 +214,8 @@ public class Quest11b extends ResourceWatcher implements YesNoQuestion
 		}
 		else
 		{
-			_uc.printAnswer(false, _labels.getString("S6"));
-			_uc.println(order.getContainingFile() + ":" + order.getLinenumber() + ": " + order.getName() + " " + order.getValue());
+			uc.printAnswer(false, _labels.getString("S6"));
+			uc.println(order.getContainingFile() + ":" + order.getLinenumber() + ": " + order.getName() + " " + order.getValue());
 			return false;
 		}
 	}
