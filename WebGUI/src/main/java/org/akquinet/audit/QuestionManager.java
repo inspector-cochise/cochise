@@ -30,7 +30,6 @@ import org.akquinet.audit.ui.DelayedHtmlUserCommunicator;
 import org.akquinet.audit.ui.DelayedHtmlUserCommunicator.InputState;
 import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
-import org.akquinet.util.ClockWatcher;
 import org.akquinet.util.IResourceChangedListener;
 import org.akquinet.util.IResourceWatcher;
 import org.akquinet.util.ResourceChangedNotifierThread;
@@ -400,22 +399,23 @@ public class QuestionManager
 		synchronized (_isStale)
 		{
 			_isStale.remove(questId);
+			
+			if(IResourceWatcher.class.isAssignableFrom(questClass))
+			{
+				ResourceChangedNotifierThread.getDefault().addResourceChangedListener(new IResourceChangedListener()
+				{
+					@Override
+					public void resourceChanged(String resourceId)
+					{
+						synchronized(_isStale)
+						{
+							_isStale.add(questId);
+						}
+					}
+				}, (IResourceWatcher) quest);
+			}
 		}
 		
-		if(IResourceWatcher.class.isAssignableFrom(questClass))
-		{
-			ResourceChangedNotifierThread.getDefault().addResourceChangedListener(new IResourceChangedListener()
-			{
-				@Override
-				public void resourceChanged(String resourceId)
-				{
-					synchronized(_isStale)
-					{
-						_isStale.add(questId);
-					}
-				}
-			}, (IResourceWatcher) quest);
-		}
 	}
 	
 	private YesNoQuestionProperties createProperties(Class<? extends YesNoQuestion> questClass) throws InvalidQuestionClassException
