@@ -13,12 +13,14 @@ import org.akquinet.audit.ModuleHelper;
 import org.akquinet.audit.ShellAnsweredQuestion;
 import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.bsi.httpd.PrologueData;
+import org.akquinet.audit.ui.DevNullUserCommunicator;
 import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
 import org.akquinet.httpd.syntax.Directive;
+import org.akquinet.util.IResourceWatcher;
 
 @Automated
-public class Quest10 extends ModuleHelper implements YesNoQuestion
+public class Quest10 extends ModuleHelper implements YesNoQuestion, IResourceWatcher
 {
 	private static final long serialVersionUID = 7570966044840051414L;
 	
@@ -28,6 +30,8 @@ public class Quest10 extends ModuleHelper implements YesNoQuestion
 	private String _commandPath;
 	private String _command;
 	private transient ResourceBundle _labels;
+
+	private boolean _lastAnswer = false;
 
 	public Quest10(PrologueData pd)
 	{
@@ -66,28 +70,34 @@ public class Quest10 extends ModuleHelper implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		_uc.printHeading3( _labels.getString("name") );
-		_uc.printParagraph( _labels.getString("Q0") );
+		_lastAnswer = answer(_uc);
+		return _lastAnswer;
+	}
+
+	private boolean answer(UserCommunicator uc)
+	{
+		uc.printHeading3( _labels.getString("name") );
+		uc.printParagraph( _labels.getString("Q0") );
 		
 		
-		_uc.println( _labels.getString("L1") );
+		uc.println( _labels.getString("L1") );
 		
 		Set<String> probs = lookForProblems(PERMISSION_PATTERN);
 		boolean ret = probs.isEmpty();;
 
 		if(!ret)
 		{
-			_uc.println( _labels.getString("L2") );
+			uc.println( _labels.getString("L2") );
 			
 			StringBuilder problemList = new StringBuilder();
 			for (String str : probs)
 			{
 				problemList = problemList.append(str).append('\n');
 			}
-			_uc.printExample(problemList.toString());
+			uc.printExample(problemList.toString());
 		}
 		
-		_uc.printAnswer(ret, ret ?  _labels.getString("S1_good") 
+		uc.printAnswer(ret, ret ?  _labels.getString("S1_good") 
 							:  _labels.getString("S1_bad") );
 		
 		return ret;
@@ -192,5 +202,54 @@ public class Quest10 extends ModuleHelper implements YesNoQuestion
 	public void setUserCommunicator(UserCommunicator uc)
 	{
 		_uc = uc;
+	}
+	
+	@Override
+	public String getResourceId()
+	{
+		return "quest." + _id;
+	}
+
+	@Override
+	public boolean resourceChanged()
+	{
+		boolean answer = answer(new DevNullUserCommunicator());
+		
+		if(!answer && answer != _lastAnswer)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
+	/**
+	 * Two IResourceWatchers are equal if they have the same resourceId.
+	 */
+	@Override
+	public boolean equals(Object o)
+	{
+		if(this == o)
+		{
+			return true;
+		}
+		
+		if(o instanceof IResourceWatcher)
+		{
+			IResourceWatcher rhs = (IResourceWatcher) o;
+			return getResourceId().equals(rhs.getResourceId());
+		}
+		else
+		{
+			return super.equals(o);
+		}
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		return getResourceId().hashCode();
 	}
 }

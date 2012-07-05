@@ -9,18 +9,22 @@ import org.akquinet.audit.Automated;
 import org.akquinet.audit.ModuleHelper;
 import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.bsi.httpd.PrologueData;
+import org.akquinet.audit.ui.DevNullUserCommunicator;
 import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
 import org.akquinet.httpd.syntax.Directive;
+import org.akquinet.util.IResourceWatcher;
 
 @Automated
-public class Quest3 extends ModuleHelper implements YesNoQuestion
+public class Quest3 extends ModuleHelper implements YesNoQuestion, IResourceWatcher
 {
 	private static final long serialVersionUID = -994168432495652020L;
 	
 	private static final String _id = "Quest3";
 	private transient UserCommunicator _uc = UserCommunicator.getDefault();
 	private transient ResourceBundle _labels;
+
+	private boolean _lastAnswer = false;
 	
 	public Quest3(PrologueData pd)
 	{
@@ -47,6 +51,12 @@ public class Quest3 extends ModuleHelper implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
+		_lastAnswer = answer(_uc);
+		return _lastAnswer;
+	}
+
+	private boolean answer(UserCommunicator _uc)
+	{
 		_uc.printHeading3( _labels.getString("name") );
 		_uc.printParagraph( _labels.getString("Q0") );
 
@@ -63,10 +73,22 @@ public class Quest3 extends ModuleHelper implements YesNoQuestion
 			if(arguments[0].equals("security2_module"))
 			{
 				Directive modSec = directive;
-				_uc.printAnswer(true, _labels.getString("S1"));
-				_uc.printExample(modSec.getContainingFile() + ":" + modSec.getLinenumber() + ": " + modSec.getName() + " " + modSec.getValue());
+				boolean ret;
+				if(!modSec.isGlobal())
+				{
+					_uc.println(_labels.getString("S6"));
+					_uc.printExample(modSec.getContainingFile() + ":" + modSec.getLinenumber() + ": " + modSec.getName() + " " + modSec.getValue());
+					_uc.printAnswer(false, _labels.getString("S7"));
+					ret = false;
+				}
+				else
+				{
+					_uc.printAnswer(true, _labels.getString("S1"));
+					_uc.printExample(modSec.getContainingFile() + ":" + modSec.getLinenumber() + ": " + modSec.getName() + " " + modSec.getValue());
+					ret = true;
+				}
 				_uc.printHidingParagraph(_labels.getString("S4"), _labels.getString("S5"));
-				return true;
+				return ret;
 			}
 			
 		}
@@ -144,5 +166,54 @@ public class Quest3 extends ModuleHelper implements YesNoQuestion
 	public void setUserCommunicator(UserCommunicator uc)
 	{
 		_uc = uc;
+	}
+	
+	@Override
+	public String getResourceId()
+	{
+		return "quest." + _id;
+	}
+
+	@Override
+	public boolean resourceChanged()
+	{
+		boolean answer = answer(new DevNullUserCommunicator());
+		
+		if(!answer && answer != _lastAnswer)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
+	/**
+	 * Two IResourceWatchers are equal if they have the same resourceId.
+	 */
+	@Override
+	public boolean equals(Object o)
+	{
+		if(this == o)
+		{
+			return true;
+		}
+		
+		if(o instanceof IResourceWatcher)
+		{
+			IResourceWatcher rhs = (IResourceWatcher) o;
+			return getResourceId().equals(rhs.getResourceId());
+		}
+		else
+		{
+			return super.equals(o);
+		}
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		return getResourceId().hashCode();
 	}
 }

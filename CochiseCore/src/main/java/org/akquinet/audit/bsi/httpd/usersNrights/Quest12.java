@@ -6,11 +6,13 @@ import java.util.ResourceBundle;
 import org.akquinet.audit.Automated;
 import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.bsi.httpd.PrologueData;
+import org.akquinet.audit.ui.DevNullUserCommunicator;
 import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
+import org.akquinet.util.ResourceWatcher;
 
 @Automated
-public class Quest12 implements YesNoQuestion
+public class Quest12 extends ResourceWatcher implements YesNoQuestion
 {
 	private static final long serialVersionUID = 5225915545021155768L;
 	
@@ -20,6 +22,8 @@ public class Quest12 implements YesNoQuestion
 	private Quest12a _q12a;
 	private Quest12b _q12b;
 	private transient ResourceBundle _labels;
+
+	private boolean _lastAnswer = false;
 	
 	public Quest12(PrologueData pd)
 	{
@@ -57,26 +61,32 @@ public class Quest12 implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		_uc.printHeading3( _labels.getString("name") );
-		_uc.printParagraph( _labels.getString("Q0") );
+		_lastAnswer = answer(_uc);
+		return _lastAnswer;
+	}
+
+	private boolean answer(UserCommunicator uc)
+	{
+		uc.printHeading3( _labels.getString("name") );
+		uc.printParagraph( _labels.getString("Q0") );
 		
 		
-		_uc.println( _labels.getString("L1") );
-		_uc.printHidingParagraph( _labels.getString("S0"), _labels.getString("P1") );
+		uc.println( _labels.getString("L1") );
+		uc.printHidingParagraph( _labels.getString("S0"), _labels.getString("P1") );
 		
-		_uc.beginIndent();
+		uc.beginIndent();
 			boolean ret = _q12b.answer();
-		_uc.endIndent();
+		uc.endIndent();
 		if(!ret)
 		{
-			_uc.println( _labels.getString("L2") );
-			_uc.beginIndent();
+			uc.println( _labels.getString("L2") );
+			uc.beginIndent();
 				ret = _q12a.answer();
-			_uc.endIndent();
+			uc.endIndent();
 		}
 		
-		_uc.println(_labels.getString("S2") + " " + _labels.getString("name"));
-		_uc.printAnswer(ret, ret ?
+		uc.println(_labels.getString("S2") + " " + _labels.getString("name"));
+		uc.printAnswer(ret, ret ?
 				 	  _labels.getString("S1_good") 
 					: _labels.getString("S1_bad") );
 		return ret;
@@ -136,5 +146,27 @@ public class Quest12 implements YesNoQuestion
 	public void setUserCommunicator(UserCommunicator uc)
 	{
 		_uc = uc;
+	}
+	
+	@Override
+	public String getResourceId()
+	{
+		return "quest." + _id;
+	}
+
+	@Override
+	public boolean resourceChanged()
+	{
+		//this is just a not so intelligent dummy-solution
+		boolean answer = answer(new DevNullUserCommunicator());
+		
+		if(!answer && answer != _lastAnswer)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 }
