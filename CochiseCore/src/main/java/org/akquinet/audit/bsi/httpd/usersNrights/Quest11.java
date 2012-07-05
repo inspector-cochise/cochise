@@ -8,7 +8,6 @@ import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.bsi.httpd.PrologueData;
 import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
-import org.akquinet.util.ClockWatcher;
 import org.akquinet.util.ResourceWatcher;
 
 @Interactive
@@ -23,7 +22,6 @@ public class Quest11 extends ResourceWatcher implements YesNoQuestion
 	private Quest11b _q11b;
 	private transient ResourceBundle _labels;
 	private boolean _last11aAnswer = false;
-	private ClockWatcher _clockWatcher = new ClockWatcher(1000);
 	private boolean _firstRun = true;
 	
 	public Quest11(PrologueData pd)
@@ -57,7 +55,6 @@ public class Quest11 extends ResourceWatcher implements YesNoQuestion
 	public boolean answer()
 	{
 		_firstRun = false;
-		_clockWatcher.resourceChanged();
 		
 		_uc.printHeading3( _labels.getString("name") );
 		_uc.printParagraph( _labels.getString("Q0") );
@@ -157,7 +154,7 @@ public class Quest11 extends ResourceWatcher implements YesNoQuestion
 		}
 		else
 		{
-			return _clockWatcher.resourceChanged() && !_last11aAnswer;
+			return _q11b.resourceChanged() && !_last11aAnswer;
 		}
 	}
 }

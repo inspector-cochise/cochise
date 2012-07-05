@@ -8,14 +8,16 @@ import java.util.ResourceBundle;
 
 import org.akquinet.audit.Automated;
 import org.akquinet.audit.YesNoQuestion;
+import org.akquinet.audit.ui.DevNullUserCommunicator;
 import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
 import org.akquinet.httpd.syntax.Context;
 import org.akquinet.httpd.syntax.Directive;
 import org.akquinet.httpd.syntax.Statement;
+import org.akquinet.util.ResourceWatcher;
 
 @Automated
-public class Quest11b implements YesNoQuestion
+public class Quest11b extends ResourceWatcher implements YesNoQuestion
 {
 	private static final long serialVersionUID = -6193788543271447392L;
 	
@@ -23,6 +25,9 @@ public class Quest11b implements YesNoQuestion
 	private ConfigFile _conf;
 	private transient ResourceBundle _labels;
 	private transient UserCommunicator _uc = UserCommunicator.getDefault();
+
+	private boolean _lastAnswer = false;
+	private boolean _firstRun = true;
 
 	public Quest11b(ConfigFile conf)
 	{
@@ -39,9 +44,16 @@ public class Quest11b implements YesNoQuestion
 	@Override
 	public synchronized boolean answer()
 	{
-		_uc.printHeading3( _labels.getString("name") );
-		_uc.printParagraph( _labels.getString("Q0") );
-		_uc.printExample( "<Directory />\n\tOrder Deny,Allow\n\tDeny from all\n</Directory>" );
+		_lastAnswer = answer(_uc);
+		_firstRun = false;
+		return _lastAnswer;
+	}
+
+	private boolean answer(UserCommunicator uc)
+	{
+		uc.printHeading3( _labels.getString("name") );
+		uc.printParagraph( _labels.getString("Q0") );
+		uc.printExample( "<Directory />\n\tOrder Deny,Allow\n\tDeny from all\n</Directory>" );
 
 		
 		//first of all let's ensure, there are no "hidden" order/allow/deny directives like in
@@ -63,7 +75,7 @@ public class Quest11b implements YesNoQuestion
 		
 		if(dirList.isEmpty())
 		{
-			_uc.printAnswer(false, _labels.getString("S8"));
+			uc.printAnswer(false, _labels.getString("S8"));
 		}
 
 		boolean ret = false;
@@ -88,7 +100,7 @@ public class Quest11b implements YesNoQuestion
 				// output an answer-message
 				if (orderIsOK(order) && denyIsOK(deny))
 				{
-					_uc.printAnswer(true, _labels.getString("S2"));
+					uc.printAnswer(true, _labels.getString("S2"));
 					ret = true;
 				}
 				else
@@ -99,25 +111,25 @@ public class Quest11b implements YesNoQuestion
 			}
 			else if(allowList.size() > 0)
 			{
-				_uc.printAnswer(false, _labels.getString("S1"));
+				uc.printAnswer(false, _labels.getString("S1"));
 				StringBuilder b = new StringBuilder();
 				for (Directive directive : allowList)
 				{
 					b = b.append(directive.getContainingFile()).append(":").append(directive.getLinenumber()).append(": ").append(directive.getName()).append(" ").append(directive.getValue()).append('\n');
 				}
-				_uc.printExample(b.toString());
+				uc.printExample(b.toString());
 				ret = false;
 				break;
 			}
 			else if(orderList.size() == 0 || denyList.size() == 0)
 			{
-				_uc.printAnswer(false, _labels.getString("S8"));
+				uc.printAnswer(false, _labels.getString("S8"));
 				ret = false;
 				break;
 			}
 			else
 			{
-				_uc.printAnswer(false, MessageFormat.format(_labels.getString("S3"), dir.getBeginLineNumber(), dir.getEndLineNumber(), dir.getContainingFile()));
+				uc.printAnswer(false, MessageFormat.format(_labels.getString("S3"), dir.getBeginLineNumber(), dir.getEndLineNumber(), dir.getContainingFile()));
 				//_uc.printAnswer(false, "I found multiple and/or incorrectly sorted \"Order\", \"Deny\" or \"Allow\" directives betwenn lines "
 				//		+ dir.getBeginLineNumber() + " and " + dir.getEndLineNumber() + ". Please make them unique, sort them and run me again.");
 				ret = false;
@@ -281,5 +293,27 @@ public class Quest11b implements YesNoQuestion
 	public void setUserCommunicator(UserCommunicator uc)
 	{
 		_uc = uc;
+	}
+	
+	@Override
+	public String getResourceId()
+	{
+		return "quest." + _id;
+	}
+
+	@Override
+	public boolean resourceChanged()
+	{
+		//this is just a not so intelligent dummy-solution
+		boolean answer = answer(new DevNullUserCommunicator());
+		
+		if(!_firstRun && answer != _lastAnswer)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 }

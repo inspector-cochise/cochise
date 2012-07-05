@@ -11,14 +11,16 @@ import org.akquinet.audit.Automated;
 import org.akquinet.audit.ShellAnsweredQuestion;
 import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.bsi.httpd.PrologueData;
+import org.akquinet.audit.ui.DevNullUserCommunicator;
 import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
 import org.akquinet.httpd.ParserException;
 import org.akquinet.httpd.syntax.Directive;
 import org.akquinet.httpd.syntax.StatementList;
+import org.akquinet.util.ResourceWatcher;
 
 @Automated
-public class Quest8 implements YesNoQuestion
+public class Quest8 extends ResourceWatcher implements YesNoQuestion
 {
 	private static final long serialVersionUID = -2441169990468550625L;
 	
@@ -33,6 +35,9 @@ public class Quest8 implements YesNoQuestion
 	private transient ResourceBundle _labels;
 	private ConfigFile _conf;
 	private boolean _highSec;
+
+	private boolean _lastAnswer = false;
+	private boolean _firstRun = true;
 
 	public Quest8(PrologueData pd)
 	{
@@ -73,8 +78,15 @@ public class Quest8 implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		_uc.printHeading3( _labels.getString("name") );
-		_uc.printParagraph( _labels.getString("Q0") );
+		_lastAnswer = answer(_uc);
+		_firstRun = false;
+		return _lastAnswer;
+	}
+
+	private boolean answer(UserCommunicator uc)
+	{
+		uc.printHeading3( _labels.getString("name") );
+		uc.printParagraph( _labels.getString("Q0") );
 		
 		
 		try
@@ -86,11 +98,11 @@ public class Quest8 implements YesNoQuestion
 			{
 				Set<File> problems_low = lookForProblems(PERMISSION_PATTERN_LOW);
 				ret = problems_low.isEmpty();
-				_uc.printAnswer(false, ret ? _labels.getString("S5") : _labels.getString("S4") );
+				uc.printAnswer(false, ret ? _labels.getString("S5") : _labels.getString("S4") );
 			}
 			else
 			{
-				_uc.printAnswer(ret, ret ? _labels.getString("S1") : _labels.getString("S2") );
+				uc.printAnswer(ret, ret ? _labels.getString("S1") : _labels.getString("S2") );
 			}
 			
 			if(!ret)
@@ -101,13 +113,13 @@ public class Quest8 implements YesNoQuestion
 					buf = buf.append(file.getCanonicalPath()).append('\n');
 				}
 				
-				_uc.printExample(buf.toString());
+				uc.printExample(buf.toString());
 			}
 			
-			_uc.beginHidingParagraph( _labels.getString("S3") );
-				_uc.printParagraph( _labels.getString("P1") );
-				_uc.printExample("-rw------- 1 root root 23650 2011-04-29 15:38 httpd.conf");
-			_uc.endHidingParagraph();
+			uc.beginHidingParagraph( _labels.getString("S3") );
+				uc.printParagraph( _labels.getString("P1") );
+				uc.printExample("-rw------- 1 root root 23650 2011-04-29 15:38 httpd.conf");
+			uc.endHidingParagraph();
 			
 			return ret;
 		}
@@ -208,5 +220,27 @@ public class Quest8 implements YesNoQuestion
 	public void setUserCommunicator(UserCommunicator uc)
 	{
 		_uc = uc;
+	}
+	
+	@Override
+	public String getResourceId()
+	{
+		return "quest." + _id;
+	}
+
+	@Override
+	public boolean resourceChanged()
+	{
+		//this is just a not so intelligent dummy-solution
+		boolean answer = answer(new DevNullUserCommunicator());
+		
+		if(!_firstRun && answer != _lastAnswer)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 }

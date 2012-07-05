@@ -41,6 +41,15 @@ abstract public class Statement extends SyntaxElement
 		return ret;
 	}
 	
+	/**
+	 * 
+	 * @return true iff this statement has no other context than the global context, false otherwise
+	 */
+	public boolean isGlobal()
+	{
+		return getSurroundingContexts().size() == 1 && getSurroundingContexts().get(0) == null;
+	}
+	
 	@Override
 	public boolean equals(Object o)
 	{

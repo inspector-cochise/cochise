@@ -24,6 +24,8 @@ public class Quest1 extends ResourceWatcher implements YesNoQuestion
 	private transient ResourceBundle _labels;
 	private boolean _lastAnswer = false;
 
+	private boolean _firstRun = true;
+
 	public Quest1(PrologueData pd)
 	{
 		this(pd._highSec);
@@ -61,32 +63,37 @@ public class Quest1 extends ResourceWatcher implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		_uc.printHeading3( _labels.getString("name") );
-		_uc.printParagraph( _labels.getString("Q0") );
+		_lastAnswer = answer(_uc);
+		_firstRun = false;
+		return _lastAnswer;
+	}
+
+	private boolean answer(UserCommunicator uc)
+	{
+		uc.printHeading3( _labels.getString("name") );
+		uc.printParagraph( _labels.getString("Q0") );
 		
 		if(_highSecReq)
 		{
 			ShellAnsweredQuestion quest = new ShellAnsweredQuestion(_commandPath + _command);
 			boolean ret = quest.answer();
 			
-			_uc.printAnswer(ret, ret ? _labels.getString("S1_good")
+			uc.printAnswer(ret, ret ? _labels.getString("S1_good")
 								: _labels.getString("S1_bad"));
 			
-			_uc.beginHidingParagraph( _labels.getString("S2") );
-			_uc.printParagraph( _labels.getString("P1") );
-			_uc.printParagraph( _labels.getString("P2") );
-			_uc.printExample( _labels.getString("S3") );
-			_uc.printParagraph( _labels.getString("P3"));
-			_uc.printExample( _labels.getString("S4") );
-			_uc.endHidingParagraph();
+			uc.beginHidingParagraph( _labels.getString("S2") );
+			uc.printParagraph( _labels.getString("P1") );
+			uc.printParagraph( _labels.getString("P2") );
+			uc.printExample( _labels.getString("S3") );
+			uc.printParagraph( _labels.getString("P3"));
+			uc.printExample( _labels.getString("S4") );
+			uc.endHidingParagraph();
 			
-			_lastAnswer = ret;
 			return ret;
 		}
 		else
 		{
-			_uc.println( _labels.getString("S5") );
-			_lastAnswer = true;
+			uc.println( _labels.getString("S5") );
 			return true;
 		}
 	}
@@ -155,14 +162,9 @@ public class Quest1 extends ResourceWatcher implements YesNoQuestion
 	@Override
 	public boolean resourceChanged()
 	{
-		UserCommunicator backupUC = _uc;
-		_uc = new DevNullUserCommunicator();
+		boolean answer = answer(new DevNullUserCommunicator());
 		
-		boolean answer = answer();
-		
-		_uc = backupUC;
-		
-		if(!answer && answer != _lastAnswer)
+		if(!_firstRun && answer != _lastAnswer)
 		{
 			return true;
 		}
