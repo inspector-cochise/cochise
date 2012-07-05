@@ -27,10 +27,7 @@ public class Quest11b extends ResourceWatcher implements YesNoQuestion
 	private transient UserCommunicator _uc = UserCommunicator.getDefault();
 
 	private boolean _lastAnswer = false;
-<<<<<<< HEAD
 	private boolean _firstRun = true;
-=======
->>>>>>> origin/willNoticeChangedResources
 
 	public Quest11b(ConfigFile conf)
 	{
@@ -48,10 +45,7 @@ public class Quest11b extends ResourceWatcher implements YesNoQuestion
 	public synchronized boolean answer()
 	{
 		_lastAnswer = answer(_uc);
-<<<<<<< HEAD
 		_firstRun = false;
-=======
->>>>>>> origin/willNoticeChangedResources
 		return _lastAnswer;
 	}
 
@@ -313,11 +307,7 @@ public class Quest11b extends ResourceWatcher implements YesNoQuestion
 		//this is just a not so intelligent dummy-solution
 		boolean answer = answer(new DevNullUserCommunicator());
 		
-<<<<<<< HEAD
 		if(!_firstRun && answer != _lastAnswer)
-=======
-		if(!answer && answer != _lastAnswer)
->>>>>>> origin/willNoticeChangedResources
 		{
 			return true;
 		}

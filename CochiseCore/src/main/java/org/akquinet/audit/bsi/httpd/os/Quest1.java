@@ -64,10 +64,7 @@ public class Quest1 extends ResourceWatcher implements YesNoQuestion
 	public boolean answer()
 	{
 		_lastAnswer = answer(_uc);
-<<<<<<< HEAD
 		_firstRun = false;
-=======
->>>>>>> origin/willNoticeChangedResources
 		return _lastAnswer;
 	}
 

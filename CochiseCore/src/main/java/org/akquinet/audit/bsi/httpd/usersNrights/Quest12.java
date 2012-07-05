@@ -24,10 +24,7 @@ public class Quest12 extends ResourceWatcher implements YesNoQuestion
 	private transient ResourceBundle _labels;
 
 	private boolean _lastAnswer = false;
-<<<<<<< HEAD
 	private boolean _firstRun = true;
-=======
->>>>>>> origin/willNoticeChangedResources
 	
 	public Quest12(PrologueData pd)
 	{
@@ -66,10 +63,7 @@ public class Quest12 extends ResourceWatcher implements YesNoQuestion
 	public boolean answer()
 	{
 		_lastAnswer = answer(_uc);
-<<<<<<< HEAD
 		_firstRun = false;
-=======
->>>>>>> origin/willNoticeChangedResources
 		return _lastAnswer;
 	}
 
@@ -168,11 +162,7 @@ public class Quest12 extends ResourceWatcher implements YesNoQuestion
 		//this is just a not so intelligent dummy-solution
 		boolean answer = answer(new DevNullUserCommunicator());
 		
-<<<<<<< HEAD
 		if(!_firstRun && answer != _lastAnswer)
-=======
-		if(!answer && answer != _lastAnswer)
->>>>>>> origin/willNoticeChangedResources
 		{
 			return true;
 		}
