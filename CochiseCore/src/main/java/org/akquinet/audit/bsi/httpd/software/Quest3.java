@@ -25,8 +25,11 @@ public class Quest3 extends ModuleHelper implements YesNoQuestion, IResourceWatc
 	private transient ResourceBundle _labels;
 
 	private boolean _lastAnswer = false;
+<<<<<<< HEAD
 
 	private boolean _firstRun = true;
+=======
+>>>>>>> origin/willNoticeChangedResources
 	
 	public Quest3(PrologueData pd)
 	{
@@ -54,7 +57,10 @@ public class Quest3 extends ModuleHelper implements YesNoQuestion, IResourceWatc
 	public boolean answer()
 	{
 		_lastAnswer = answer(_uc);
+<<<<<<< HEAD
 		_firstRun = false;
+=======
+>>>>>>> origin/willNoticeChangedResources
 		return _lastAnswer;
 	}
 
@@ -182,7 +188,11 @@ public class Quest3 extends ModuleHelper implements YesNoQuestion, IResourceWatc
 	{
 		boolean answer = answer(new DevNullUserCommunicator());
 		
+<<<<<<< HEAD
 		if(!_firstRun && answer != _lastAnswer)
+=======
+		if(!answer && answer != _lastAnswer)
+>>>>>>> origin/willNoticeChangedResources
 		{
 			return true;
 		}

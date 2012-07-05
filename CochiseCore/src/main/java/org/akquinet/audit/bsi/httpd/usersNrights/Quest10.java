@@ -32,7 +32,10 @@ public class Quest10 extends ModuleHelper implements YesNoQuestion, IResourceWat
 	private transient ResourceBundle _labels;
 
 	private boolean _lastAnswer = false;
+<<<<<<< HEAD
 	private boolean _firstRun = true;
+=======
+>>>>>>> origin/willNoticeChangedResources
 
 	public Quest10(PrologueData pd)
 	{
@@ -72,7 +75,10 @@ public class Quest10 extends ModuleHelper implements YesNoQuestion, IResourceWat
 	public boolean answer()
 	{
 		_lastAnswer = answer(_uc);
+<<<<<<< HEAD
 		_firstRun = false;
+=======
+>>>>>>> origin/willNoticeChangedResources
 		return _lastAnswer;
 	}
 
@@ -217,7 +223,11 @@ public class Quest10 extends ModuleHelper implements YesNoQuestion, IResourceWat
 	{
 		boolean answer = answer(new DevNullUserCommunicator());
 		
+<<<<<<< HEAD
 		if(!_firstRun && answer != _lastAnswer)
+=======
+		if(!answer && answer != _lastAnswer)
+>>>>>>> origin/willNoticeChangedResources
 		{
 			return true;
 		}
