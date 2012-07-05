@@ -23,8 +23,7 @@ public class Quest12 extends ResourceWatcher implements YesNoQuestion
 	private Quest12b _q12b;
 	private transient ResourceBundle _labels;
 
-	private boolean _lastAnswer = false;
-	private boolean _firstRun = true;
+	private Boolean _lastAnswer = null;
 	
 	public Quest12(PrologueData pd)
 	{
@@ -63,7 +62,6 @@ public class Quest12 extends ResourceWatcher implements YesNoQuestion
 	public boolean answer()
 	{
 		_lastAnswer = answer(_uc);
-		_firstRun = false;
 		return _lastAnswer;
 	}
 
@@ -75,16 +73,20 @@ public class Quest12 extends ResourceWatcher implements YesNoQuestion
 		
 		uc.println( _labels.getString("L1") );
 		uc.printHidingParagraph( _labels.getString("S0"), _labels.getString("P1") );
-		
-		uc.beginIndent();
-			boolean ret = _q12b.answer();
-		uc.endIndent();
-		if(!ret)
+
+		boolean ret;
+		synchronized(this)
 		{
-			uc.println( _labels.getString("L2") );
 			uc.beginIndent();
-				ret = _q12a.answer();
+			ret = _q12b.answer(uc);
 			uc.endIndent();
+			if(!ret)
+			{
+				uc.println( _labels.getString("L2") );
+				uc.beginIndent();
+				ret = _q12a.answer(uc);
+				uc.endIndent();
+			}
 		}
 		
 		uc.println(_labels.getString("S2") + " " + _labels.getString("name"));
@@ -127,8 +129,11 @@ public class Quest12 extends ResourceWatcher implements YesNoQuestion
 	@Override
 	public void initialize() throws Exception
 	{
-		_q12a.initialize();
-		_q12b.initialize();
+		synchronized(this)
+		{
+			_q12a.initialize();
+			_q12b.initialize();
+		}
 	}
 	
 	private synchronized void readObject( java.io.ObjectInputStream s ) throws IOException, ClassNotFoundException
@@ -159,10 +164,19 @@ public class Quest12 extends ResourceWatcher implements YesNoQuestion
 	@Override
 	public boolean resourceChanged()
 	{
+		try
+		{
+			initialize();
+		}
+		catch (Exception e)
+		{
+			throw new RuntimeException(e);
+		}
+		
 		//this is just a not so intelligent dummy-solution
 		boolean answer = answer(new DevNullUserCommunicator());
 		
-		if(!_firstRun && answer != _lastAnswer)
+		if(_lastAnswer != null && answer != _lastAnswer)
 		{
 			return true;
 		}

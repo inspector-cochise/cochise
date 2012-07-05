@@ -36,8 +36,7 @@ public class Quest8 extends ResourceWatcher implements YesNoQuestion
 	private ConfigFile _conf;
 	private boolean _highSec;
 
-	private boolean _lastAnswer = false;
-	private boolean _firstRun = true;
+	private Boolean _lastAnswer = null;
 
 	public Quest8(PrologueData pd)
 	{
@@ -79,7 +78,6 @@ public class Quest8 extends ResourceWatcher implements YesNoQuestion
 	public boolean answer()
 	{
 		_lastAnswer = answer(_uc);
-		_firstRun = false;
 		return _lastAnswer;
 	}
 
@@ -91,29 +89,33 @@ public class Quest8 extends ResourceWatcher implements YesNoQuestion
 		
 		try
 		{
-			Set<File> problems = lookForProblems(PERMISSION_PATTERN);
-			boolean ret = problems.isEmpty();
-			
-			if(!_highSec && !ret)
+			boolean ret;
+			synchronized(_conf)
 			{
-				Set<File> problems_low = lookForProblems(PERMISSION_PATTERN_LOW);
-				ret = problems_low.isEmpty();
-				uc.printAnswer(false, ret ? _labels.getString("S5") : _labels.getString("S4") );
-			}
-			else
-			{
-				uc.printAnswer(ret, ret ? _labels.getString("S1") : _labels.getString("S2") );
-			}
-			
-			if(!ret)
-			{
-				StringBuffer buf = new StringBuffer();
-				for (File file : problems)
+				Set<File> problems = lookForProblems(PERMISSION_PATTERN);
+				ret = problems.isEmpty();
+				
+				if(!_highSec && !ret)
 				{
-					buf = buf.append(file.getCanonicalPath()).append('\n');
+					Set<File> problems_low = lookForProblems(PERMISSION_PATTERN_LOW);
+					ret = problems_low.isEmpty();
+					uc.printAnswer(false, ret ? _labels.getString("S5") : _labels.getString("S4") );
+				}
+				else
+				{
+					uc.printAnswer(ret, ret ? _labels.getString("S1") : _labels.getString("S2") );
 				}
 				
-				uc.printExample(buf.toString());
+				if(!ret)
+				{
+					StringBuffer buf = new StringBuffer();
+					for (File file : problems)
+					{
+						buf = buf.append(file.getCanonicalPath()).append('\n');
+					}
+					
+					uc.printExample(buf.toString());
+				}
 			}
 			
 			uc.beginHidingParagraph( _labels.getString("S3") );
@@ -200,7 +202,10 @@ public class Quest8 extends ResourceWatcher implements YesNoQuestion
 	@Override
 	public void initialize() throws Exception
 	{
-		_conf.reparse();
+		synchronized(_conf)
+		{
+			_conf.reparse();
+		}
 	}
 	
 	private synchronized void readObject( java.io.ObjectInputStream s ) throws IOException, ClassNotFoundException
@@ -231,10 +236,19 @@ public class Quest8 extends ResourceWatcher implements YesNoQuestion
 	@Override
 	public boolean resourceChanged()
 	{
+		try
+		{
+			initialize();
+		}
+		catch (Exception e)
+		{
+			throw new RuntimeException(e);
+		}
+		
 		//this is just a not so intelligent dummy-solution
 		boolean answer = answer(new DevNullUserCommunicator());
 		
-		if(!_firstRun && answer != _lastAnswer)
+		if(_lastAnswer != null && answer != _lastAnswer)
 		{
 			return true;
 		}

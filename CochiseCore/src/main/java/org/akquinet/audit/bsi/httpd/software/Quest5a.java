@@ -38,27 +38,33 @@ public class Quest5a implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		_uc.printHeading3( _labels.getString("name") );
-		_uc.printParagraph( _labels.getString("Q0") );
+		return answer(_uc);
+	}
+	
+
+	public boolean answer(UserCommunicator uc)
+	{
+		uc.printHeading3( _labels.getString("name") );
+		uc.printParagraph( _labels.getString("Q0") );
 		
 		
 		List<Directive> incList = _conf.getAllDirectivesIgnoreCase("Include");
 		
 		if(!incList.isEmpty())
 		{
-			_uc.printAnswer(false, _labels.getString("S1_bad") );
+			uc.printAnswer(false, _labels.getString("S1_bad") );
 			StringBuffer buf = new StringBuffer();
 			for (Directive directive : incList)
 			{
 				buf.append( directive.getContainingFile() + ":" + directive.getLinenumber() + ": " + directive.getName() + " " + directive.getValue() + "\n");
 			}
 			buf.deleteCharAt(buf.length()-1);
-			_uc.printExample(buf.toString());
+			uc.printExample(buf.toString());
 			return false;
 		}
 		else
 		{
-			_uc.printAnswer(true, _labels.getString("S1_good") );
+			uc.printAnswer(true, _labels.getString("S1_good") );
 			return true;
 		}
 	}

@@ -25,8 +25,7 @@ public class Quest5 extends ResourceWatcher implements YesNoQuestion
 	private Quest5b _q5b;
 	private transient ResourceBundle _labels;
 	
-	private boolean _lastAnswer = false;
-	private boolean _firstRun = true;
+	private Boolean _lastAnswer = null;
 	
 	public Quest5(PrologueData pd)
 	{
@@ -60,7 +59,6 @@ public class Quest5 extends ResourceWatcher implements YesNoQuestion
 	public boolean answer()
 	{
 		_lastAnswer = answer(_uc);
-		_firstRun = false;
 		return _lastAnswer;
 	}
 
@@ -73,8 +71,14 @@ public class Quest5 extends ResourceWatcher implements YesNoQuestion
 		
 		uc.println( _labels.getString("L1") );
 		uc.beginIndent();
-		boolean answer5a = _q5a.answer();
-		boolean answer5b = _q5b.answer();
+		
+		boolean answer5a;
+		boolean answer5b;
+		synchronized(this)
+		{
+			answer5a = _q5a.answer(uc);
+			answer5b = _q5b.answer(uc);
+		}
 		boolean ret = answer5a && answer5b;
 		
 		uc.endIndent();
@@ -120,8 +124,11 @@ public class Quest5 extends ResourceWatcher implements YesNoQuestion
 	@Override
 	public void initialize() throws Exception
 	{
-		_q5a.initialize();
-		_q5b.initialize();
+		synchronized(this)
+		{
+			_q5a.initialize();
+			_q5b.initialize();
+		}
 	}
 	
 	private synchronized void readObject( java.io.ObjectInputStream s ) throws IOException, ClassNotFoundException
@@ -152,10 +159,19 @@ public class Quest5 extends ResourceWatcher implements YesNoQuestion
 	@Override
 	public boolean resourceChanged()
 	{
+		try
+		{
+			initialize();
+		}
+		catch (Exception e)
+		{
+			throw new RuntimeException(e);
+		}
+		
 		//this is just a not so intelligent dummy-solution
 		boolean answer = answer(new DevNullUserCommunicator());
 		
-		if(!_firstRun && answer != _lastAnswer)
+		if(_lastAnswer != null && answer != _lastAnswer)
 		{
 			return true;
 		}

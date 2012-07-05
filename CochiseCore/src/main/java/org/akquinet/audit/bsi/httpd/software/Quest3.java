@@ -24,9 +24,7 @@ public class Quest3 extends ModuleHelper implements YesNoQuestion, IResourceWatc
 	private transient UserCommunicator _uc = UserCommunicator.getDefault();
 	private transient ResourceBundle _labels;
 
-	private boolean _lastAnswer = false;
-
-	private boolean _firstRun = true;
+	private Boolean _lastAnswer = null;
 	
 	public Quest3(PrologueData pd)
 	{
@@ -54,7 +52,6 @@ public class Quest3 extends ModuleHelper implements YesNoQuestion, IResourceWatc
 	public boolean answer()
 	{
 		_lastAnswer = answer(_uc);
-		_firstRun = false;
 		return _lastAnswer;
 	}
 
@@ -63,8 +60,15 @@ public class Quest3 extends ModuleHelper implements YesNoQuestion, IResourceWatc
 		_uc.printHeading3( _labels.getString("name") );
 		_uc.printParagraph( _labels.getString("Q0") );
 
+		List<Directive> loadList;
+		String[] modList;
 		
-		List<Directive> loadList = getLoadModuleList();
+		synchronized(this)
+		{
+			loadList = getLoadModuleList();
+			modList = getCompiledIntoModulesList();
+		}
+		
 		for (Directive directive : loadList)
 		{
 			String[] arguments = directive.getValue().trim().split("[ \t]+");
@@ -97,7 +101,6 @@ public class Quest3 extends ModuleHelper implements YesNoQuestion, IResourceWatc
 		}
 		
 		//maybe ModSecurity is compiled into the apache binary, check for that:
-		String[] modList = getCompiledIntoModulesList();
 		for (String str : modList)
 		{
 			if(str.matches("( |\t)*mod_security.c( |\t)*"))
@@ -149,7 +152,10 @@ public class Quest3 extends ModuleHelper implements YesNoQuestion, IResourceWatc
 	@Override
 	public void initialize() throws Exception
 	{
-		reparse();
+		synchronized(this)
+		{
+			reparse();
+		}
 	}
 	
 	private synchronized void readObject( java.io.ObjectInputStream s ) throws IOException, ClassNotFoundException
@@ -180,9 +186,18 @@ public class Quest3 extends ModuleHelper implements YesNoQuestion, IResourceWatc
 	@Override
 	public boolean resourceChanged()
 	{
+		try
+		{
+			initialize();
+		}
+		catch (Exception e)
+		{
+			throw new RuntimeException(e);
+		}
+		
 		boolean answer = answer(new DevNullUserCommunicator());
 		
-		if(!_firstRun && answer != _lastAnswer)
+		if(_lastAnswer != null && answer != _lastAnswer)
 		{
 			return true;
 		}

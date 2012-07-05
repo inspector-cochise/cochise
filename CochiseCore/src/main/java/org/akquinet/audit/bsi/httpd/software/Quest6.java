@@ -24,8 +24,7 @@ public class Quest6 extends ResourceWatcher implements YesNoQuestion
 	private transient ProcessBuilder _httpd;
 	private transient ResourceBundle _labels;
 
-	private boolean _lastAnswer = false;
-	private boolean _firstRun = true;
+	private Boolean _lastAnswer = null;
 	
 	public Quest6(PrologueData pd)
 	{
@@ -64,7 +63,6 @@ public class Quest6 extends ResourceWatcher implements YesNoQuestion
 	public boolean answer()
 	{
 		_lastAnswer = answer(_uc);
-		_firstRun = false;
 		return _lastAnswer;
 	}
 
@@ -195,7 +193,7 @@ public class Quest6 extends ResourceWatcher implements YesNoQuestion
 		//this is just a not so intelligent dummy-solution
 		boolean answer = answer(new DevNullUserCommunicator());
 		
-		if(!_firstRun && answer != _lastAnswer)
+		if(_lastAnswer != null && answer != _lastAnswer)
 		{
 			return true;
 		}

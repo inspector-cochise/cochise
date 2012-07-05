@@ -22,9 +22,8 @@ public class Quest1 extends ResourceWatcher implements YesNoQuestion
 	private String _commandPath;
 	private String _command;
 	private transient ResourceBundle _labels;
-	private boolean _lastAnswer = false;
+	private Boolean _lastAnswer = null;
 
-	private boolean _firstRun = true;
 
 	public Quest1(PrologueData pd)
 	{
@@ -64,7 +63,6 @@ public class Quest1 extends ResourceWatcher implements YesNoQuestion
 	public boolean answer()
 	{
 		_lastAnswer = answer(_uc);
-		_firstRun = false;
 		return _lastAnswer;
 	}
 
@@ -164,7 +162,7 @@ public class Quest1 extends ResourceWatcher implements YesNoQuestion
 	{
 		boolean answer = answer(new DevNullUserCommunicator());
 		
-		if(!_firstRun && answer != _lastAnswer)
+		if(_lastAnswer != null && answer != _lastAnswer)
 		{
 			return true;
 		}

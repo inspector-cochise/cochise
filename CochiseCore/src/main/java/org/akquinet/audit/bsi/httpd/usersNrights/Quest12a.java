@@ -51,10 +51,15 @@ public class Quest12a implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		_uc.printHeading3( _labels.getString("name") );
-		_uc.printParagraph( _labels.getString("Q0") );
+		return answer(_uc);
+	}
+	
+	public boolean answer(UserCommunicator uc)
+	{
+		uc.printHeading3( _labels.getString("name") );
+		uc.printParagraph( _labels.getString("Q0") );
 		
-		_uc.printParagraph( _labels.getString("P1") );
+		uc.printParagraph( _labels.getString("P1") );
 		
 		String user = null;
 		String group = null;
@@ -78,8 +83,8 @@ public class Quest12a implements YesNoQuestion
 			throw new RuntimeException(e);
 		}
 
-		_uc.println( MessageFormat.format(_labels.getString("L1"), user, group) );
-		_uc.println( _labels.getString("L2") );
+		uc.println( MessageFormat.format(_labels.getString("L1"), user, group) );
+		uc.println( _labels.getString("L2") );
 		ShellAnsweredQuestion quest = new ShellAnsweredQuestion(_commandPath + _command, user, group);
 		boolean ret = quest.answer();
 		
@@ -102,7 +107,7 @@ public class Quest12a implements YesNoQuestion
 		String[] shellOut = buf.toString().split("[ |\t|\n|\r\n]");
 		if(shellOut.length == 1 && ! buf.toString().equals(""))
 		{
-			_uc.printAnswer(ret, _labels.getString(shellOut[0]) );
+			uc.printAnswer(ret, _labels.getString(shellOut[0]) );
 		}
 		else if(shellOut.length > 1)
 		{
@@ -112,7 +117,7 @@ public class Quest12a implements YesNoQuestion
 				argArr[i-1] = shellOut[i];
 			}
 			String tmp = MessageFormat.format(_labels.getString(shellOut[0]), (Object[])argArr);
-			_uc.printAnswer(ret, tmp );
+			uc.printAnswer(ret, tmp );
 		}
 		
 		return ret;

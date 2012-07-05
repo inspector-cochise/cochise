@@ -40,8 +40,13 @@ public class Quest5b implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		_uc.printHeading3( _labels.getString("name") );
-		_uc.printParagraph( _labels.getString("Q0") );
+		return answer(_uc);
+	}
+	
+	public boolean answer(UserCommunicator uc)
+	{
+		uc.printHeading3( _labels.getString("name") );
+		uc.printParagraph( _labels.getString("Q0") );
 		
 		
 		List<Directive> dirList = _conf.getAllDirectives("AllowOverride");
@@ -70,10 +75,10 @@ public class Quest5b implements YesNoQuestion
 		String overrides = problems.isEmpty() ?
 				  _labels.getString("S3")
 				: _labels.getString("S4");
-		_uc.printAnswer(isSetGlobalRoot & problems.isEmpty(), global + " " + overrides);
+		uc.printAnswer(isSetGlobalRoot & problems.isEmpty(), global + " " + overrides);
 		for (Directive directive : problems)
 		{
-			_uc.println(directive.getContainingFile() + ":" + directive.getLinenumber() + ": " + directive.getName() + " " + directive.getValue());
+			uc.println(directive.getContainingFile() + ":" + directive.getLinenumber() + ": " + directive.getName() + " " + directive.getValue());
 		}
 
 		

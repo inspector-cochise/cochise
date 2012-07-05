@@ -50,25 +50,30 @@ public class Quest12b implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		_uc.printHeading3( _labels.getString("name") );
-		_uc.printParagraph( _labels.getString("Q0") );
-		_uc.printExample( _labels.getString("S0") );
+		return answer(_uc);
+	}
+	
+	public boolean answer(UserCommunicator uc)
+	{
+		uc.printHeading3( _labels.getString("name") );
+		uc.printParagraph( _labels.getString("Q0") );
+		uc.printExample( _labels.getString("S0") );
 
 		
-		_uc.println( _labels.getString("L1") );
+		uc.println( _labels.getString("L1") );
 		
 		String user = null;
 		String group = null;
 		if(_conf.getDirective("User").size() == 0 || _conf.getDirective("Group").size() == 0)
 		{
-			_uc.printAnswer(false,  _labels.getString("S2") );
+			uc.printAnswer(false,  _labels.getString("S2") );
 			return false;
 		}
 		
 		user = _conf.getDirective("User").get(0).getValue().trim();
 		group = _conf.getDirective("Group").get(0).getValue().trim();
 		
-		_uc.println( MessageFormat.format( _labels.getString("L2") , user, group) );
+		uc.println( MessageFormat.format( _labels.getString("L2") , user, group) );
 		
 		ShellAnsweredQuestion quest = new ShellAnsweredQuestion(_commandPath + _command, user, group);
 		boolean ret = quest.answer();
@@ -92,7 +97,7 @@ public class Quest12b implements YesNoQuestion
 		String[] shellOut = buf.toString().split("[ |\t]");
 		if(shellOut.length == 1 && ! buf.toString().equals(""))
 		{
-			_uc.printAnswer(ret, _labels.getString(shellOut[0]) );
+			uc.printAnswer(ret, _labels.getString(shellOut[0]) );
 		}
 		else if(shellOut.length > 1)
 		{
@@ -102,7 +107,7 @@ public class Quest12b implements YesNoQuestion
 				argArr[i-1] = shellOut[i].replaceAll("\n", "");
 			}
 			String tmp = MessageFormat.format(_labels.getString(shellOut[0]), (Object[])argArr);
-			_uc.printAnswer(ret, tmp );
+			uc.printAnswer(ret, tmp );
 		}
 		
 		return ret;

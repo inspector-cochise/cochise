@@ -26,8 +26,7 @@ public class Quest11b extends ResourceWatcher implements YesNoQuestion
 	private transient ResourceBundle _labels;
 	private transient UserCommunicator _uc = UserCommunicator.getDefault();
 
-	private boolean _lastAnswer = false;
-	private boolean _firstRun = true;
+	private Boolean _lastAnswer = null;
 
 	public Quest11b(ConfigFile conf)
 	{
@@ -45,7 +44,6 @@ public class Quest11b extends ResourceWatcher implements YesNoQuestion
 	public synchronized boolean answer()
 	{
 		_lastAnswer = answer(_uc);
-		_firstRun = false;
 		return _lastAnswer;
 	}
 
@@ -55,23 +53,28 @@ public class Quest11b extends ResourceWatcher implements YesNoQuestion
 		uc.printParagraph( _labels.getString("Q0") );
 		uc.printExample( "<Directory />\n\tOrder Deny,Allow\n\tDeny from all\n</Directory>" );
 
+		List<Statement> statList;
+		List<Context> dirList;
 		
-		//first of all let's ensure, there are no "hidden" order/allow/deny directives like in
-		//neg_contained3.conf (see JUnit tests)
+		synchronized(_conf)
 		{
-			for(String s : new String[] {"order", "allow", "deny"})
+			//first of all let's ensure, there are no "hidden" order/allow/deny directives like in
+			//neg_contained3.conf (see JUnit tests)
 			{
-				boolean r = checkForConditionallyActives(s);
-				if(!r)
+				for(String s : new String[] {"order", "allow", "deny"})
 				{
-					printHidingParagraph();
-					return r;
+					boolean r = checkForConditionallyActives(s);
+					if(!r)
+					{
+						printHidingParagraph();
+						return r;
+					}
 				}
 			}
+			
+			statList = _conf.getHeadExpression().getStatements()._statements;
+			dirList = createDirectoryRoot_List(statList);
 		}
-		
-		List<Statement> statList = _conf.getHeadExpression().getStatements()._statements;
-		List<Context> dirList = createDirectoryRoot_List(statList);
 		
 		if(dirList.isEmpty())
 		{
@@ -273,7 +276,10 @@ public class Quest11b extends ResourceWatcher implements YesNoQuestion
 	@Override
 	public void initialize() throws Exception
 	{
-		_conf.reparse();
+		synchronized(_conf)
+		{
+			_conf.reparse();
+		}
 	}
 	
 	private synchronized void readObject( java.io.ObjectInputStream s ) throws IOException, ClassNotFoundException
@@ -304,10 +310,19 @@ public class Quest11b extends ResourceWatcher implements YesNoQuestion
 	@Override
 	public boolean resourceChanged()
 	{
+		try
+		{
+			initialize();
+		}
+		catch (Exception e)
+		{
+			throw new RuntimeException(e);
+		}
+		
 		//this is just a not so intelligent dummy-solution
 		boolean answer = answer(new DevNullUserCommunicator());
 		
-		if(!_firstRun && answer != _lastAnswer)
+		if(_lastAnswer != null && answer != _lastAnswer)
 		{
 			return true;
 		}
