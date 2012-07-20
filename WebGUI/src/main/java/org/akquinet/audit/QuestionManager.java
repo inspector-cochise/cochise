@@ -35,6 +35,7 @@ import org.akquinet.audit.bsi.httpd.usersNrights.Quest8;
 import org.akquinet.audit.bsi.httpd.usersNrights.Quest9;
 import org.akquinet.audit.ui.DelayedHtmlUserCommunicator;
 import org.akquinet.audit.ui.DevNullUserCommunicator;
+import org.akquinet.audit.ui.KillThisThreadException;
 import org.akquinet.audit.ui.DelayedHtmlUserCommunicator.InputState;
 import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
@@ -461,7 +462,15 @@ public class QuestionManager
 				throw new RuntimeException(e);
 			}
 
-			_answer = _quest.answer();
+			try
+			{
+				_answer = _quest.answer();
+			}
+			catch (KillThisThreadException e)
+			{
+				return;
+			}
+			
 			_callback.updateStatus(_quest, _answer ? QuestionStatus.GOOD : QuestionStatus.BAD);
 		}
 	}
