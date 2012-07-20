@@ -80,7 +80,7 @@ public class Quest6 extends ResourceWatcher implements YesNoQuestion
 			if(exit == 0)
 			{
 				uc.printAnswer(true, _labels.getString("S1") );
-				printExtraInfo();
+				printExtraInfo(uc);
 				return true;
 			}
 			else
@@ -96,7 +96,7 @@ public class Quest6 extends ResourceWatcher implements YesNoQuestion
 				uc.printExample(buf.toString());
 				
 				uc.printParagraph( _labels.getString("S5") );
-				printExtraInfo();
+				printExtraInfo(uc);
 				return false;
 			}
 		}
@@ -110,11 +110,11 @@ public class Quest6 extends ResourceWatcher implements YesNoQuestion
 		}
 	}
 
-	private void printExtraInfo()
+	private void printExtraInfo(UserCommunicator uc)
 	{
-		_uc.beginHidingParagraph(_labels.getString("S3"));
-			_uc.printParagraph(_labels.getString("S4"));
-		_uc.endHidingParagraph();
+		uc.beginHidingParagraph(_labels.getString("S3"));
+			uc.printParagraph(_labels.getString("S4"));
+		uc.endHidingParagraph();
 	}
 
 	@Override
