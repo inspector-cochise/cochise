@@ -1,6 +1,7 @@
 package org.akquinet.web;
 
 import java.util.Random;
+import java.util.logging.Logger;
 
 public class CommonData
 {
@@ -29,15 +30,24 @@ public class CommonData
 
 	public static final long RUN_ID = (new Random(System.nanoTime())).nextInt();
 
+	public static String CochiseDataPath = "../cochise-data/";
+	
 	public enum QuestionStatus
 	{
 		GOOD, BAD, OPEN
 	}
 
 	private static CommonData _default;
+	
+	private static Logger _logger = Logger.getAnonymousLogger();
 
 	private CommonData()
 	{
+	}
+	
+	public static Logger getLogger()
+	{
+		return _logger;
 	}
 
 	public static CommonData getDefault()
