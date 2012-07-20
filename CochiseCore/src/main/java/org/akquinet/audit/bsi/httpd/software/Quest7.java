@@ -18,9 +18,9 @@ import org.akquinet.util.ResourceWatcher;
 @Interactive
 public class Quest7 extends ResourceWatcher implements YesNoQuestion
 {
-	private static final long serialVersionUID = -3971445301087141388L;
+	private static final long serialVersionUID = 8785403091512987854L;
 	
-	private static final String _id = "Quest7";
+	public static final String _id = "Quest7";
 	private ConfigFile _conf;
 	private transient ResourceBundle _labels;
 	private transient UserCommunicator _uc = UserCommunicator.getDefault();
@@ -29,7 +29,7 @@ public class Quest7 extends ResourceWatcher implements YesNoQuestion
 	private String _explanation = "";
 	private boolean _lastAnswer;
 	private List<String> _problems;
-	private Object _monitor = new Object();
+	private transient Object _monitor = new Object();
 
 	private boolean _isSetGlobal;
 
@@ -252,6 +252,7 @@ public class Quest7 extends ResourceWatcher implements YesNoQuestion
 	private synchronized void readObject( java.io.ObjectInputStream s ) throws IOException, ClassNotFoundException
 	{
 		s.defaultReadObject();
+		_monitor = new Object();
 		_uc = UserCommunicator.getDefault();
 		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 	}

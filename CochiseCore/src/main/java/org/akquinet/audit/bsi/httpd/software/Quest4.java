@@ -17,9 +17,9 @@ import org.akquinet.util.IResourceWatcher;
 @Interactive
 public class Quest4 extends ModuleHelper implements YesNoQuestion, IResourceWatcher
 {
-	private static final long serialVersionUID = 4569945626872848354L;
+	private static final long serialVersionUID = 8721136798597684044L;
 	
-	private static final String _id = "Quest4";
+	public static final String _id = "Quest4";
 	private transient UserCommunicator _uc = UserCommunicator.getDefault();
 	private transient ResourceBundle _labels;
 	
@@ -29,7 +29,7 @@ public class Quest4 extends ModuleHelper implements YesNoQuestion, IResourceWatc
 	private String _explanation = "";
 	private boolean _firstRun = true;
 	
-	private Object _monitor = new Object();
+	private transient Object _monitor = new Object();
 	
 	private boolean _lastAnswer;
 	
@@ -224,6 +224,7 @@ public class Quest4 extends ModuleHelper implements YesNoQuestion, IResourceWatc
 	private synchronized void readObject( java.io.ObjectInputStream s ) throws IOException, ClassNotFoundException
 	{
 		s.defaultReadObject();
+		_monitor = new Object();
 		_uc = UserCommunicator.getDefault();
 		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 	}
