@@ -61,19 +61,19 @@
 											{
 											case OPEN:
 												%>
-													<a onmouseover="showWMTT('openTip')" onmouseout="hideWMTT()" href=""><img src="img/open.png" /></a>
+													<a onmouseover="showWMTT('openTip')" onmouseout="hideWMTT()" href="<%= CommonData.MAIN_SERVLET_URL %>"><img src="img/open.png" /></a>
 													<%--<span class="open"><%= labels.getString("ope") %></span>--%>
 												<%
 												break;
 											case GOOD:
 												%>
-													<a onmouseover="showWMTT('goodTip')" onmouseout="hideWMTT()" href=""><img src="img/good.png" /></a>
+													<a onmouseover="showWMTT('goodTip')" onmouseout="hideWMTT()" href="<%= CommonData.MAIN_SERVLET_URL %>"><img src="img/good.png" /></a>
 													<%--<span class="good"><%= labels.getString("pos") %></span>--%>
 												<%
 												break;
 											case BAD:
 												%>
-													<a onmouseover="showWMTT('badTip')" onmouseout="hideWMTT()" href=""><img src="img/bad.png" /></a>
+													<a onmouseover="showWMTT('badTip')" onmouseout="hideWMTT()" href="<%= CommonData.MAIN_SERVLET_URL %>"><img src="img/bad.png" /></a>
 													<%--<span class="bad"><%= labels.getString("neg") %></span>--%>
 												<%
 												break;
