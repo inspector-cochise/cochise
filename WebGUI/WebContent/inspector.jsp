@@ -101,6 +101,7 @@
 				<form>
 					<input type="button" value="<%= ResourceBundle.getBundle("site", Locale.getDefault()).getString("reportButton") %>"
 						onclick="showReport();" />
+					<input type="button" value="<%= ResourceBundle.getBundle("site", Locale.getDefault()).getString("saveStateButton") %>" onclick="location = '<%= CommonData.ZIPSTATE_URL %>';" />
 				</form>
 			</div>
 			<div id="lower-left">

@@ -34,9 +34,9 @@ import org.akquinet.audit.bsi.httpd.usersNrights.Quest12;
 import org.akquinet.audit.bsi.httpd.usersNrights.Quest8;
 import org.akquinet.audit.bsi.httpd.usersNrights.Quest9;
 import org.akquinet.audit.ui.DelayedHtmlUserCommunicator;
+import org.akquinet.audit.ui.DelayedHtmlUserCommunicator.InputState;
 import org.akquinet.audit.ui.DevNullUserCommunicator;
 import org.akquinet.audit.ui.KillThisThreadException;
-import org.akquinet.audit.ui.DelayedHtmlUserCommunicator.InputState;
 import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
 import org.akquinet.util.IResourceChangedListener;
@@ -273,68 +273,8 @@ public class QuestionManager
 
 		try
 		{
-			createQuestion(Quest1.class);
-			
-			File q2PersistFile = new File(CommonData.CochiseDataPath + Quest2._id);
-			if(q2PersistFile.exists())
-			{
-				readPersistedQuestion(q2PersistFile);
-			}
-			else
-			{
-				createQuestion(Quest2.class);
-			}
-			
-			createQuestion(Quest3.class);
-			
-			File q4PersistFile = new File(CommonData.CochiseDataPath + Quest4._id);
-			if(q4PersistFile.exists())
-			{
-				readPersistedQuestion(q4PersistFile);
-			}
-			else
-			{
-				createQuestion(Quest4.class);
-			}
-			
-			createQuestion(Quest5.class);
-			createQuestion(Quest6.class);
-			
-			File q7PersistFile = new File(CommonData.CochiseDataPath + Quest7._id);
-			if(q7PersistFile.exists())
-			{
-				readPersistedQuestion(q7PersistFile);
-			}
-			else
-			{
-				createQuestion(Quest7.class);
-			}
-			
-			createQuestion(Quest8.class);
-			
-			File q9PersistFile = new File(CommonData.CochiseDataPath + Quest9._id);
-			if(q9PersistFile.exists())
-			{
-				readPersistedQuestion(q9PersistFile);
-			}
-			else
-			{
-				createQuestion(Quest9.class);
-			}
-			
-			createQuestion(Quest10.class);
-			
-			File q11PersistFile = new File(CommonData.CochiseDataPath + Quest11._id);
-			if(q11PersistFile.exists())
-			{
-				readPersistedQuestion(q11PersistFile);
-			}
-			else
-			{
-				createQuestion(Quest11.class);
-			}
-			
-			createQuestion(Quest12.class);
+			addAutomatedQuestions();
+			addInteractiveQuestions(false);
 		}
 		catch (InvalidQuestionClassException e)
 		{
@@ -357,8 +297,41 @@ public class QuestionManager
 			throw new RuntimeException(e);
 		}
 	}
+
+	private void addInteractiveQuestions(boolean lookForPersistedQuests) throws FileNotFoundException, IOException, ClassNotFoundException, InvalidQuestionClassException
+	{
+		createInteractiveQuest(Quest2.class, Quest2._id, lookForPersistedQuests);
+		createInteractiveQuest(Quest4.class, Quest4._id, lookForPersistedQuests);
+		createInteractiveQuest(Quest7.class, Quest7._id, lookForPersistedQuests);
+		createInteractiveQuest(Quest9.class, Quest9._id, lookForPersistedQuests);
+		createInteractiveQuest(Quest11.class, Quest11._id, lookForPersistedQuests);
+	}
 	
-	public void removeQuestions()
+	private void createInteractiveQuest(Class<? extends YesNoQuestion> cl, String questId, boolean lookForPersistedQuests) throws FileNotFoundException, ClassCastException, IOException, ClassNotFoundException, InvalidQuestionClassException
+	{
+		File persistFile = new File(CommonData.CochiseDataPath + questId);
+		if(lookForPersistedQuests && persistFile.exists())
+		{
+			readPersistedQuestion(persistFile);
+		}
+		else
+		{
+			createQuestion(cl);
+		}
+	}
+
+	private void addAutomatedQuestions() throws InvalidQuestionClassException
+	{
+		createQuestion(Quest1.class);
+		createQuestion(Quest3.class);
+		createQuestion(Quest5.class);
+		createQuestion(Quest6.class);
+		createQuestion(Quest8.class);
+		createQuestion(Quest10.class);
+		createQuestion(Quest12.class);
+	}
+	
+	private void removeQuestions()
 	{
 		HashSet<String> questIds = new HashSet<String>(_questionsById.keySet());
 		for(String questId : questIds)
@@ -366,6 +339,44 @@ public class QuestionManager
 			removeQuestion(questId);
 		}
 	}
+	
+	private void removeInteractiveQuestions()
+	{
+		HashSet<String> questIds = new HashSet<String>(_questionsById.keySet());
+		for(String questId : questIds)
+		{
+			if(_questionsById.get(questId).getClass().isAnnotationPresent(Interactive.class))
+			{
+				removeQuestion(questId);
+			}
+		}
+	}
+	
+	public void loadPersistedQuestions()
+	{
+		try
+		{
+			removeInteractiveQuestions();
+			addInteractiveQuestions(true);
+		}
+		catch (FileNotFoundException e)
+		{
+			throw new RuntimeException(e);
+		}
+		catch (IOException e)
+		{
+			throw new RuntimeException(e);
+		}
+		catch (ClassNotFoundException e)
+		{
+			throw new RuntimeException(e);
+		}
+		catch (InvalidQuestionClassException e)
+		{
+			throw new RuntimeException(e);
+		}
+	}
+	
 
 	/**
 	 * 
