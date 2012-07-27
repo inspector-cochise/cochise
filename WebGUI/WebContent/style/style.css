@@ -178,3 +178,6 @@ ul {
 	text-align: right;
 }
 
+.deactivated {
+	opacity: 0.3;
+}

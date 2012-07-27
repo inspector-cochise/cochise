@@ -22,6 +22,7 @@
 	ResourceBundle labels = ResourceBundle.getBundle("settings", Locale.getDefault());
 %>
 <h1><%=labels.getString("prologue2")%></h1>
+<h2><%=labels.getString("generalSettings")%></h2>
 <%
 	SettingsHelper helper = new SettingsHelper(QuestionManager.getDefault().getPrologueData());
 	
@@ -78,6 +79,17 @@
 		</tr>
 	</table>
 </form>
+
+<div class="<%= QuestionManager.getDefault().isConfigured() ? "" : "deactivated" %>">
+<h2><%=labels.getString("continueSession")%></h2>
+	<form action="<%= response.encodeURL(CommonData.UPLOADSTATE_URL) %>" enctype="multipart/form-data" method="POST">
+		<%=labels.getString("continue1")%>
+		<ol>
+			<li><input type="file" name="upFile" <%= QuestionManager.getDefault().isConfigured() ? "" : "disabled" %>/></li>
+			<li><input type="submit" value="<%=labels.getString("continue2")%>" <%= QuestionManager.getDefault().isConfigured() ? "" : "disabled" %>/></li>
+		</ol>
+	</form>
+</div>
 
 <div id="apacheExecTip" class="tooltip"><%= labels.getString("apacheExecTip") %></div>
 <div id="apacheConfTip" class="tooltip"><%= labels.getString("apacheConfTip") %></div>

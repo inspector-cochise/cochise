@@ -18,9 +18,9 @@ import org.akquinet.util.ResourceWatcher;
 @Interactive
 public class Quest9 extends ResourceWatcher implements YesNoQuestion
 {
-	private static final long serialVersionUID = -4428911855077358238L;
+	private static final long serialVersionUID = -8814779206173285903L;
 	
-	private static final String _id = "Quest9";
+	public static final String _id = "Quest9";
 	private transient UserCommunicator _uc = UserCommunicator.getDefault();
 	private ConfigFile _conf;
 	private String _serverRoot = null;

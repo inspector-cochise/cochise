@@ -15,9 +15,9 @@ import org.akquinet.audit.ui.UserCommunicator;
 @Interactive
 public class Quest2 implements YesNoQuestion
 {
-	private static final long serialVersionUID = 8204295563575476314L;
+	private static final long serialVersionUID = -7930218858624626816L;
 	
-	private static final String _id = "Quest2";
+	public static final String _id = "Quest2";
 	private transient UserCommunicator _uc = UserCommunicator.getDefault();
 	private transient ProcessBuilder _httpd;
 	private transient ProcessBuilder _getCurrent;

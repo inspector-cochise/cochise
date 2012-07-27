@@ -1,6 +1,12 @@
 package org.akquinet.audit;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.rmi.UnexpectedException;
@@ -12,6 +18,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 import org.akquinet.audit.bsi.httpd.PrologueData;
 import org.akquinet.audit.bsi.httpd.os.Quest1;
@@ -28,22 +35,20 @@ import org.akquinet.audit.bsi.httpd.usersNrights.Quest8;
 import org.akquinet.audit.bsi.httpd.usersNrights.Quest9;
 import org.akquinet.audit.ui.DelayedHtmlUserCommunicator;
 import org.akquinet.audit.ui.DelayedHtmlUserCommunicator.InputState;
+import org.akquinet.audit.ui.DevNullUserCommunicator;
+import org.akquinet.audit.ui.KillThisThreadException;
 import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
 import org.akquinet.util.IResourceChangedListener;
 import org.akquinet.util.IResourceWatcher;
 import org.akquinet.util.ResourceChangedNotifierThread;
 import org.akquinet.web.CommonData;
+import org.akquinet.web.CommonData.QuestionStatus;
 import org.akquinet.web.SettingsHelper;
 
 public class QuestionManager
 {
 	private static final String LOADER_ANIMATION = "<div class=\"loader\"></div>";
-	
-	public enum QuestionStatus
-	{
-		GOOD, BAD, OPEN
-	}
 
 	private static QuestionManager _default;
 
@@ -60,6 +65,14 @@ public class QuestionManager
 		_questionsById = new HashMap<String, YesNoQuestion>();
 		_mainContentId = CommonData.PROLOGUE_ID;
 		_isStale = new HashSet<String>();
+		try
+		{
+			UserCommunicator.setDefault(new DevNullUserCommunicator());
+		}
+		catch (Exception e)
+		{
+			throw new RuntimeException(e);
+		}
 	}
 
 	public static QuestionManager getDefault()
@@ -251,7 +264,7 @@ public class QuestionManager
 		}
 	}
 
-	public void addQuestions()
+	private void addQuestions()
 	{
 		if (!_questionProperties.isEmpty())
 		{
@@ -260,26 +273,65 @@ public class QuestionManager
 
 		try
 		{
-			createQuestion(Quest1.class);
-			createQuestion(Quest2.class);
-			createQuestion(Quest3.class);
-			createQuestion(Quest4.class);
-			createQuestion(Quest5.class);
-			createQuestion(Quest6.class);
-			createQuestion(Quest7.class);
-			createQuestion(Quest8.class);
-			createQuestion(Quest9.class);
-			createQuestion(Quest10.class);
-			createQuestion(Quest11.class);
-			createQuestion(Quest12.class);
+			addAutomatedQuestions();
+			addInteractiveQuestions(false);
 		}
 		catch (InvalidQuestionClassException e)
 		{
 			throw new RuntimeException(e);
 		}
+		catch (FileNotFoundException e)
+		{
+			throw new RuntimeException(e);
+		}
+		catch (ClassCastException e)
+		{
+			throw new RuntimeException(e);
+		}
+		catch (IOException e)
+		{
+			throw new RuntimeException(e);
+		}
+		catch (ClassNotFoundException e)
+		{
+			throw new RuntimeException(e);
+		}
+	}
+
+	private void addInteractiveQuestions(boolean lookForPersistedQuests) throws FileNotFoundException, IOException, ClassNotFoundException, InvalidQuestionClassException
+	{
+		createInteractiveQuest(Quest2.class, Quest2._id, lookForPersistedQuests);
+		createInteractiveQuest(Quest4.class, Quest4._id, lookForPersistedQuests);
+		createInteractiveQuest(Quest7.class, Quest7._id, lookForPersistedQuests);
+		createInteractiveQuest(Quest9.class, Quest9._id, lookForPersistedQuests);
+		createInteractiveQuest(Quest11.class, Quest11._id, lookForPersistedQuests);
 	}
 	
-	public void removeQuestions()
+	private void createInteractiveQuest(Class<? extends YesNoQuestion> cl, String questId, boolean lookForPersistedQuests) throws FileNotFoundException, ClassCastException, IOException, ClassNotFoundException, InvalidQuestionClassException
+	{
+		File persistFile = new File(CommonData.CochiseDataPath + questId);
+		if(lookForPersistedQuests && persistFile.exists())
+		{
+			readPersistedQuestion(persistFile);
+		}
+		else
+		{
+			createQuestion(cl);
+		}
+	}
+
+	private void addAutomatedQuestions() throws InvalidQuestionClassException
+	{
+		createQuestion(Quest1.class);
+		createQuestion(Quest3.class);
+		createQuestion(Quest5.class);
+		createQuestion(Quest6.class);
+		createQuestion(Quest8.class);
+		createQuestion(Quest10.class);
+		createQuestion(Quest12.class);
+	}
+	
+	private void removeQuestions()
 	{
 		HashSet<String> questIds = new HashSet<String>(_questionsById.keySet());
 		for(String questId : questIds)
@@ -287,6 +339,44 @@ public class QuestionManager
 			removeQuestion(questId);
 		}
 	}
+	
+	private void removeInteractiveQuestions()
+	{
+		HashSet<String> questIds = new HashSet<String>(_questionsById.keySet());
+		for(String questId : questIds)
+		{
+			if(_questionsById.get(questId).getClass().isAnnotationPresent(Interactive.class))
+			{
+				removeQuestion(questId);
+			}
+		}
+	}
+	
+	public void loadPersistedQuestions()
+	{
+		try
+		{
+			removeInteractiveQuestions();
+			addInteractiveQuestions(true);
+		}
+		catch (FileNotFoundException e)
+		{
+			throw new RuntimeException(e);
+		}
+		catch (IOException e)
+		{
+			throw new RuntimeException(e);
+		}
+		catch (ClassNotFoundException e)
+		{
+			throw new RuntimeException(e);
+		}
+		catch (InvalidQuestionClassException e)
+		{
+			throw new RuntimeException(e);
+		}
+	}
+	
 
 	/**
 	 * 
@@ -314,10 +404,35 @@ public class QuestionManager
 
 	private void updateStatus(YesNoQuestion quest, QuestionStatus status)
 	{
+		final YesNoQuestionProperties props;
 		synchronized (_questionProperties)
 		{
-			_questionProperties.get(quest).status = status;
+			props = _questionProperties.get(quest);
+			props.status = status;
 		}
+		
+		Thread th = new Thread()
+		{
+			@Override
+			public void run()
+			{
+				try
+				{
+					ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(CommonData.CochiseDataPath + props.quest.getID()));
+					
+					os.writeObject(props.quest);
+					os.writeObject(props.status);
+					os.writeObject(props.communicator.stringifyCurrentState());
+					os.close();
+				}
+				catch (IOException e)
+				{
+					CommonData.getLogger().log(Level.FINE, e.getMessage(), e);
+				}
+			}
+		};
+		
+		th.start();
 	}
 
 	public QuestionStatus getStatus(String questId)
@@ -358,7 +473,15 @@ public class QuestionManager
 				throw new RuntimeException(e);
 			}
 
-			_answer = _quest.answer();
+			try
+			{
+				_answer = _quest.answer();
+			}
+			catch (KillThisThreadException e)
+			{
+				return;
+			}
+			
 			_callback.updateStatus(_quest, _answer ? QuestionStatus.GOOD : QuestionStatus.BAD);
 		}
 	}
@@ -368,9 +491,40 @@ public class QuestionManager
 		YesNoQuestion quest;
 		DelayedHtmlUserCommunicator communicator;
 		QuestionStatus status;
-		AnsweringThread askingThread;
+		Thread askingThread;
+		
+		YesNoQuestionProperties(Class<? extends YesNoQuestion> questClass, QuestionManager callback) throws InvalidQuestionClassException
+		{
+			try
+			{
+				Constructor<? extends YesNoQuestion> ctr = questClass.getConstructor(PrologueData.class, UserCommunicator.class);
+				
+				communicator = new DelayedHtmlUserCommunicator(CommonData.MAIN_SERVLET_URL);
+				quest = ctr.newInstance(_prologueData, communicator);
+				communicator.setQuestId(quest.getID());
 
-		YesNoQuestionProperties(YesNoQuestion _quest, DelayedHtmlUserCommunicator _communicator, QuestionStatus _status, AnsweringThread _askingThread)
+				status = QuestionStatus.OPEN;
+				askingThread = new AnsweringThread(quest, callback);
+			}
+			catch (NoSuchMethodException e)		//if no constructor with Parameters PrologueData, UserCommunicator exists
+			{
+				throw new InvalidQuestionClassException(e);
+			}
+			catch (InstantiationException e)	//if the class is abstract
+			{
+				throw new InvalidQuestionClassException(e);
+			}
+			catch (IllegalAccessException e)	//if the constructor is inaccessible
+			{
+				throw new InvalidQuestionClassException(e);
+			}
+			catch (InvocationTargetException e)	//if the constructor throws an exception
+			{
+				throw new RuntimeException(e);
+			}
+		}
+
+		YesNoQuestionProperties(YesNoQuestion _quest, DelayedHtmlUserCommunicator _communicator, QuestionStatus _status, Thread _askingThread)
 		{
 			quest = _quest;
 			communicator = _communicator;
@@ -387,7 +541,7 @@ public class QuestionManager
 	 */
 	private void createQuestion(Class<? extends YesNoQuestion> questClass) throws InvalidQuestionClassException
 	{
-		YesNoQuestionProperties questProperties = createProperties(questClass);
+		YesNoQuestionProperties questProperties = new YesNoQuestionProperties(questClass, this);
 		
 		final YesNoQuestion quest = questProperties.quest;
 		final String questId = quest.getID();
@@ -415,39 +569,120 @@ public class QuestionManager
 				}, (IResourceWatcher) quest);
 			}
 		}
-		
 	}
 	
-	private YesNoQuestionProperties createProperties(Class<? extends YesNoQuestion> questClass) throws InvalidQuestionClassException
+	private void readPersistedQuestion(File questionFile) throws FileNotFoundException, IOException, ClassNotFoundException, ClassCastException
 	{
-		try
+		ObjectInputStream objInStream = new ObjectInputStream(new FileInputStream(questionFile));
+		
+		YesNoQuestion quest = (YesNoQuestion) objInStream.readObject();
+		QuestionStatus status = (QuestionStatus) objInStream.readObject();
+		final String stringifiedState = (String) objInStream.readObject();
+		
+		objInStream.close();
+		
+		DelayedHtmlUserCommunicator comm = new DelayedHtmlUserCommunicator("", quest.getID())
 		{
-			Constructor<? extends YesNoQuestion> ctr = questClass.getConstructor(PrologueData.class, UserCommunicator.class);
+			@Override
+			public String stringifyCurrentState()
+			{
+				return stringifiedState;
+			}
 			
-			DelayedHtmlUserCommunicator comm = new DelayedHtmlUserCommunicator(CommonData.MAIN_SERVLET_URL);
-			final YesNoQuestion quest = ctr.newInstance(_prologueData, comm);
-			final String questId = quest.getID();
-			comm.setQuestId(questId);
+			@Override
+			public void beginHidingParagraph(String hiddenText) {}
+			@Override
+			public void endHidingParagraph() {}
+			@Override
+			public void beginIndent() {}
+			@Override
+			public void endIndent() {}
+			@Override
+			public void markReport() {}
+			@Override
+			public void resetReport() {}
+			@Override
+			public void printAnswer(boolean answer, String cause) {}
+			@Override
+			public void printExample(String example) {}
+			@Override
+			public void printHeading1(String heading) {}
+			@Override
+			public void printHeading2(String heading) {}
+			@Override
+			public void printHeading3(String heading) {}
+			@Override
+			public void printHidingParagraph(String shortDescription, String expandedText) {}
+			@Override
+			public void printParagraph(String text) {}
+			@Override
+			public void println(String text) {}
+			@Override
+			public void reportError(Exception error) {}
+			@Override
+			public void reportError(String error) {}
+			@Override
+			public void setAnswer(String answer) {}
+			@Override
+			public void setBooleanAnswer(boolean answer) {}
+			@Override
+			public void setBooleanAnswer(String answer) {}
+			@Override
+			public void setStringAnswer(String answer) {}
+			@Override
+			public String askStringQuestion(String question)
+			{
+				return "";
+			}
+			@Override
+			public String askStringQuestion(String question, String defaultAnswer)
+			{
+				return "";
+			}
+			@Override
+			public String askTextQuestion(String question)
+			{
+				return "";
+			}
+			@Override
+			public boolean askYesNoQuestion(String question)
+			{
+				return false;
+			}
+			@Override
+			public boolean askYesNoQuestion(String question, Boolean defaultAnswer)
+			{
+				return false;
+			}
+		};
+		quest.setUserCommunicator(comm);
+		
+		YesNoQuestionProperties questProperties = new YesNoQuestionProperties(quest, comm, status, new Thread());
+		
+		final String questId = quest.getID();
+		
+		_questionProperties.put(quest, questProperties);
+		_questionsById.put(questId, quest);
+		questProperties.askingThread.start();
+		
+		synchronized (_isStale)
+		{
+			_isStale.remove(questId);
 			
-			YesNoQuestionProperties questProperties = new YesNoQuestionProperties(quest, comm, QuestionStatus.OPEN, new AnsweringThread(quest, this));
-			
-			return questProperties;
-		}
-		catch (NoSuchMethodException e)		//if no constructor with Parameters PrologueData, UserCommunicator exists
-		{
-			throw new InvalidQuestionClassException(e);
-		}
-		catch (InstantiationException e)	//if the class is abstract
-		{
-			throw new InvalidQuestionClassException(e);
-		}
-		catch (IllegalAccessException e)	//if the constructor is inaccessible
-		{
-			throw new InvalidQuestionClassException(e);
-		}
-		catch (InvocationTargetException e)	//if the constructor throws an exception
-		{
-			throw new RuntimeException(e);
+			if(IResourceWatcher.class.isAssignableFrom(quest.getClass()))
+			{
+				ResourceChangedNotifierThread.getDefault().addResourceChangedListener(new IResourceChangedListener()
+				{
+					@Override
+					public void resourceChanged(String resourceId)
+					{
+						synchronized(_isStale)
+						{
+							_isStale.add(questId);
+						}
+					}
+				}, (IResourceWatcher) quest);
+			}
 		}
 	}
 	

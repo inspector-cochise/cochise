@@ -165,8 +165,7 @@ public class DelayedHtmlUserCommunicator extends UserCommunicator
 			}
 			catch (InterruptedException e)
 			{
-				Thread.currentThread().interrupt();
-				return false;
+				throw new KillThisThreadException();
 			}
 			
 			_inputState = InputState.NO_INPUT_EXPECTED;
@@ -213,8 +212,7 @@ public class DelayedHtmlUserCommunicator extends UserCommunicator
 			}
 			catch (InterruptedException e)
 			{
-				Thread.currentThread().interrupt();
-				return "";
+				throw new KillThisThreadException();
 			}
 			
 			_inputState = InputState.NO_INPUT_EXPECTED;
@@ -253,8 +251,7 @@ public class DelayedHtmlUserCommunicator extends UserCommunicator
 			}
 			catch (InterruptedException e)
 			{
-				Thread.currentThread().interrupt();
-				return "";
+				throw new KillThisThreadException();
 			}
 			
 			_inputState = InputState.NO_INPUT_EXPECTED;

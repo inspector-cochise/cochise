@@ -1,6 +1,7 @@
 package org.akquinet.web;
 
 import java.util.Random;
+import java.util.logging.Logger;
 
 public class CommonData
 {
@@ -15,6 +16,8 @@ public class CommonData
 	public static final String MAIN_SERVLET_URL = "inspector.jsp";
 	public static final String LOGIN_SERVLET_URL = "login.jsp";
 	public static final String REPORT_SERVLET_URL = "report.jsp";
+	public static final String ZIPSTATE_URL = "QuestionData.zip";
+	public static final String UPLOADSTATE_URL = "UploadQuestions";
 
 	public static final String PARAM_REQUESTED_QUEST = "quest";
 	public static final String PARAM_ACTION = "action";
@@ -29,15 +32,24 @@ public class CommonData
 
 	public static final long RUN_ID = (new Random(System.nanoTime())).nextInt();
 
+	public static String CochiseDataPath = "../cochise-data/";
+	
 	public enum QuestionStatus
 	{
 		GOOD, BAD, OPEN
 	}
 
 	private static CommonData _default;
+	
+	private static Logger _logger = Logger.getAnonymousLogger();
 
 	private CommonData()
 	{
+	}
+	
+	public static Logger getLogger()
+	{
+		return _logger;
 	}
 
 	public static CommonData getDefault()
