@@ -51,6 +51,7 @@
 			}
 			%>
 			 ];
+		var mainCont = '';
 		<%
 	}
 	%>
@@ -69,6 +70,12 @@
 		hub.publish(true, "/container/load", {
 			containerId : 'body'
 		});
+		
+		mainCont = getMainContent();
+		$('#right #content').html(mainCont);
+		
+		setInterval(updateMainContent, 3000);
+		setInterval(updateQuestions, 1000);
 		
 		updateQuestions();
 	});
@@ -112,9 +119,7 @@
 			</div>
 		</div>
 		<div id="right">
-			<div id="content">
-				<%@include file="mainCont.jsp" %>
-			</div>
+			<div id="content"></div>
 		</div>
 	</div>
 <%

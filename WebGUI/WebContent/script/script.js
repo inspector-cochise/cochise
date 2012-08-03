@@ -2,14 +2,11 @@ var mainContentUrl = 'mainCont.jsp';
 var completeSiteUrl = 'inspector.jsp';
 var questionStatusUrl = 'qStat.jsp';
 var reportUrl = 'report.jsp';
-var mainContHash = '';
 
 var positiveQuestions = 0;
 var negativeQuestions = 0;
 var openQuestions = 0;
 
-setInterval(updateMainContent, 3000);
-setInterval(updateQuestions, 1000);
 
 function restartQuestion()
 {
@@ -67,6 +64,25 @@ function isStale(target)
 	}
 }
 
+function getMainContent(target)
+{
+	var xmlHttpObject = new XMLHttpRequest();
+
+	if(target == null || target == '')
+	{
+		xmlHttpObject.open('get', mainContentUrl, false);
+	}
+	else
+	{
+		xmlHttpObject.open('get', mainContentUrl + '?quest=' + target, false);
+		$('[id^="navlink_"]').css("font-weight", "normal");
+		$('#navlink_' + target).css("font-weight", "bold");
+	}
+	xmlHttpObject.send(null);
+	
+	return xmlHttpObject.responseText;
+}
+
 function updateMainContent(target)
 {
 	if(!isAvailable())
@@ -83,26 +99,12 @@ function updateMainContent(target)
 		}
 	}
 	
-	var xmlHttpObject = new XMLHttpRequest();
+	var responseText = getMainContent(target);
 
-	if(target == null || target == '')
+	if (mainCont != responseText)
 	{
-		xmlHttpObject.open('get', mainContentUrl, false);
-	}
-	else
-	{
-		xmlHttpObject.open('get', mainContentUrl + '?quest=' + target, false);
-		$('[id^="navlink_"]').css("font-weight", "normal");
-		$('#navlink_' + target).css("font-weight", "bold");
-	}
-	xmlHttpObject.send(null);
-
-	var responseHash = str_md5(xmlHttpObject.responseText);
-
-	if (mainContHash != responseHash)
-	{
-		mainContHash = responseHash;
-		$('#right #content').html(xmlHttpObject.responseText);
+		mainCont = responseText;
+		$('#right #content').html(responseText);
 
 		hub.unregisterComponent('disclosure').start();
 
