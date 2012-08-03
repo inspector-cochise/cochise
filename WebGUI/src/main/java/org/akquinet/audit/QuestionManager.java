@@ -65,6 +65,13 @@ public class QuestionManager
 		_questionsById = new HashMap<String, YesNoQuestion>();
 		_mainContentId = CommonData.PROLOGUE_ID;
 		_isStale = new HashSet<String>();
+		
+		if (_prologueData == null)
+		{
+			_prologueData = (new SettingsHelper())._prologueData;
+			_configured = false;
+		}
+		
 		try
 		{
 			UserCommunicator.setDefault(new DevNullUserCommunicator());
@@ -133,11 +140,6 @@ public class QuestionManager
 		updateMainContentId(params.get(CommonData.PARAM_REQUESTED_QUEST));
 
 		String action = params.get(CommonData.PARAM_ACTION);
-		if (_prologueData == null)
-		{
-			_prologueData = (new SettingsHelper())._prologueData;
-			_configured = false;
-		}
 
 		if (action != null)
 		{
