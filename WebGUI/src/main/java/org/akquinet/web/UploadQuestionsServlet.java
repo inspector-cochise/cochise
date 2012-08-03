@@ -53,6 +53,7 @@ public class UploadQuestionsServlet extends HttpServlet
 		try
 		{
 			byte[] buf = new byte[BUFFER_SIZE];
+			@SuppressWarnings("unchecked")
 			List<FileItem> list = upload.parseRequest(req);
 			for(FileItem i : list)
 			{
