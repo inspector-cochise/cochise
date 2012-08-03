@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 @WebServlet(urlPatterns="/checkLogin")
 public class AuthenticatorServlet extends HttpServlet
@@ -16,7 +17,7 @@ public class AuthenticatorServlet extends HttpServlet
 	
 	private static final String COCHISE_PROPERTIES_PASSKEY = "cochisePass";
 	
-	private static boolean _someoneLoggedIn = false;
+	private static String _sessionId = null;
 
 	public AuthenticatorServlet()
 	{
@@ -29,25 +30,22 @@ public class AuthenticatorServlet extends HttpServlet
 		String logout = request.getParameter("logout");
 		if(logout != null)
 		{
-			_someoneLoggedIn = false;
-			request.getSession().removeAttribute("loggedIn");
+			_sessionId = null;
 			request.getSession().invalidate();
 			response.sendRedirect(response.encodeRedirectURL(CommonData.LOGIN_SERVLET_URL));
 			return;
 		}
 		
 		String pass = request.getParameter("password");
-		if(pass != null && authenticate(pass) && !_someoneLoggedIn) //there can only be one person logged in (this application is not parallelity-safe)
+		if(pass != null && authenticate(pass) && _sessionId == null) //there can only be one person logged in (this application is not parallelity-safe)
 		{
-			_someoneLoggedIn = true;
+			_sessionId = request.getSession().getId();
 			Enumeration<String> attributes = request.getSession().getAttributeNames();
 			while(attributes.hasMoreElements())
 			{
 				request.getSession().removeAttribute( attributes.nextElement() );
 			}
 			
-			request.getSession().setAttribute("runId", CommonData.RUN_ID);
-			request.getSession().setAttribute("loggedIn", true);
 			response.sendRedirect(response.encodeRedirectURL(CommonData.MAIN_SERVLET_URL));
 		}
 		else
@@ -56,7 +54,18 @@ public class AuthenticatorServlet extends HttpServlet
 		}
 	}
 	
-	private boolean authenticate(String pass)
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	{
+		doGet(request, response);
+	}
+
+	/**
+	 * 
+	 * @param pass
+	 * @return returns true if the password is ok and false otherwise
+	 */
+	public static boolean authenticate(String pass)
 	{
 		if(System.getProperty(COCHISE_PROPERTIES_PASSKEY) == null)
 		{
@@ -68,9 +77,13 @@ public class AuthenticatorServlet extends HttpServlet
 		}
 	}
 
-	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	/**
+	 * 
+	 * @param sess
+	 * @return returns true if the session is ok and false otherwise
+	 */
+	public static boolean authenticate(HttpSession sess)
 	{
-		doGet(request, response);
+		return _sessionId != null && sess.getId().equals(_sessionId);
 	}
 }

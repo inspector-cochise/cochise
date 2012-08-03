@@ -38,10 +38,7 @@ public class QuestStatusServlet extends HttpServlet
 		String action = request.getParameter(CommonData.PARAM_ACTION);
 		
 		HttpSession session = request.getSession();
-		if (session.getAttribute("loggedIn") == null
-				|| session.getAttribute("runId") == null 
-				|| !session.getAttribute("runId").equals(CommonData.RUN_ID)
-			)
+		if (!AuthenticatorServlet.authenticate(session))
 		{
 			if(action != null && action.equals(CommonData.ACTION_IS_AVAILABLE))
 			{

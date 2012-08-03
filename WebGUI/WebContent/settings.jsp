@@ -1,4 +1,5 @@
 
+<%@page import="org.akquinet.web.AuthenticatorServlet"%>
 <%@page import="org.akquinet.audit.QuestionManager"%>
 <%@page import="org.akquinet.audit.bsi.httpd.PrologueData"%>
 <%@page import="org.akquinet.web.CommonData"%>
@@ -9,10 +10,7 @@
 <%@page import="java.util.Locale"%>
 <%@page import="java.util.ResourceBundle"%>
 <%
-	if (session.getAttribute("loggedIn") == null
-			|| session.getAttribute("runId") == null
-			|| !session.getAttribute("runId").equals(CommonData.RUN_ID)
-		)
+	if (!AuthenticatorServlet.authenticate(request.getSession()))
 	{
 		response.sendRedirect( response.encodeRedirectURL(CommonData.LOGIN_SERVLET_URL) );
 		return;

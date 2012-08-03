@@ -23,10 +23,7 @@ public class ZippedQuestionsServlet extends HttpServlet
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
-		if (req.getSession().getAttribute("loggedIn") == null
-				|| req.getSession().getAttribute("runId") == null
-				|| !req.getSession().getAttribute("runId").equals(CommonData.RUN_ID)
-			)
+		if (!AuthenticatorServlet.authenticate(req.getSession()))
 		{
 			resp.sendRedirect(resp.encodeRedirectURL(CommonData.LOGIN_SERVLET_URL));
 			return;

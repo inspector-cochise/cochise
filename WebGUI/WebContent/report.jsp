@@ -1,3 +1,4 @@
+<%@page import="org.akquinet.web.AuthenticatorServlet"%>
 <%@page import="org.akquinet.audit.QuestionManager"%>
 <%@page import="java.util.ResourceBundle"%>
 <%@page import="java.util.Iterator"%>
@@ -11,10 +12,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%
-	if (session.getAttribute("loggedIn") == null
-			|| session.getAttribute("runId") == null
-			|| !session.getAttribute("runId").equals(CommonData.RUN_ID)
-		)
+	if (!AuthenticatorServlet.authenticate(request.getSession()))
 	{
 		response.sendRedirect(response.encodeRedirectURL(CommonData.LOGIN_SERVLET_URL));
 		return;
