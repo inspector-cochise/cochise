@@ -115,6 +115,63 @@ public class ModuleHelper implements Serializable
 	}
 	
 	/**
+	 * Diggs through the configuration looking for a LoadModule directive for the specified module name
+	 * LoadModule moduleName path/to/some/dso
+	 * @param moduleName
+	 * @return The LoadModule directive if existent, null otherwise
+	 */
+	public Directive getLoadModuleDirective(String moduleName)
+	{
+		List<Directive> dirs = getLoadModuleList();
+		
+		for (Directive directive : dirs)
+		{
+			String[] arguments = directive.getValue().trim().split("[ \t]+");
+			if(arguments == null || arguments.length < 2)
+			{
+				continue;
+			}
+			
+			if(arguments[0].equals("moduleName"))
+			{
+				return directive;
+			}
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * 
+	 * @param moduleName
+	 * @return true iff a module with name moduleName is beeing loaded by a LoadModule directive
+	 */
+	public boolean isModuleLoaded(String moduleName)
+	{
+		return getLoadModuleDirective(moduleName) != null;
+	}
+	
+	/**
+	 * 
+	 * @param compiledIntoModuleName Note this name is most times different from the name used by a LoadModule directive
+	 * @return true iff a module with name compiledIntoModuleName has been compiled into the apache binary.
+	 */
+	public boolean isModuleCompiledInto(String compiledIntoModuleName)
+	{
+		String[] modList = getCompiledIntoModulesList();
+		
+		for (String str : modList)
+		{
+			if(str.matches("( |\t)*" + compiledIntoModuleName + "( |\t)*"))
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * Reparse the config-file. Useful if the config-file has been changed.
 	 * @throws ParserException
 	 * @throws IOException

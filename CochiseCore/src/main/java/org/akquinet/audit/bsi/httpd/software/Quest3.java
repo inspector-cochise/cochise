@@ -2,7 +2,6 @@ package org.akquinet.audit.bsi.httpd.software;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.ResourceBundle;
 
 import org.akquinet.audit.Automated;
@@ -61,55 +60,33 @@ public class Quest3 implements YesNoQuestion, IResourceWatcher
 		_uc.printHeading3( _labels.getString("name") );
 		_uc.printParagraph( _labels.getString("Q0") );
 
-		List<Directive> loadList;
-		String[] modList;
-		
-		synchronized(this)
+		Directive loadDir = _moduleHelper.getLoadModuleDirective("security2_module");
+		if(loadDir != null)
 		{
-			loadList = _moduleHelper.getLoadModuleList();
-			modList = _moduleHelper.getCompiledIntoModulesList();
-		}
-		
-		for (Directive directive : loadList)
-		{
-			String[] arguments = directive.getValue().trim().split("[ \t]+");
-			if(arguments == null || arguments.length < 2)
+			boolean ret;
+			if(!loadDir.isGlobal())
 			{
-				continue;
+				_uc.println(_labels.getString("S6"));
+				_uc.printExample(loadDir.getContainingFile() + ":" + loadDir.getLinenumber() + ": " + loadDir.getName() + " " + loadDir.getValue());
+				_uc.printAnswer(false, _labels.getString("S7"));
+				ret = false;
 			}
-			
-			if(arguments[0].equals("security2_module"))
+			else
 			{
-				Directive modSec = directive;
-				boolean ret;
-				if(!modSec.isGlobal())
-				{
-					_uc.println(_labels.getString("S6"));
-					_uc.printExample(modSec.getContainingFile() + ":" + modSec.getLinenumber() + ": " + modSec.getName() + " " + modSec.getValue());
-					_uc.printAnswer(false, _labels.getString("S7"));
-					ret = false;
-				}
-				else
-				{
-					_uc.printAnswer(true, _labels.getString("S1"));
-					_uc.printExample(modSec.getContainingFile() + ":" + modSec.getLinenumber() + ": " + modSec.getName() + " " + modSec.getValue());
-					ret = true;
-				}
-				_uc.printHidingParagraph(_labels.getString("S4"), _labels.getString("S5"));
-				return ret;
+				_uc.printAnswer(true, _labels.getString("S1"));
+				_uc.printExample(loadDir.getContainingFile() + ":" + loadDir.getLinenumber() + ": " + loadDir.getName() + " " + loadDir.getValue());
+				ret = true;
 			}
-			
+			_uc.printHidingParagraph(_labels.getString("S4"), _labels.getString("S5"));
+			return ret;
 		}
 		
 		//maybe ModSecurity is compiled into the apache binary, check for that:
-		for (String str : modList)
+		if(_moduleHelper.isModuleCompiledInto("mod_security.c"))
 		{
-			if(str.matches("( |\t)*mod_security.c( |\t)*"))
-			{
-				_uc.printAnswer(true, _labels.getString("S2"));
-				_uc.printHidingParagraph(_labels.getString("S4"), _labels.getString("S5"));
-				return true;
-			}
+			_uc.printAnswer(true, _labels.getString("S2"));
+			_uc.printHidingParagraph(_labels.getString("S4"), _labels.getString("S5"));
+			return true;
 		}
 		
 		_uc.printAnswer(false, _labels.getString("S3"));
