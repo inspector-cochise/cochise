@@ -20,9 +20,9 @@ import org.akquinet.httpd.syntax.Directive;
 import org.akquinet.util.IResourceWatcher;
 
 @Automated
-public class Quest10 extends ModuleHelper implements YesNoQuestion, IResourceWatcher
+public class Quest10 implements YesNoQuestion, IResourceWatcher
 {
-	private static final long serialVersionUID = 7570966044840051414L;
+	private static final long serialVersionUID = 2195554792425076160L;
 	
 	private static final String _id = "Quest10";
 	private transient UserCommunicator _uc = UserCommunicator.getDefault();
@@ -30,6 +30,7 @@ public class Quest10 extends ModuleHelper implements YesNoQuestion, IResourceWat
 	private String _commandPath;
 	private String _command;
 	private transient ResourceBundle _labels;
+	private ModuleHelper _moduleHelper;
 
 	private Boolean _lastAnswer = null;
 
@@ -60,7 +61,7 @@ public class Quest10 extends ModuleHelper implements YesNoQuestion, IResourceWat
 	
 	public Quest10(ConfigFile conf, String commandPath, String command, UserCommunicator uc)
 	{
-		super(conf);
+		_moduleHelper = new ModuleHelper(conf);
 		_uc = uc;
 		_commandPath = commandPath;
 		_command = command;
@@ -110,7 +111,7 @@ public class Quest10 extends ModuleHelper implements YesNoQuestion, IResourceWat
 	private List<File> getModuleFiles()
 	{
 		List<File> ret = new LinkedList<File>();
-		List<Directive> dirList = getLoadModuleList();
+		List<Directive> dirList = _moduleHelper.getLoadModuleList();
 		for (Directive dir : dirList)
 		{
 			try
@@ -123,7 +124,7 @@ public class Quest10 extends ModuleHelper implements YesNoQuestion, IResourceWat
 			}
 		}
 		
-		dirList = getLoadFileList();
+		dirList = _moduleHelper.getLoadFileList();
 		for (Directive dir : dirList)
 		{
 			ret.add(new File(dir.getValue().trim()));
@@ -188,7 +189,7 @@ public class Quest10 extends ModuleHelper implements YesNoQuestion, IResourceWat
 	{
 		synchronized(this)
 		{
-			reparse();
+			_moduleHelper.reparse();
 		}
 	}
 	

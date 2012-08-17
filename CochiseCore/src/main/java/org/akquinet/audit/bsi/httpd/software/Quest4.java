@@ -15,9 +15,9 @@ import org.akquinet.httpd.syntax.Directive;
 import org.akquinet.util.IResourceWatcher;
 
 @Interactive
-public class Quest4 extends ModuleHelper implements YesNoQuestion, IResourceWatcher
+public class Quest4 implements YesNoQuestion, IResourceWatcher
 {
-	private static final long serialVersionUID = 8721136798597684044L;
+	private static final long serialVersionUID = 1851906850759136977L;
 	
 	public static final String _id = "Quest4";
 	private transient UserCommunicator _uc = UserCommunicator.getDefault();
@@ -28,6 +28,7 @@ public class Quest4 extends ModuleHelper implements YesNoQuestion, IResourceWatc
 	@SuppressWarnings("unused")		//maybe will be used later, having it here now so that it get's serialized
 	private String _explanation = "";
 	private boolean _firstRun = true;
+	private ModuleHelper _moduleHelper;
 	
 	private transient Object _monitor = new Object();
 	
@@ -50,12 +51,12 @@ public class Quest4 extends ModuleHelper implements YesNoQuestion, IResourceWatc
 	
 	public Quest4(ConfigFile conf, File apacheExecutable, UserCommunicator uc)
 	{
-		super(conf, apacheExecutable);
+		_moduleHelper = new ModuleHelper(conf, apacheExecutable);
 		_uc = uc;
 		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 		_lastAnswer = false;
 		
-		_compiledIntoModules = getCompiledIntoModulesList();
+		_compiledIntoModules = _moduleHelper.getCompiledIntoModulesList();
 		_loadModules = getLoadModules();
 	}
 
@@ -74,7 +75,7 @@ public class Quest4 extends ModuleHelper implements YesNoQuestion, IResourceWatc
 		
 		synchronized (_monitor)
 		{
-			_compiledIntoModules = getCompiledIntoModulesList();
+			_compiledIntoModules = _moduleHelper.getCompiledIntoModulesList();
 			_loadModules = getLoadModules();
 		}
 		
@@ -124,7 +125,7 @@ public class Quest4 extends ModuleHelper implements YesNoQuestion, IResourceWatc
 	
 	private String[] getLoadModules()
 	{
-		Directive[] loadModules = (Directive[]) getLoadModuleList().toArray(new Directive[0]);
+		Directive[] loadModules = (Directive[]) _moduleHelper.getLoadModuleList().toArray(new Directive[0]);
 		String[] ret = new String[loadModules.length];
 		for (int i = 0; i < loadModules.length; ++i)
 		{
@@ -153,7 +154,7 @@ public class Quest4 extends ModuleHelper implements YesNoQuestion, IResourceWatc
 			compModulesOld = _compiledIntoModules.clone();
 			loadModulesOld = _loadModules.clone();
 		}
-		String[] compiledIntoModules = getCompiledIntoModulesList();
+		String[] compiledIntoModules = _moduleHelper.getCompiledIntoModulesList();
 		String[] loadModules = getLoadModules();
 		
 		if(compModulesOld.length !=	compiledIntoModules.length)
@@ -218,7 +219,7 @@ public class Quest4 extends ModuleHelper implements YesNoQuestion, IResourceWatc
 	@Override
 	public void initialize() throws ParserException, IOException
 	{
-		reparse();
+		_moduleHelper.reparse();
 	}
 	
 	private synchronized void readObject( java.io.ObjectInputStream s ) throws IOException, ClassNotFoundException

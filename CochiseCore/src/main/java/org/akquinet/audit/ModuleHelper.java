@@ -60,7 +60,7 @@ public class ModuleHelper implements Serializable
 	 * This method looks for all LoadModule-directives in the configuration and returns a list of them.
 	 * @return List of all LoadModule-directives in the configuration.
 	 */
-	protected List<Directive> getLoadModuleList()
+	public List<Directive> getLoadModuleList()
 	{
 		return _conf.getDirectiveIgnoreCase("LoadModule");
 	}
@@ -69,7 +69,7 @@ public class ModuleHelper implements Serializable
 	 * This method looks for all LoadFile-directives in the configuration and returns a list of them.
 	 * @return List of all LoadFile-directives in the configuration.
 	 */
-	protected List<Directive> getLoadFileList()
+	public List<Directive> getLoadFileList()
 	{
 		return _conf.getDirectiveIgnoreCase("LoadFile");
 	}
@@ -78,7 +78,7 @@ public class ModuleHelper implements Serializable
 	 * This method will use the apache executable to determine which modules have been compiled into it.
 	 * @return An array with the names of all modules compiled into your apache executable.
 	 */
-	protected String[] getCompiledIntoModulesList()
+	public String[] getCompiledIntoModulesList()
 	{
 		if(_httpd == null)
 		{
@@ -119,7 +119,7 @@ public class ModuleHelper implements Serializable
 	 * @throws ParserException
 	 * @throws IOException
 	 */
-	protected void reparse() throws ParserException, IOException
+	public void reparse() throws ParserException, IOException
 	{
 		_conf.reparse();
 	}

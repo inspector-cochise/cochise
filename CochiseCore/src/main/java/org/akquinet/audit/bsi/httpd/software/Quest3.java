@@ -16,15 +16,16 @@ import org.akquinet.httpd.syntax.Directive;
 import org.akquinet.util.IResourceWatcher;
 
 @Automated
-public class Quest3 extends ModuleHelper implements YesNoQuestion, IResourceWatcher
+public class Quest3 implements YesNoQuestion, IResourceWatcher
 {
-	private static final long serialVersionUID = -994168432495652020L;
+	private static final long serialVersionUID = 250672576291690784L;
 	
 	private static final String _id = "Quest3";
 	private transient UserCommunicator _uc = UserCommunicator.getDefault();
 	private transient ResourceBundle _labels;
 
 	private Boolean _lastAnswer = null;
+	private ModuleHelper _moduleHelper;
 	
 	public Quest3(PrologueData pd)
 	{
@@ -43,7 +44,7 @@ public class Quest3 extends ModuleHelper implements YesNoQuestion, IResourceWatc
 	
 	public Quest3(ConfigFile conf, File apacheExecutable, UserCommunicator uc)
 	{
-		super(conf, apacheExecutable);
+		_moduleHelper = new ModuleHelper(conf, apacheExecutable);
 		_uc = uc;
 		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
 	}
@@ -65,8 +66,8 @@ public class Quest3 extends ModuleHelper implements YesNoQuestion, IResourceWatc
 		
 		synchronized(this)
 		{
-			loadList = getLoadModuleList();
-			modList = getCompiledIntoModulesList();
+			loadList = _moduleHelper.getLoadModuleList();
+			modList = _moduleHelper.getCompiledIntoModulesList();
 		}
 		
 		for (Directive directive : loadList)
@@ -154,7 +155,7 @@ public class Quest3 extends ModuleHelper implements YesNoQuestion, IResourceWatc
 	{
 		synchronized(this)
 		{
-			reparse();
+			_moduleHelper.reparse();
 		}
 	}
 	
