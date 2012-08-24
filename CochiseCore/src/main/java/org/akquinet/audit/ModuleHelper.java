@@ -132,7 +132,7 @@ public class ModuleHelper implements Serializable
 				continue;
 			}
 			
-			if(arguments[0].equals("moduleName"))
+			if(arguments[0].equals(moduleName))
 			{
 				return directive;
 			}
