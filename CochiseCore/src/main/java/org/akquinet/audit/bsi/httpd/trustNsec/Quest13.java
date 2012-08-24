@@ -17,6 +17,7 @@ import org.akquinet.httpd.syntax.Directive;
 
 public class Quest13 implements YesNoQuestion
 {
+	private static final long serialVersionUID = 1903677931753535191L;
 	private static final String SSLCipherSuite_Minimum = "SSLCipherSuite !NULL:!eNULL:!aNULL:!ADH:!MD5:!RC2";
 
 	private static final String _id = "Quest13";
@@ -142,18 +143,47 @@ public class Quest13 implements YesNoQuestion
 
 	private boolean SSLRandomSeedIsWellAndPresent()
 	{
-		//TODO what would "well" mean?
-		final int randomSeedCount = _config.getAllDirectivesIgnoreCase("SSLRandomSeed").size();
-		if(randomSeedCount <= 0)
+		List<Directive> sslRandomSeeds = _config.getAllDirectivesIgnoreCase("SSLRandomSeed");
+		int connectCount = 0;
+		int startupCount = 0;
+		
+		for(Directive seed : sslRandomSeeds)
 		{
-			//TODO message?
-			return false;
+			if(seed.getValue().trim().substring(0, 7).equalsIgnoreCase("startup"))
+			{
+				++startupCount;
+			}
+			else if(seed.getValue().trim().substring(0, 7).equalsIgnoreCase("connect"))
+			{
+				++connectCount;
+			}
+		}
+		
+		boolean ret = true;
+		
+		if(startupCount <= 0)
+		{
+			_uc.println( _labels.getString("L9") );
+			ret = false;
 		}
 		else
 		{
-			//TODO message?
-			return true;
+			_uc.println( _labels.getString("L10") );
+			ret &= true;
 		}
+		
+		if(connectCount <= 0)
+		{
+			_uc.println( _labels.getString("L11") );
+			ret = false;
+		}
+		else
+		{
+			_uc.println( _labels.getString("L12") );
+			ret &= true;
+		}
+		
+		return ret;
 	}
 
 	@Override
