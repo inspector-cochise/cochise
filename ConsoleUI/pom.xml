@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>Cochise</groupId>
   <artifactId>ConsoleUI</artifactId>
-  <version>0.3.1</version>
+  <version>0.3.2</version>
   
   <dependencies>
     <dependency>
@@ -13,7 +13,7 @@
     <dependency>
       <groupId>Cochise</groupId>
       <artifactId>CochiseCore</artifactId>
-      <version>0.3.1</version>
+      <version>0.3.2</version>
     </dependency>
     <dependency>
     	<groupId>junit</groupId>

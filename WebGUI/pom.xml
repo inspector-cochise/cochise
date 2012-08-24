@@ -2,14 +2,14 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>Cochise</groupId>
   <artifactId>WebGUI</artifactId>
-  <version>0.3.1</version>
+  <version>0.3.2</version>
   <packaging>war</packaging>
   
   <dependencies>
     <dependency>
       <groupId>Cochise</groupId>
 	  <artifactId>CochiseCore</artifactId>
-	  <version>0.3.1</version>
+	  <version>0.3.2</version>
 	  <scope>compile</scope>
     </dependency>
     <dependency>
