@@ -2,9 +2,24 @@ package org.akquinet.audit.ui;
 
 import java.util.Locale;
 
+import javax.swing.text.DefaultStyledDocument;
+
 public class DevNullUserCommunicator extends UserCommunicator
 {
 	private Locale _locale = Locale.getDefault();
+	private boolean _defaultBooleanAnswer;
+	private String _defaultStringAnswer;
+	
+	public DevNullUserCommunicator()
+	{
+		this(false, "");
+	}
+
+	public DevNullUserCommunicator(boolean defaultBooleanAnswer, String defaultStringAnswer)
+	{
+		_defaultBooleanAnswer = defaultBooleanAnswer;
+		_defaultStringAnswer = defaultStringAnswer;
+	}
 
 	@Override
 	public void reportError(String error)
@@ -79,7 +94,7 @@ public class DevNullUserCommunicator extends UserCommunicator
 	@Override
 	public boolean askYesNoQuestion(String question)
 	{
-		return false;
+		return _defaultBooleanAnswer;
 	}
 
 	@Override
@@ -91,7 +106,7 @@ public class DevNullUserCommunicator extends UserCommunicator
 	@Override
 	public String askStringQuestion(String question)
 	{
-		return "";
+		return _defaultStringAnswer;
 	}
 
 	@Override
@@ -103,7 +118,7 @@ public class DevNullUserCommunicator extends UserCommunicator
 	@Override
 	public String askTextQuestion(String question)
 	{
-		return "";
+		return _defaultStringAnswer;
 	}
 
 	@Override
