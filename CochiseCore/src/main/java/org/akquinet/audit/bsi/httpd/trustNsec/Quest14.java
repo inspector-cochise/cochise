@@ -43,15 +43,15 @@ public class Quest14 extends ResourceWatcher implements YesNoQuestion
 	
 	public Quest14(PrologueData pd, UserCommunicator uc)
 	{
-		this(pd._conf, pd._apacheExecutable, uc);
+		this(pd._conf, uc);
 	}
 
-	public Quest14(ConfigFile conf, File apacheExecutable)
+	public Quest14(ConfigFile conf)
 	{
-		this(conf, apacheExecutable, UserCommunicator.getDefault());
+		this(conf, UserCommunicator.getDefault());
 	}
 	
-	public Quest14(ConfigFile conf, File apacheExecutable, UserCommunicator uc)
+	public Quest14(ConfigFile conf, UserCommunicator uc)
 	{
 		_uc = uc;
 		_config = conf;
