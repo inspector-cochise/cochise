@@ -8,14 +8,18 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
 
+import org.akquinet.audit.Automated;
 import org.akquinet.audit.ModuleHelper;
 import org.akquinet.audit.YesNoQuestion;
 import org.akquinet.audit.bsi.httpd.PrologueData;
+import org.akquinet.audit.ui.DevNullUserCommunicator;
 import org.akquinet.audit.ui.UserCommunicator;
 import org.akquinet.httpd.ConfigFile;
 import org.akquinet.httpd.syntax.Directive;
+import org.akquinet.util.ResourceWatcher;
 
-public class Quest13 implements YesNoQuestion
+@Automated
+public class Quest13 extends ResourceWatcher implements YesNoQuestion
 {
 	private static final long serialVersionUID = 1903677931753535191L;
 	private static final String SSLCipherSuite_Minimum = "SSLCipherSuite !NULL:!eNULL:!aNULL:!ADH:!MD5:!RC2";
@@ -27,6 +31,7 @@ public class Quest13 implements YesNoQuestion
 	
 	private ConfigFile _config;
 	private ModuleHelper _moduleHelper;
+	private Boolean _lastAnswer;
 	
 	public Quest13(PrologueData pd)
 	{
@@ -54,20 +59,25 @@ public class Quest13 implements YesNoQuestion
 	@Override
 	public boolean answer()
 	{
-		_uc.printHeading3( _labels.getString("name") );
-		_uc.printParagraph( _labels.getString("Q0") );
+		return answer(_uc);
+	}
+	
+	public boolean answer(UserCommunicator uc)
+	{
+		uc.printHeading3( _labels.getString("name") );
+		uc.printParagraph( _labels.getString("Q0") );
 		
 		if(!mod_sslIsPresent() ||
 		   !SSLRandomSeedIsWellAndPresent() ||
 		   !SSLMutexIsWellAndPresent() ||
 		   !SSLCipherSuiteIsWellAndPresent())
 		{
-			_uc.printAnswer(false, _labels.getString("A0"));
+			uc.printAnswer(false, _labels.getString("A0"));
 			return false;
 		}
 		else
 		{
-			_uc.printAnswer(true, _labels.getString("A1"));
+			uc.printAnswer(true, _labels.getString("A1"));
 			return true;
 		}
 	}
@@ -245,6 +255,37 @@ public class Quest13 implements YesNoQuestion
 		s.defaultReadObject();
 		_uc = UserCommunicator.getDefault();
 		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
+	}
+
+	@Override
+	public String getResourceId()
+	{
+		return "quest." + _id;
+	}
+
+	@Override
+	public boolean resourceChanged()
+	{
+		try
+		{
+			initialize();
+		}
+		catch (Exception e)
+		{
+			throw new RuntimeException(e);
+		}
+		
+		//this is just a not so intelligent dummy-solution
+		boolean answer = answer(new DevNullUserCommunicator());
+		
+		if(_lastAnswer != null && answer != _lastAnswer)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 }
