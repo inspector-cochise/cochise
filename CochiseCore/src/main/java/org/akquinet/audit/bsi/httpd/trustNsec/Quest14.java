@@ -27,7 +27,7 @@ public class Quest14 extends ResourceWatcher implements YesNoQuestion
 
 	public static final String _id = "Quest14";
 	
-	private transient UserCommunicator _uc;
+	private transient UserCommunicator _uc = UserCommunicator.getDefault();
 	private transient ResourceBundle _labels;
 	
 	private List<Directive> _sslEngineList = null;
