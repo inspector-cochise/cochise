@@ -31,7 +31,7 @@ public class Quest13 extends ResourceWatcher implements YesNoQuestion
 	
 	private ConfigFile _config;
 	private ModuleHelper _moduleHelper;
-	private Boolean _lastAnswer;
+	private Boolean _lastAnswer = null;
 	
 	public Quest13(PrologueData pd)
 	{
