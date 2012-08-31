@@ -16,6 +16,8 @@ import org.akquinet.audit.bsi.httpd.software.Quest4;
 import org.akquinet.audit.bsi.httpd.software.Quest5;
 import org.akquinet.audit.bsi.httpd.software.Quest6;
 import org.akquinet.audit.bsi.httpd.software.Quest7;
+import org.akquinet.audit.bsi.httpd.trustNsec.Quest13;
+import org.akquinet.audit.bsi.httpd.trustNsec.Quest14;
 import org.akquinet.audit.bsi.httpd.usersNrights.Quest10;
 import org.akquinet.audit.bsi.httpd.usersNrights.Quest11;
 import org.akquinet.audit.bsi.httpd.usersNrights.Quest12;
@@ -83,20 +85,23 @@ public class HttpdAudit
 			a.askPrologue(new PrologueQuestion(pD));
 			
 			YesNoQuestion[] quests = { new Heading2Printer( labels.getString("H3") , 1),
-					new Quest1(pD._highSec),
+					new Quest1(pD),
 					new Heading2Printer( labels.getString("H4") , 2),
-					new Quest2(pD._apacheExecutable),
-					new Quest3(pD._conf, pD._apacheExecutable),
-					new Quest4(pD._conf, pD._apacheExecutable),
-					new Quest5(pD._conf),
-					new Quest6(pD._apacheExecutable),
-					new Quest7(pD._conf),
+					new Quest2(pD),
+					new Quest3(pD),
+					new Quest4(pD),
+					new Quest5(pD),
+					new Quest6(pD),
+					new Quest7(pD),
 					new Heading2Printer( labels.getString("H5") , 3),
-					new Quest8(pD._configFile, pD._conf, pD._highSec),
-					new Quest9(pD._conf, pD._apacheExecutable.getName(), pD._highSec),
-					new Quest10(pD._conf),
-					new Quest11(pD._conf),
-					new Quest12(pD._conf, pD._apacheExecutable.getName())
+					new Quest8(pD),
+					new Quest9(pD),
+					new Quest10(pD),
+					new Quest11(pD),
+					new Quest12(pD),
+					new Heading2Printer( labels.getString("H7") , 3),
+					new Quest13(pD),
+					new Quest14(pD)
 			};
 			
 			a.addQuestions(quests);
