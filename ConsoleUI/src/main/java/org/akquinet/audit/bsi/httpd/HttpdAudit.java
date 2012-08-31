@@ -18,6 +18,7 @@ import org.akquinet.audit.bsi.httpd.software.Quest6;
 import org.akquinet.audit.bsi.httpd.software.Quest7;
 import org.akquinet.audit.bsi.httpd.trustNsec.Quest13;
 import org.akquinet.audit.bsi.httpd.trustNsec.Quest14;
+import org.akquinet.audit.bsi.httpd.trustNsec.Quest15;
 import org.akquinet.audit.bsi.httpd.usersNrights.Quest10;
 import org.akquinet.audit.bsi.httpd.usersNrights.Quest11;
 import org.akquinet.audit.bsi.httpd.usersNrights.Quest12;
@@ -101,7 +102,8 @@ public class HttpdAudit
 					new Quest12(pD),
 					new Heading2Printer( labels.getString("H7") , 3),
 					new Quest13(pD),
-					new Quest14(pD)
+					new Quest14(pD),
+					new Quest15(pD)
 			};
 			
 			a.addQuestions(quests);

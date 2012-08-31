@@ -30,6 +30,7 @@ import org.akquinet.audit.bsi.httpd.software.Quest6;
 import org.akquinet.audit.bsi.httpd.software.Quest7;
 import org.akquinet.audit.bsi.httpd.trustNsec.Quest13;
 import org.akquinet.audit.bsi.httpd.trustNsec.Quest14;
+import org.akquinet.audit.bsi.httpd.trustNsec.Quest15;
 import org.akquinet.audit.bsi.httpd.usersNrights.Quest10;
 import org.akquinet.audit.bsi.httpd.usersNrights.Quest11;
 import org.akquinet.audit.bsi.httpd.usersNrights.Quest12;
@@ -335,6 +336,7 @@ public class QuestionManager
 		createQuestion(Quest10.class);
 		createQuestion(Quest12.class);
 		createQuestion(Quest13.class);
+		createQuestion(Quest15.class);
 	}
 	
 	private void removeQuestions()

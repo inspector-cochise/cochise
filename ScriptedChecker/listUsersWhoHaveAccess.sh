@@ -1,6 +1,10 @@
 #!/bin/sh
+# $1 directory to be inspected
+# $2 if set to "list_for_file" directories will not be exploded
+#
 # list all users who have some access to $1
 # if $1 is a directory the list includes all users who have some access to one of it's children
+# this behavior can be overriden by setting $2 to "list_for_file"
 #
 # access means: read, write, execute, ownership, member of group whith group-ownership
 
@@ -36,18 +40,24 @@ list_for_file()
 }
 
 
-TEMPFILE=`mktemp`
+if [ "$2" = "list_for_file" ]
+then
+	list_for_file $1
+	exit $?
+else
+	TEMPFILE=`mktemp`
 
-for filename in `find $1`
-do
-	list_for_file $filename >> $TEMPFILE
-	if [ $? = 1 ]
-	then
-		rm $TEMPFILE
-		echo everybody has access
-		exit 1
-	fi
-done
-
-sort $TEMPFILE | uniq
-rm $TEMPFILE
+	for filename in `find $1`
+	do
+		list_for_file $filename >> $TEMPFILE
+		if [ $? = 1 ]
+		then
+			rm $TEMPFILE
+			echo everybody has access
+			exit 1
+		fi
+	done
+	
+	sort $TEMPFILE | uniq
+	rm $TEMPFILE
+fi
