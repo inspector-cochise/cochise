@@ -176,6 +176,30 @@ public class Directive extends Statement
 	}
 	
 	@Override
+	public List<Context> getContext(String name)
+	{
+		return new LinkedList<Context>();
+	}
+
+	@Override
+	public List<Context> getContextIgnoreCase(String name)
+	{
+		return new LinkedList<Context>();
+	}
+
+	@Override
+	public List<Context> getAllContexts(String name)
+	{
+		return new LinkedList<Context>();
+	}
+
+	@Override
+	public List<Context> getAllContextsIgnoreCase(String name)
+	{
+		return new LinkedList<Context>();
+	}
+	
+	@Override
 	public boolean equals(Object o)
 	{
 		if(this == o)

@@ -28,6 +28,8 @@ import org.akquinet.audit.bsi.httpd.software.Quest4;
 import org.akquinet.audit.bsi.httpd.software.Quest5;
 import org.akquinet.audit.bsi.httpd.software.Quest6;
 import org.akquinet.audit.bsi.httpd.software.Quest7;
+import org.akquinet.audit.bsi.httpd.trustNsec.Quest13;
+import org.akquinet.audit.bsi.httpd.trustNsec.Quest14;
 import org.akquinet.audit.bsi.httpd.usersNrights.Quest10;
 import org.akquinet.audit.bsi.httpd.usersNrights.Quest11;
 import org.akquinet.audit.bsi.httpd.usersNrights.Quest12;
@@ -307,6 +309,7 @@ public class QuestionManager
 		createInteractiveQuest(Quest7.class, Quest7._id, lookForPersistedQuests);
 		createInteractiveQuest(Quest9.class, Quest9._id, lookForPersistedQuests);
 		createInteractiveQuest(Quest11.class, Quest11._id, lookForPersistedQuests);
+		createInteractiveQuest(Quest14.class, Quest14._id, lookForPersistedQuests);
 	}
 	
 	private void createInteractiveQuest(Class<? extends YesNoQuestion> cl, String questId, boolean lookForPersistedQuests) throws FileNotFoundException, ClassCastException, IOException, ClassNotFoundException, InvalidQuestionClassException
@@ -331,6 +334,7 @@ public class QuestionManager
 		createQuestion(Quest8.class);
 		createQuestion(Quest10.class);
 		createQuestion(Quest12.class);
+		createQuestion(Quest13.class);
 	}
 	
 	private void removeQuestions()

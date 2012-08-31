@@ -47,6 +47,26 @@ public class Head extends SyntaxElement
 		return _statements.getAllDirectivesIgnoreCase(name);
 	}
 	
+	public List<Context> getContext(String name)
+	{
+		return _statements.getContext(name);
+	}
+
+	public List<Context> getContextIgnoreCase(String name)
+	{
+		return _statements.getContextIgnoreCase(name);
+	}
+
+	public List<Context> getAllContexts(String name)
+	{
+		return _statements.getAllContexts(name);
+	}
+
+	public List<Context> getAllContextsIgnoreCase(String name)
+	{
+		return _statements.getAllContextsIgnoreCase(name);
+	}
+	
 	@Override
 	public boolean equals(Object o)
 	{

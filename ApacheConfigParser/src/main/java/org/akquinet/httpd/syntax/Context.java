@@ -192,6 +192,30 @@ public class Context extends Statement
 	}
 	
 	@Override
+	public List<Context> getContext(String name)
+	{
+		return _containedStatementList.getContext(name);
+	}
+
+	@Override
+	public List<Context> getContextIgnoreCase(String name)
+	{
+		return _containedStatementList.getContextIgnoreCase(name);
+	}
+
+	@Override
+	public List<Context> getAllContexts(String name)
+	{
+		return _containedStatementList.getAllContexts(name);
+	}
+
+	@Override
+	public List<Context> getAllContextsIgnoreCase(String name)
+	{
+		return _containedStatementList.getAllContextsIgnoreCase(name);
+	}
+	
+	@Override
 	public boolean equals(Object o)
 	{
 		if(this == o)

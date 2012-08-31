@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 
+import org.akquinet.httpd.syntax.Context;
 import org.akquinet.httpd.syntax.Directive;
 import org.akquinet.httpd.syntax.Head;
 
@@ -82,6 +83,46 @@ public class ConfigFile implements Serializable
 	public List<Directive> getAllDirectivesIgnoreCase(String name)
 	{
 		return _head.getAllDirectivesIgnoreCase(name);
+	}
+	
+	/**
+	 * 
+	 * @param name name of the context
+	 * @return list of all contexts with this name directly contained in root context 
+	 */
+	public List<Context> getContext(String name)
+	{
+		return _head.getContext(name);
+	}
+
+	/**
+	 * 
+	 * @param name name of the context
+	 * @return list of all contexts with this name directly contained in root context 
+	 */
+	public List<Context> getContextIgnoreCase(String name)
+	{
+		return _head.getContextIgnoreCase(name);
+	}
+
+	/**
+	 * 
+	 * @param name name of the context
+	 * @return list of all contexts with this name
+	 */
+	public List<Context> getAllContexts(String name)
+	{
+		return _head.getAllContexts(name);
+	}
+
+	/**
+	 * 
+	 * @param name name of the context
+	 * @return list of all contexts with this name
+	 */
+	public List<Context> getAllContextsIgnoreCase(String name)
+	{
+		return _head.getAllContextsIgnoreCase(name);
 	}
 	
 	public Head getHeadExpression()

@@ -321,6 +321,76 @@ public class StatementList extends SyntaxElement
 		return ret;
 	}
 	
+	public List<Context> getContext(String name)
+	{
+		List<Context> ret = new LinkedList<Context>();
+		for(Statement statement : _statements)
+		{
+			if(statement instanceof Context)
+			{
+				Context ctx = (Context) statement;
+				if(ctx.getName().equals(name))
+				{
+					ret.add(ctx);
+				}
+			}
+		}
+		return ret;
+	}
+
+	public List<Context> getContextIgnoreCase(String name)
+	{
+		List<Context> ret = new LinkedList<Context>();
+		for(Statement statement : _statements)
+		{
+			if(statement instanceof Context)
+			{
+				Context ctx = (Context) statement;
+				if(ctx.getName().equalsIgnoreCase(name))
+				{
+					ret.add(ctx);
+				}
+			}
+		}
+		return ret;
+	}
+
+	public List<Context> getAllContexts(String name)
+	{
+		List<Context> ret = new LinkedList<Context>();
+		for(Statement statement : _statements)
+		{
+			if(statement instanceof Context)
+			{
+				Context ctx = (Context) statement;
+				if(ctx.getName().equals(name))
+				{
+					ret.add(ctx);
+				}
+				ret.addAll(ctx.getAllContexts(name));
+			}
+		}
+		return ret;
+	}
+
+	public List<Context> getAllContextsIgnoreCase(String name)
+	{
+		List<Context> ret = new LinkedList<Context>();
+		for(Statement statement : _statements)
+		{
+			if(statement instanceof Context)
+			{
+				Context ctx = (Context) statement;
+				if(ctx.getName().equalsIgnoreCase(name))
+				{
+					ret.add(ctx);
+				}
+				ret.addAll(ctx.getAllContexts(name));
+			}
+		}
+		return ret;
+	}
+
 	@Override
 	public boolean equals(Object o)
 	{

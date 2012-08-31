@@ -17,6 +17,10 @@ abstract public class Statement extends SyntaxElement
 	abstract public List<Directive> getDirectiveIgnoreCase(String name);
 	abstract public List<Directive> getAllDirectives(String name);
 	abstract public List<Directive> getAllDirectivesIgnoreCase(String name);
+	abstract public List<Context> getContext(String name);
+	abstract public List<Context> getContextIgnoreCase(String name);
+	abstract public List<Context> getAllContexts(String name);
+	abstract public List<Context> getAllContextsIgnoreCase(String name);
 	
 	/**
 	 * Every Statement has Contexts in it's parental hierarchy or is global. All these surrounding Contexts shall be found
