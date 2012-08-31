@@ -67,10 +67,10 @@ public class Quest13 extends ResourceWatcher implements YesNoQuestion
 		uc.printHeading3( _labels.getString("name") );
 		uc.printParagraph( _labels.getString("Q0") );
 		
-		if(!mod_sslIsPresent() ||
-		   !SSLRandomSeedIsWellAndPresent() ||
-		   !SSLMutexIsWellAndPresent() ||
-		   !SSLCipherSuiteIsWellAndPresent())
+		if(!mod_sslIsPresent(uc) ||
+		   !SSLRandomSeedIsWellAndPresent(uc) ||
+		   !SSLMutexIsWellAndPresent(uc) ||
+		   !SSLCipherSuiteIsWellAndPresent(uc))
 		{
 			uc.printAnswer(false, _labels.getString("A0"));
 			return false;
@@ -82,28 +82,28 @@ public class Quest13 extends ResourceWatcher implements YesNoQuestion
 		}
 	}
 
-	private boolean mod_sslIsPresent()
+	private boolean mod_sslIsPresent(UserCommunicator uc)
 	{
 		if(_moduleHelper.isModuleLoaded("ssl_module") || _moduleHelper.isModuleCompiledInto("mod_ssl.c"))
 		{
-			_uc.println( _labels.getString("L1") );
+			uc.println( _labels.getString("L1") );
 			return true;
 		}
 		else
 		{
-			_uc.println( _labels.getString("L2") );
+			uc.println( _labels.getString("L2") );
 			return false;
 		}
 	}
 
-	private boolean SSLCipherSuiteIsWellAndPresent()
+	private boolean SSLCipherSuiteIsWellAndPresent(UserCommunicator uc)
 	{
 		List<Directive> dirs = _config.getAllDirectivesIgnoreCase("SSLCipherSuite");
 		
 		if(dirs.size() != 1)
 		{
-			_uc.printParagraph( _labels.getString("L3") );
-			_uc.printExample(SSLCipherSuite_Minimum);
+			uc.printParagraph( _labels.getString("L3") );
+			uc.printExample(SSLCipherSuite_Minimum);
 			return false;
 		}
 		
@@ -119,39 +119,39 @@ public class Quest13 extends ResourceWatcher implements YesNoQuestion
 		
 		if(!ok)
 		{
-			_uc.printParagraph( _labels.getString("L4") );
-			_uc.printExample(SSLCipherSuite_Minimum);
+			uc.printParagraph( _labels.getString("L4") );
+			uc.printExample(SSLCipherSuite_Minimum);
 			return false;
 		}
 		else
 		{
-			_uc.println( _labels.getString("L5") );
+			uc.println( _labels.getString("L5") );
 			return true;
 		}
 	}
 
-	private boolean SSLMutexIsWellAndPresent()
+	private boolean SSLMutexIsWellAndPresent(UserCommunicator uc)
 	{
 		List<Directive> dirs = _config.getAllDirectivesIgnoreCase("SSLMutex");
 		
 		if(dirs.size() != 1)
 		{
-			_uc.println( _labels.getString("L6") );
+			uc.println( _labels.getString("L6") );
 			return false;
 		}
 		else if(dirs.get(0).getValue().equalsIgnoreCase("none") || dirs.get(0).getValue().equalsIgnoreCase("no"))
 		{
-			_uc.println( _labels.getString("L7") );
+			uc.println( _labels.getString("L7") );
 			return false;
 		}
 		else
 		{
-			_uc.println( _labels.getString("L8") );
+			uc.println( _labels.getString("L8") );
 			return true;
 		}
 	}
 
-	private boolean SSLRandomSeedIsWellAndPresent()
+	private boolean SSLRandomSeedIsWellAndPresent(UserCommunicator uc)
 	{
 		List<Directive> sslRandomSeeds = _config.getAllDirectivesIgnoreCase("SSLRandomSeed");
 		int connectCount = 0;
@@ -173,23 +173,23 @@ public class Quest13 extends ResourceWatcher implements YesNoQuestion
 		
 		if(startupCount <= 0)
 		{
-			_uc.println( _labels.getString("L9") );
+			uc.println( _labels.getString("L9") );
 			ret = false;
 		}
 		else
 		{
-			_uc.println( _labels.getString("L10") );
+			uc.println( _labels.getString("L10") );
 			ret &= true;
 		}
 		
 		if(connectCount <= 0)
 		{
-			_uc.println( _labels.getString("L11") );
+			uc.println( _labels.getString("L11") );
 			ret = false;
 		}
 		else
 		{
-			_uc.println( _labels.getString("L12") );
+			uc.println( _labels.getString("L12") );
 			ret &= true;
 		}
 		
