@@ -23,6 +23,7 @@ public class Quest13 extends ResourceWatcher implements YesNoQuestion
 {
 	private static final long serialVersionUID = 1903677931753535191L;
 	private static final String SSLCipherSuite_Minimum = "SSLCipherSuite !NULL:!eNULL:!aNULL:!ADH:!MD5:!RC2";
+	private static final String SSLProtocol_Minimum = "SSLProtocol -SSLv2";
 
 	private static final String _id = "Quest13";
 	
@@ -70,7 +71,8 @@ public class Quest13 extends ResourceWatcher implements YesNoQuestion
 		if(!mod_sslIsPresent(uc) ||
 		   !SSLRandomSeedIsWellAndPresent(uc) ||
 		   !SSLMutexIsWellAndPresent(uc) ||
-		   !SSLCipherSuiteIsWellAndPresent(uc))
+		   !SSLCipherSuiteIsWellAndPresent(uc) ||
+		   !SSLProtocolIsWellAndPresent(uc))
 		{
 			uc.printAnswer(false, _labels.getString("A0"));
 			return false;
@@ -98,7 +100,7 @@ public class Quest13 extends ResourceWatcher implements YesNoQuestion
 
 	private boolean SSLCipherSuiteIsWellAndPresent(UserCommunicator uc)
 	{
-		List<Directive> dirs = _config.getAllDirectivesIgnoreCase("SSLCipherSuite");
+		List<Directive> dirs = _config.getDirectiveIgnoreCase("SSLCipherSuite");
 		
 		if(dirs.size() != 1)
 		{
@@ -129,10 +131,38 @@ public class Quest13 extends ResourceWatcher implements YesNoQuestion
 			return true;
 		}
 	}
+	
+	private boolean SSLProtocolIsWellAndPresent(UserCommunicator uc)
+	{
+		List<Directive> dirs = _config.getDirectiveIgnoreCase("SSLProtocol");
+		
+		if(dirs.size() != 1)
+		{
+			uc.printParagraph( _labels.getString("L13") );
+			return false;
+		}
+		
+		Set<String> spec = new HashSet<String>( Arrays.asList( dirs.get(0).getValue().split(" ") ));
+		
+		//TODO isn't that for high security only?
+		boolean ok = spec.contains("-SSLv2");
+		
+		if(!ok)
+		{
+			uc.printParagraph( _labels.getString("L14") );
+			uc.printExample(SSLProtocol_Minimum);
+			return false;
+		}
+		else
+		{
+			uc.println( _labels.getString("L15") );
+			return true;
+		}
+	}
 
 	private boolean SSLMutexIsWellAndPresent(UserCommunicator uc)
 	{
-		List<Directive> dirs = _config.getAllDirectivesIgnoreCase("SSLMutex");
+		List<Directive> dirs = _config.getDirectiveIgnoreCase("SSLMutex");
 		
 		if(dirs.size() != 1)
 		{
@@ -153,7 +183,7 @@ public class Quest13 extends ResourceWatcher implements YesNoQuestion
 
 	private boolean SSLRandomSeedIsWellAndPresent(UserCommunicator uc)
 	{
-		List<Directive> sslRandomSeeds = _config.getAllDirectivesIgnoreCase("SSLRandomSeed");
+		List<Directive> sslRandomSeeds = _config.getDirectiveIgnoreCase("SSLRandomSeed");
 		int connectCount = 0;
 		int startupCount = 0;
 		
