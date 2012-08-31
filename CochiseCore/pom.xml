@@ -2,13 +2,13 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>Cochise</groupId>
   <artifactId>CochiseCore</artifactId>
-  <version>0.3.2</version>
+  <version>0.4.0.SNAPSHOT</version>
 
   <dependencies>
     <dependency>
       <groupId>ApacheConfigParser</groupId>
       <artifactId>ApacheConfigParser</artifactId>
-      <version>0.2.1</version>
+      <version>0.2.2.SNAPSHOT</version>
     </dependency>
     <dependency>
     	<groupId>junit</groupId>
