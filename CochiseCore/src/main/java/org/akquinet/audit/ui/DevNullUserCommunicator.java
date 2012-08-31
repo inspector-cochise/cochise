@@ -2,8 +2,6 @@ package org.akquinet.audit.ui;
 
 import java.util.Locale;
 
-import javax.swing.text.DefaultStyledDocument;
-
 public class DevNullUserCommunicator extends UserCommunicator
 {
 	private Locale _locale = Locale.getDefault();
