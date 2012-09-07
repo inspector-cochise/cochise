@@ -78,6 +78,7 @@ public class Quest15 extends ResourceWatcher implements YesNoQuestion
 		_uc = uc;
 		_conf = conf;
 		_commandPath = commandPath;
+		_command = command;
 		_getUserNGroupCommand = getUserNGroupCommand;
 		_apacheExecutable = apacheExecutable;
 		_labels = ResourceBundle.getBundle(_id, _uc.getLocale());
